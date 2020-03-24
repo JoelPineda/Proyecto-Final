@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="cargo">
+      {{noticia.titulo}}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+
+
+  <img *ngIf="!cargo" src="https://loading.io/spinners/balls/lg.circle-slack-loading-icon.gif" alt="">
+
+  <div *ngIf="cargo">
+    <div id="global">
+      <p>{{noticia.contenido}}</p>
+      <p>{{noticia.fecha | date}}</p>
+    </div>
+    <footer>
+      <p>{{noticia.autor.nombre}} {{noticia.autor.apellido}}</p>
+    </footer>
+   
+  </div>
+</ion-content>

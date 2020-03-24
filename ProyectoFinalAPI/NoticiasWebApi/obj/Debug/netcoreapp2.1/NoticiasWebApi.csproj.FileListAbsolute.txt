@@ -1,0 +1,60 @@
+C:\Users\Tomas Garay\Desktop\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.csprojAssemblyReference.cache
+C:\Users\Tomas Garay\Desktop\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.csproj.CoreCompileInputs.cache
+C:\Users\Tomas Garay\Desktop\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.RazorAssemblyInfo.cache
+C:\Users\Tomas Garay\Desktop\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.RazorAssemblyInfo.cs
+C:\Users\Tomas Garay\Desktop\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.AssemblyInfoInputs.cache
+C:\Users\Tomas Garay\Desktop\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.AssemblyInfo.cs
+C:\Users\Tomas Garay\Desktop\Noticias\NoticiasWebApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.deps.json
+C:\Users\Tomas Garay\Desktop\Noticias\NoticiasWebApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.runtimeconfig.json
+C:\Users\Tomas Garay\Desktop\Noticias\NoticiasWebApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.runtimeconfig.dev.json
+C:\Users\Tomas Garay\Desktop\Noticias\NoticiasWebApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.dll
+C:\Users\Tomas Garay\Desktop\Noticias\NoticiasWebApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.pdb
+C:\Users\Tomas Garay\Desktop\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.RazorTargetAssemblyInfo.cache
+C:\Users\Tomas Garay\Desktop\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.dll
+C:\Users\Tomas Garay\Desktop\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.pdb
+D:\Udemy\Ionic y Net Core\Noticias\NoticiasWebApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.deps.json
+D:\Udemy\Ionic y Net Core\Noticias\NoticiasWebApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.runtimeconfig.json
+D:\Udemy\Ionic y Net Core\Noticias\NoticiasWebApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.runtimeconfig.dev.json
+D:\Udemy\Ionic y Net Core\Noticias\NoticiasWebApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.dll
+D:\Udemy\Ionic y Net Core\Noticias\NoticiasWebApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.pdb
+D:\Udemy\Ionic y Net Core\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.csprojAssemblyReference.cache
+D:\Udemy\Ionic y Net Core\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.csproj.CoreCompileInputs.cache
+D:\Udemy\Ionic y Net Core\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.RazorAssemblyInfo.cache
+D:\Udemy\Ionic y Net Core\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.RazorAssemblyInfo.cs
+D:\Udemy\Ionic y Net Core\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.AssemblyInfoInputs.cache
+D:\Udemy\Ionic y Net Core\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.AssemblyInfo.cs
+D:\Udemy\Ionic y Net Core\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.RazorTargetAssemblyInfo.cache
+D:\Udemy\Ionic y Net Core\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.dll
+D:\Udemy\Ionic y Net Core\Noticias\NoticiasWebApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.pdb
+C:\Users\brito\Desktop\noticiasapi-master\NoticiasWebApi\bin\Debug\netcoreapp2.1\appsettings.Development.json
+C:\Users\brito\Desktop\noticiasapi-master\NoticiasWebApi\bin\Debug\netcoreapp2.1\appsettings.json
+C:\Users\brito\Desktop\noticiasapi-master\NoticiasWebApi\bin\Debug\netcoreapp2.1\Properties\launchSettings.json
+C:\Users\brito\Desktop\noticiasapi-master\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.deps.json
+C:\Users\brito\Desktop\noticiasapi-master\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.runtimeconfig.json
+C:\Users\brito\Desktop\noticiasapi-master\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.runtimeconfig.dev.json
+C:\Users\brito\Desktop\noticiasapi-master\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.dll
+C:\Users\brito\Desktop\noticiasapi-master\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.pdb
+C:\Users\brito\Desktop\noticiasapi-master\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.csprojAssemblyReference.cache
+C:\Users\brito\Desktop\noticiasapi-master\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.RazorAssemblyInfo.cache
+C:\Users\brito\Desktop\noticiasapi-master\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.RazorAssemblyInfo.cs
+C:\Users\brito\Desktop\noticiasapi-master\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.AssemblyInfoInputs.cache
+C:\Users\brito\Desktop\noticiasapi-master\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.AssemblyInfo.cs
+C:\Users\brito\Desktop\noticiasapi-master\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.RazorTargetAssemblyInfo.cache
+C:\Users\brito\Desktop\noticiasapi-master\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.dll
+C:\Users\brito\Desktop\noticiasapi-master\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.pdb
+C:\Users\brito\Desktop\ProyectoFinal\ProyectoFinalApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\appsettings.Development.json
+C:\Users\brito\Desktop\ProyectoFinal\ProyectoFinalApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\appsettings.json
+C:\Users\brito\Desktop\ProyectoFinal\ProyectoFinalApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\Properties\launchSettings.json
+C:\Users\brito\Desktop\ProyectoFinal\ProyectoFinalApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.deps.json
+C:\Users\brito\Desktop\ProyectoFinal\ProyectoFinalApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.runtimeconfig.json
+C:\Users\brito\Desktop\ProyectoFinal\ProyectoFinalApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.runtimeconfig.dev.json
+C:\Users\brito\Desktop\ProyectoFinal\ProyectoFinalApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.dll
+C:\Users\brito\Desktop\ProyectoFinal\ProyectoFinalApi\NoticiasWebApi\bin\Debug\netcoreapp2.1\NoticiasWebApi.pdb
+C:\Users\brito\Desktop\ProyectoFinal\ProyectoFinalApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.csprojAssemblyReference.cache
+C:\Users\brito\Desktop\ProyectoFinal\ProyectoFinalApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.RazorAssemblyInfo.cache
+C:\Users\brito\Desktop\ProyectoFinal\ProyectoFinalApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.RazorAssemblyInfo.cs
+C:\Users\brito\Desktop\ProyectoFinal\ProyectoFinalApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.AssemblyInfoInputs.cache
+C:\Users\brito\Desktop\ProyectoFinal\ProyectoFinalApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.AssemblyInfo.cs
+C:\Users\brito\Desktop\ProyectoFinal\ProyectoFinalApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.RazorTargetAssemblyInfo.cache
+C:\Users\brito\Desktop\ProyectoFinal\ProyectoFinalApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.dll
+C:\Users\brito\Desktop\ProyectoFinal\ProyectoFinalApi\NoticiasWebApi\obj\Debug\netcoreapp2.1\NoticiasWebApi.pdb
