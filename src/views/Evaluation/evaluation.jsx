@@ -59,7 +59,7 @@ export default function Evaluation(props) {
                 
                 $("#TblEvaluation").DataTable({
                             destroy: true,
-                            searching: true,
+                            searching: false,
                             language: LangSpanish,
                             bLengthChange: false,
                             lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200],
