@@ -383,5 +383,12 @@ table#TblEvaluation {
 .side-menu-ul > li:hover{
     transform: scale(1.05) !important;
     background-color: rgba(0, 0, 0, .5)
+}
+.span-optional-info{
+    color:gray;
+    font-size:12px;
+    font-weight:bold;
+    margin: 0px 2px;
+    font-style: italic;
 } 
  
