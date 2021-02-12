@@ -12,7 +12,7 @@ export default function Dasboard(props) {
 
 
   useEffect(() => {
-    $("body").addClass(' is-menu-visible'); 
+   $("body").addClass(' is-menu-visible'); 
 
   },[]);
   

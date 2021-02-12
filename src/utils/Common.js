@@ -56,7 +56,7 @@ export const getUser = () => {
        });
  
    }
-   ShowMenu();
+  
    menuList.push("<li><a href='/logout'><i class='fa fa-sign-out '></i><span>&nbsp;Cerrar</span></a></li></ul>");   
     return menuList.join('');
 
