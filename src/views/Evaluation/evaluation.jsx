@@ -8,6 +8,7 @@ import "moment/locale/es";
 import { getUser, removeUserSession } from "../../utils/Common";
 import API from "../../utils/api";
 import {EditEvaluation} from "../Evaluation/editEvaluation";
+import {AddEvaluation} from "../Evaluation/addEvaliation";
 
 import Loading from "../../components/loading/loading";
 import {ShowConfirmationMessage, MessageResults, ShowPopUp} from "../../utils/CommonFunctions";
@@ -18,9 +19,24 @@ registerLocale("es", es);
 $(document).ready(()=>{
     $('body').on('click', '#TblEvaluation #btEdit', function(e){
 
-        ShowPopUp({titleName: "Editar Evaluación", htmlBody: EditEvaluation(e), handlerEvent: OnClickSaveEdit, TextOk:"Guardar", isDisabled:true, EnabledDisabled:true})
+        ShowPopUp({titleName: "Editar Evaluación", htmlBody: EditEvaluation(e), handlerEvent: OnClickSaveEdit, TextOk:"Guardar", isDisabled:true, EnabledDisabled:true});
         DefaulValuetEdit();
     })
+
+    $('#sp_AddEvaluation').click(()=>{
+        ShowPopUp({titleName: "Añadir Evaluación", htmlBody: AddEvaluation(), handlerEvent: OnClickSaveAdd, TextOk:"Guardar", isDisabled:true, EnabledDisabled:true});
+    })
+    $('body').on('change', '#tbEvaluationName', function(e){
+        if($(e.currentTarget).val().length < 2 ){
+            $(this).parent().find('.title-required').text('*');
+             ValidationEditSelections();
+             
+        }else{
+            $(e.currentTarget).parent().find('.title-required').text('');
+             ValidationEditSelections();
+        }
+    })
+
     $('body').on('change', '#divEditEvaluation .validate-option', function(e){
         if($(e.currentTarget).val() === '0'){
             $(e.currentTarget).parent().find('.title-required').text('*');
@@ -48,7 +64,12 @@ $(document).ready(()=>{
         }
 
      }
- 
+    if($('#tbEvaluationName').val().length < 2 ){
+        $('#tbEvaluationName').parent().find('.title-required').text('*');
+        isValid = true; 
+    }else{
+        $('#tbEvaluationName').parent().find('.title-required').text('');
+    }
     $(btnOk).attr('disabled',isValid);
     if(!isValid){
         $(dataSelect).find('.title-required').text('');
@@ -56,7 +77,6 @@ $(document).ready(()=>{
 
  } 
 const DefaulValuetEdit = ()=>{
-
      let dataSelect = $('#divEditEvaluation .validate-option');
      let dataNoSelect = $('#divEditEvaluation .validate-no-option');
      for (let idx = 0; idx < dataSelect.length; idx++) {
@@ -84,9 +104,6 @@ const DefaulValuetEdit = ()=>{
      
     ValidationEditSelections();
 } 
-
- 
-
 const OnClickSaveEdit = ()=>{
  let param = {
                 EvaluationId: parseInt($("#tbEvaluationName").attr('data-id')),
@@ -100,8 +117,35 @@ const OnClickSaveEdit = ()=>{
             }; 
     ShowConfirmationMessage(SaveEditChanges, '',param);
 }
+const OnClickSaveAdd = ()=>{
+ let param = {
+                EvaluationName: $("#tbEvaluationName").val(),
+                EvaluationObjectId: parseInt($("#dropObject").val()), 
+                EvaluationHierarchyId: ($("#dropHierarchy").val() ==="0"? null: parseInt($("#dropHierarchy").val())),
+                PositionMustFill: ($("#dropPositionMustFill").val() ==="0"? null: $("#dropPositionMustFill").val()),
+                FillAfterLogin: $("#dropFillAfterLogin").val(),
+                AfterHiringDate: $("#dropAfterHiringDate").val(),
+                Inactive: $("#dropInactive").val()
+            }; 
+    ShowConfirmationMessage(SaveAddChanges, '',param);
+}
 const SaveEditChanges = (params)=>{ 
       API.putData("Evaluations/Update", params)
+      .then((res) => {
+          if (res.status === 200) {
+              MessageResults(res.status);
+              setTimeout(() => {
+                  window.location.reload(true);
+              }, 1200);
+          } 
+      })
+      .catch(function (err) {
+      console.error("Error de conexion " + err);
+          MessageResults(400, err);
+      });     
+}
+const SaveAddChanges = (params)=>{ 
+      API.postData("Evaluations/Add", params)
       .then((res) => {
           if (res.status === 200) {
               MessageResults(res.status);
@@ -213,10 +257,23 @@ const GetEvaluationObject = ()=>{
           return [];
       });     
 }
+const GetEvaluationHierarchy = ()=>{ 
+      API.getData("EvaluationHierarchy/get")
+      .then((res) => {
+          if (res.status === 200) {
+               $("#sp_AddEvaluation").attr('data-evaluation-Hierarchy', btoa(JSON.stringify(res.data)));
+          } 
+      })
+      .catch(function (err) {
+        console.error("Error de conexion " + err);
+          return [];
+      });     
+}
 
   useEffect(() => {
     fillData();
     GetEvaluationObject();
+    GetEvaluationHierarchy();
 
  }, []); 
   
@@ -231,7 +288,7 @@ const GetEvaluationObject = ()=>{
               <br />
               <br />
               <h2 className="h2">Evaluaci&oacute;n</h2>
-              <span className="btn btn-success btn-sm"><i className="fa fa-plus-circle"></i>&nbsp;Añadir Evaliaci&oacute;n</span>
+              <span className="btn btn-success btn-sm" id="sp_AddEvaluation"><i className="fa fa-plus-circle"></i>&nbsp;Añadir Evaliaci&oacute;n</span>
                 
             </div>
           </div>        
