@@ -30,5 +30,5 @@ export default {
       method: "DELETE",
       url: url,
       data: data,
-    }),    
+    }),
 };
