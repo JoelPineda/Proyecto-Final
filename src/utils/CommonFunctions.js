@@ -116,4 +116,23 @@ export const GetImagePatch = (ulrPatch)=>{
 export const GetDateDiff = (first, second) => {
     return Math.round((second-first)/(1000*60*60*24));
 } 
+
+export const GetdropDownListYesNo = (cssClass, selectedValue, dropName)=>{
+  let DefaultField = '<option value="0">--Seleccione--</option>';
+  let dropDownList = ['<select class="form-control '+ cssClass +'" data-value="'+ selectedValue +'" id="'+ dropName +'">'];
+  let dropYesNo = DefaultField +'<option class="capitalized" value="Y">Si</option><option class="capitalized" value="N">No</option></select>';
+      dropDownList.push(dropYesNo); 
+
+      return dropDownList.join(''); 
+}
+export const GetdropDownListPositionMustFill = (cssClass, selectedValue, dropName)=>{
+       let DefaultField = '<option value="0">--Seleccione--</option>';
+       let dropDownList = ['<select class="form-control '+ cssClass +'" data-optional="'+ selectedValue +'" id="'+ dropName +'">'];
+            dropDownList.push(DefaultField +'<option class="capitalized" value="DIRECTOR">Director</option>');
+            dropDownList.push('<option class="capitalized" value="GERENTE">Gerente</option>');
+            dropDownList.push('<option class="capitalized" value="SUPERVISOR">Supervisor</option>');
+            dropDownList.push('<option class="capitalized" value="EMPLEADO">Empleado</option></select>'); 
+             
+       return dropDownList.join('');    
+}
  
