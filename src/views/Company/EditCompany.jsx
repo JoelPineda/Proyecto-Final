@@ -191,7 +191,7 @@ export default function EditCompany(props) {
     console.log(output);
   };
 
-  const guardarCompany = () => {
+  const ActualizarCompany = () => {
     API.putData("Company/update", {
       id: id,
       logo: document.getElementById("logo").value,
@@ -404,7 +404,7 @@ export default function EditCompany(props) {
               <button
                 type="button"
                 className="mybt btn btn-outline-danger text-wrap"
-                onClick={guardarCompany}
+                onClick={ActualizarCompany}
               >
                 Actualizar
               </button>
