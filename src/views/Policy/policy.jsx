@@ -18,50 +18,59 @@ import {
 import { DataTable } from "datatables.net";
 import { LangSpanish } from "../../tools/dataTables.Language";
 
-export default function CompanyConf(props) {
+export default function Policy(props) {
   const [dataLoading, setDataLoading] = useState(true);
-  const [company, setCompany] = useState(true);
+  const [policy, setPolicy] = useState(true);
 
   const fillData = () => {
     let Record = [];
-    API.getData("/Company/getCompany")
+    API.getData("policies/getAll?companyId=01")
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
           let dataResult = [];
 
-          let EditBtn =
-            "<a href='/addCompany'   class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Evaluación' ></a>";
-          setCompany(res.data);
-          debugger;
+          setPolicy(res.data);
           res.data.forEach((item) => {
             dataResult.push({
               id:
                 '<span class="container d-flex align-items-center justify-content-center">' +
                 item.id +
                 "</>",
-              logo:
+              title:
                 '<span class="capitalized defaultText">' +
-                item.logo +
+                item.title +
                 "</span>",
-              vision:
+              content:
                 '<span class="capitalized defaultText">' +
-                item.vision +
+                item.content +
                 "</span>",
-              values:
+              creationDate:
                 '<span class="capitalized defaultText">' +
-                item.values +
+                Moment(item.creationDate).format("DD/MM/YYYY  ") +
                 "</span>",
-              name:
+              isRequired:
                 '<span class="capitalized defaultText">' +
-                item.name +
+                item.isRequired +
                 "</span>",
-              mision:
+              levelFrom:
                 '<span class="capitalized defaultText">' +
-                item.mision +
+                item.levelFrom +
+                "</span>",
+              readAfterLogin:
+                '<span class="capitalized defaultText">' +
+                item.readAfterLogin +
+                "</span>",
+              companyId:
+                '<span class="capitalized defaultText">' +
+                item.companyId +
+                "</span>",
+              inactive:
+                '<span class="capitalized defaultText">' +
+                item.inactive +
                 "</span>",
               itemBtn:
-                '<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Compañia" href="/editCompany?id=' +
+                '<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Politica" href="/editPolicy?id=' +
                 item.id +
                 '"' +
                 item.id +
@@ -69,7 +78,7 @@ export default function CompanyConf(props) {
             });
           });
 
-          $("#TblCompany").DataTable({
+          $("#TblPolicy").DataTable({
             destroy: true,
             searching: false,
             language: LangSpanish,
@@ -82,45 +91,48 @@ export default function CompanyConf(props) {
               dataResult.length === 0
                 ? [
                     {
-                      logo: "",
-                      vision: "",
-                      name: "",
-                      mision: "",
-                      values: "",
+                      title: "",
+                      content: "",
+                      creationDate: "",
+                      isRequired: "",
+                      levelFrom: "",
+                      readAfterLogin: "",
+                      companyId: "",
+                      inactive: "",
                       itemBtn: "",
                     },
                   ]
                 : dataResult,
             columns: [
               {
-                data: "name",
-                title: "Nombre ",
-                width: "15%",
-                className: "capitalized",
-              },
-              {
-                data: "logo",
-                title: "Logo\u00a0Compania",
+                data: "title",
+                title: "Titulo",
                 width: "25%",
                 className: "capitalized",
               },
               {
-                data: "vision",
-                title: "Vision",
+                data: "creationDate",
+                title: "Fecha\u00a0Creacion",
+                width: "25%",
+                className: "capitalized",
+              },
+              {
+                data: "isRequired",
+                title: "Requerido",
                 width: "20%",
                 className: "capitalized",
               },
               {
-                data: "values",
-                title: "Valores",
+                data: "levelFrom",
+                title: "Nivel",
                 width: "20%",
                 className: "capitalized",
               },
 
               {
-                data: "mision",
-                title: "Mision ",
-                width: "15%",
+                data: "inactive",
+                title: "Inactivo ",
+                width: "20%",
                 className: "capitalized",
               },
               {
@@ -153,10 +165,10 @@ export default function CompanyConf(props) {
             <div className="lowcolor col-12">
               <br />
               <br />
-              <h2 className="h2">CompaÑia</h2>
-              <a href="/addCompany">
+              <h2 className="h2">Politica</h2>
+              <a href="/addPolicy">
                 <span className="btn btn-success btn-sm">
-                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Compania
+                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Politica
                 </span>
               </a>
             </div>
@@ -172,7 +184,7 @@ export default function CompanyConf(props) {
                         Style="min-height:600px"
                       >
                         <table
-                          id="TblCompany"
+                          id="TblPolicy"
                           className="table table-striped table-bordered display"
                           Style="width:100% !important"
                         ></table>
