@@ -1,67 +1,46 @@
 import React, { useState, useEffect } from "react";
-import Button from "../../components/Button/Button";
-import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
 import $ from "jquery";
 import Moment from "moment";
-import es from "date-fns/locale/es";
 import "moment/locale/es";
 import { getUser, removeUserSession } from "../../utils/Common";
 import API from "../../utils/api";
-import { EditEvaluation } from "../Evaluation/editEvaluation";
-
 import Loading from "../../components/loading/loading";
-import {
-  ShowConfirmationMessage,
-  MessageResults,
-  ShowPopUp,
-} from "../../utils/CommonFunctions";
-import { DataTable } from "datatables.net";
 import { LangSpanish } from "../../tools/dataTables.Language";
 
-export default function CompanyConf(props) {
+export default function Bank(props) {
   const [dataLoading, setDataLoading] = useState(true);
-  const [company, setCompany] = useState(true);
+  const [bank, setBank] = useState(true);
 
   const fillData = () => {
     let Record = [];
-    API.getData("/Company/getCompany")
+    API.getData("Bank/get")
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
           let dataResult = [];
 
-          let EditBtn =
-            "<a href='/addCompany'   class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Evaluación' ></a>";
-          setCompany(res.data);
-          debugger;
+          setBank(res.data);
+
           res.data.forEach((item) => {
             dataResult.push({
               id:
                 '<span class="container d-flex align-items-center justify-content-center">' +
                 item.id +
                 "</>",
-              logo:
+              bankName:
                 '<span class="capitalized defaultText">' +
-                item.logo +
+                item.bankName +
                 "</span>",
-              vision:
+              inactive:
                 '<span class="capitalized defaultText">' +
-                item.vision +
+                item.inactive +
                 "</span>",
-              values:
+              creationDate:
                 '<span class="capitalized defaultText">' +
-                item.values +
-                "</span>",
-              name:
-                '<span class="capitalized defaultText">' +
-                item.name +
-                "</span>",
-              mision:
-                '<span class="capitalized defaultText">' +
-                item.mision +
+                Moment(item.creationDate).format("DD/MM/YYYY  ") +
                 "</span>",
               itemBtn:
-                '<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Compañia" href="/editCompany?id=' +
+                '<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Banco" href="/editbank?id=' +
                 item.id +
                 '"' +
                 item.id +
@@ -69,7 +48,7 @@ export default function CompanyConf(props) {
             });
           });
 
-          $("#TblCompany").DataTable({
+          $("#TblBank").DataTable({
             destroy: true,
             searching: false,
             language: LangSpanish,
@@ -82,51 +61,36 @@ export default function CompanyConf(props) {
               dataResult.length === 0
                 ? [
                     {
-                      logo: "",
-                      vision: "",
-                      name: "",
-                      mision: "",
-                      values: "",
-                      itemBtn: "",
+                      bankName: "",
+                      inactive: "",
+                      creationDate: "",
                     },
                   ]
                 : dataResult,
             columns: [
               {
-                data: "name",
-                title: "Nombre ",
-                width: "15%",
+                data: "bankName",
+                title: "Banco",
+                width: "40%",
                 className: "capitalized",
               },
               {
-                data: "logo",
-                title: "Logo\u00a0Compania",
-                width: "25%",
-                className: "capitalized",
-              },
-              {
-                data: "vision",
-                title: "Vision",
+                data: "creationDate",
+                title: "Fecha",
                 width: "20%",
                 className: "capitalized",
               },
               {
-                data: "values",
-                title: "Valores",
+                data: "inactive",
+                title: "Inactivo",
                 width: "20%",
                 className: "capitalized",
               },
 
               {
-                data: "mision",
-                title: "Mision ",
-                width: "15%",
-                className: "capitalized",
-              },
-              {
                 data: "itemBtn",
                 title: "\u00a0Acciones\u00a0\u00a0\u00a0",
-                width: "30%",
+                width: "20%",
                 orderable: false,
               },
             ],
@@ -153,10 +117,10 @@ export default function CompanyConf(props) {
             <div className="lowcolor col-12">
               <br />
               <br />
-              <h2 className="h2">CompaÑia</h2>
-              <a href="/addCompany">
+              <h2 className="h2">Bancos</h2>
+              <a href="/addbank">
                 <span className="btn btn-success btn-sm">
-                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Compania
+                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Banco
                 </span>
               </a>
             </div>
@@ -172,7 +136,7 @@ export default function CompanyConf(props) {
                         Style="min-height:600px"
                       >
                         <table
-                          id="TblCompany"
+                          id="TblBank"
                           className="table table-striped table-bordered display"
                           Style="width:100% !important"
                         ></table>

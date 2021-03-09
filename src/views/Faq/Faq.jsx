@@ -18,50 +18,48 @@ import {
 import { DataTable } from "datatables.net";
 import { LangSpanish } from "../../tools/dataTables.Language";
 
-export default function CompanyConf(props) {
+export default function Faq(props) {
   const [dataLoading, setDataLoading] = useState(true);
-  const [company, setCompany] = useState(true);
+  const [faq, setFaq] = useState(true);
 
   const fillData = () => {
     let Record = [];
-    API.getData("/Company/getCompany")
+    API.getData("Faq/get?companyId=01")
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
           let dataResult = [];
 
-          let EditBtn =
-            "<a href='/addCompany'   class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Evaluación' ></a>";
-          setCompany(res.data);
-          debugger;
+          setFaq(res.data);
+
           res.data.forEach((item) => {
             dataResult.push({
               id:
                 '<span class="container d-flex align-items-center justify-content-center">' +
                 item.id +
                 "</>",
-              logo:
+              question:
                 '<span class="capitalized defaultText">' +
-                item.logo +
+                item.question +
                 "</span>",
-              vision:
+              answer:
                 '<span class="capitalized defaultText">' +
-                item.vision +
+                item.answer +
                 "</span>",
-              values:
+              faqOrder:
                 '<span class="capitalized defaultText">' +
-                item.values +
+                item.faqOrder +
                 "</span>",
-              name:
+              inactive:
                 '<span class="capitalized defaultText">' +
-                item.name +
+                item.inactive +
                 "</span>",
-              mision:
+              companyId:
                 '<span class="capitalized defaultText">' +
-                item.mision +
+                item.companyId +
                 "</span>",
               itemBtn:
-                '<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Compañia" href="/editCompany?id=' +
+                '<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Pregunta" href="/editfaq?id=' +
                 item.id +
                 '"' +
                 item.id +
@@ -69,7 +67,7 @@ export default function CompanyConf(props) {
             });
           });
 
-          $("#TblCompany").DataTable({
+          $("#TblFaq").DataTable({
             destroy: true,
             searching: false,
             language: LangSpanish,
@@ -82,47 +80,40 @@ export default function CompanyConf(props) {
               dataResult.length === 0
                 ? [
                     {
-                      logo: "",
-                      vision: "",
-                      name: "",
-                      mision: "",
-                      values: "",
-                      itemBtn: "",
+                      question: "",
+                      answer: "",
+                      faqOrder: "",
+                      inactive: "",
+                      companyId: "",
                     },
                   ]
                 : dataResult,
             columns: [
               {
-                data: "name",
-                title: "Nombre ",
-                width: "15%",
-                className: "capitalized",
-              },
-              {
-                data: "logo",
-                title: "Logo\u00a0Compania",
+                data: "question",
+                title: "Pregunta",
                 width: "25%",
                 className: "capitalized",
               },
               {
-                data: "vision",
-                title: "Vision",
+                data: "answer",
+                title: "Respuesta",
+                width: "25%",
+                className: "capitalized",
+              },
+              {
+                data: "faqOrder",
+                title: "Orden",
                 width: "20%",
                 className: "capitalized",
               },
               {
-                data: "values",
-                title: "Valores",
+                data: "inactive",
+                title: "Inactivo",
                 width: "20%",
                 className: "capitalized",
               },
 
-              {
-                data: "mision",
-                title: "Mision ",
-                width: "15%",
-                className: "capitalized",
-              },
               {
                 data: "itemBtn",
                 title: "\u00a0Acciones\u00a0\u00a0\u00a0",
@@ -153,10 +144,10 @@ export default function CompanyConf(props) {
             <div className="lowcolor col-12">
               <br />
               <br />
-              <h2 className="h2">CompaÑia</h2>
-              <a href="/addCompany">
+              <h2 className="h2">Pregunta Frecuentes</h2>
+              <a href="/addfaq">
                 <span className="btn btn-success btn-sm">
-                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Compania
+                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Pregunta
                 </span>
               </a>
             </div>
@@ -172,7 +163,7 @@ export default function CompanyConf(props) {
                         Style="min-height:600px"
                       >
                         <table
-                          id="TblCompany"
+                          id="TblFaq"
                           className="table table-striped table-bordered display"
                           Style="width:100% !important"
                         ></table>

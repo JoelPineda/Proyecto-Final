@@ -18,6 +18,21 @@ import AcceptePolicy from "../../views/Dashboard/policyaccepted";
 import CompanyConf from "../../views/Company/company";
 import NewCompany from "../../views/Company/AddCompany";
 import EditCompany from "../../views/Company/EditCompany";
+import AddPolicy from "../../views/Policy/AddPolicy";
+import EditPolicy from "../../views/Policy/EditPolicy";
+import PolicyInd from "../../views/Policy/policy";
+import Faq from "../../views/Faq/Faq";
+import AddFaq from "../../views/Faq/AddFaq";
+import EditFaq from "../../views/Faq/EditFaq";
+import Bank from "../../views/Bank/Bank";
+import AddBank from "../../views/Bank/AddBank";
+import EditBank from "../../views/Bank/EditBank";
+import Consulate from "../../views/Consulate/Consulate";
+import AddConsulate from "../../views/Consulate/AddConsulate";
+import EditConsulate from "../../views/Consulate/EditConsulate";
+import New from "../../views/News/New";
+import AddNew from "../../views/News/AddNew";
+import EditNew from "../../views/News/EditNew";
 
 export default class Menu extends React.Component {
   constructor(props) {
@@ -75,6 +90,26 @@ export default class Menu extends React.Component {
           <PrivateRoute path="/settings" component={CompanyConf} />
           <PrivateRoute path="/addCompany" component={NewCompany} />
           <PrivateRoute path="/editCompany" component={EditCompany} />
+
+          <PrivateRoute path="/policies" component={PolicyInd} />
+          <PrivateRoute path="/addPolicy" component={AddPolicy} />
+          <PrivateRoute path="/editPolicy" component={EditPolicy} />
+
+          <PrivateRoute path="/faq" component={Faq} />
+          <PrivateRoute path="/addfaq" component={AddFaq} />
+          <PrivateRoute path="/editfaq" component={EditFaq} />
+
+          <PrivateRoute path="/bank" component={Bank} />
+          <PrivateRoute path="/addbank" component={AddBank} />
+          <PrivateRoute path="/editbank" component={EditBank} />
+
+          <PrivateRoute path="/consulate" component={Consulate} />
+          <PrivateRoute path="/addconsulate" component={AddConsulate} />
+          <PrivateRoute path="/editconsulate" component={EditConsulate} />
+
+          <PrivateRoute path="/news" component={New} />
+          <PrivateRoute path="/addNew" component={AddNew} />
+          <PrivateRoute path="/editNew" component={EditNew} />
         </Switch>
       </Router>
     );

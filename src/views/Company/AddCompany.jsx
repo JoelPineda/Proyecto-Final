@@ -120,6 +120,15 @@ export default function AddCompany(props) {
       onChange: handleChange,
     };
   };
+  const convertiraBase64 = (e) => {
+    const output = document.getElementById("output");
+    output.src = URL.createObjectURL(e.target.files[0]);
+
+    output.onload = function () {
+      const url = URL.revokeObjectURL(output.src); // free memory
+    };
+    console.log(output);
+  };
 
   const [error, setError] = useState(null);
   const name = useFormInput("");
@@ -135,14 +144,26 @@ export default function AddCompany(props) {
       <div class="col-md-12">
         <div class="row">
           <div class="col-md-12">
+            <br />
+            <h3 className="text-center">AGREGAR NUEVA COMPAÑIA</h3>
+
             <div class="row">
               <div class="form-group col-md-6">
                 <label class="control-label">Nombre</label>
                 <input class="form-control" {...name} />
               </div>
               <div class="form-group col-md-6">
-                <label class="control-label">Logo</label>
-                <input type="file" class="form-control" {...logo} />
+                <label class="control-label">Logo </label>
+                <br />
+                <input
+                  type="file"
+                  id="logo"
+                  multiple
+                  accept="image/png, image/PNG"
+                  onChange={(e) => convertiraBase64(e)}
+                />
+                <br />
+                <img id="output" width="150" height="100" />
               </div>
             </div>
             <div class="row">
@@ -280,9 +301,6 @@ export default function AddCompany(props) {
               >
                 Guardar Compania
               </button>
-            </div>
-            <div class="form-group col-md-2 py-2">
-              <a asp-action="Index">Volver a la Lista</a>
             </div>
           </div>
         </div>
