@@ -19,11 +19,16 @@ export default function Login(props) {
       .catch((error) => {
         setLoading(false);
         console.log(error);
-        if (error.response.status === 401){
-          setError('¡Verifique usuario y/o contraseña!');
-          document.getElementById("tbUser").focus();
-        } 
-        else setError("Error: " + error.message);
+        if(error.response === undefined){
+          setError("Error: Error de Conexión");
+        }else{
+          if (error.response.status === 401){
+            setError('¡Verifique usuario y/o contraseña!');
+            document.getElementById("tbUser").focus();
+          } 
+          else setError("Error: " + error.message);
+        }
+
       });
   };
 

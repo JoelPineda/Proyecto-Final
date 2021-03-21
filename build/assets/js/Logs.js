@@ -3,6 +3,30 @@ logOnload = () =>{
     $('.most-visited-log').click((event)=>{
         SaveLog(event);
     })
+
+$('body').on('click','#btEdit',()=>{
+ setTimeout(() => {
+     $(".chosen-select").chosen({
+        no_results_text: "No hay registros"
+    }) 
+     $('.chosen-select').trigger("chosen:updated");      
+ }, 400);
+ 
+   
+})
+$('body').on('click','#sp_AddUser',()=>{
+ setTimeout(() => {
+     $(".chosen-select").chosen({
+        no_results_text: "No hay registros"
+    }) 
+     $('.chosen-select').trigger("chosen:updated");      
+ }, 400);
+ 
+   
+})
+
+    
+
 }
 var SaveLog = (e) => {
   if(sessionStorage.getItem("configBaseURL") !== null){  
