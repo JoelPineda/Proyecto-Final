@@ -301,7 +301,6 @@ const SaveAddChanges = (params)=>{
       });       
 }
 const SaveDisableChanges = (params)=>{ 
-    debugger
     let id = params.UserId;
        API.putData("BackendUser/DisableUser?id=" + id)
        .then((res) => {
@@ -322,12 +321,13 @@ const SaveDisableChanges = (params)=>{
 });
 
 export default function BackendUser(props) {
-    const [dataLoading, setDataLoading] = useState(true); 
+    const [dataLoading, setDataLoading] = useState(true);
  
     const  fillData =() => { 
         let Record = [];
            API.getData("/BackendUser/GetUserBackend?companyId=" + getUser().companyId)
           .then((res) => {
+              setDataLoading(false);
             if (res.status === 200) { 
 
                 let dataResult = []; 
@@ -337,8 +337,7 @@ export default function BackendUser(props) {
                 let backendUserData = [];
  
                 let EditBtn = "&nbsp;<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar usuario, asignar Rol...' ></a>&nbsp;";
-                let DeleteBtn = "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Usuario' ></a>";
-                
+                let DeleteBtn = "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Usuario' ></a>";             
                 
                 if(res.data.length > 0){
                     GetOptionMenuAndPermission(res.data[0]);
@@ -416,7 +415,7 @@ export default function BackendUser(props) {
                                 buttons: [ 
                                     'copy','excel','pdf'
                                 ],                            
-                            data:  (dataResult.length === 0? [{EvaluationName:'',EvaluationObjectName:'',EvaluationHierarchyName:'', PositionMustFill:'', FillAfterLogin:'', AfterHiringDate:'',Inactive:'',itemBtn: ''}] : dataResult),
+                            data:  (dataResult.length === 0? [{Alias:'', User:'',Psw:'',PermissionTitle:'', CompanyName:'', IsActive:'',itemBtn: ''}] : dataResult),
                             columns: [  
                                 { data: "Alias", title: "Alias", width:'20%', className:"capitalized" }, 
                                 { data: "User", title: "Usuario", width:'20%', className:"capitalized" },
@@ -431,16 +430,13 @@ export default function BackendUser(props) {
                     $('.csHidden').attr('style', 'display:none');
               
     
-            }
-            setTimeout(() => {
-                setDataLoading(false);  
-              }, 400);    
+            }   
           })
           .catch(function (err) {
             console.error("Error de conexion " + err);
             setDataLoading(false);
           });
-          setDataLoading(false);
+          
      
     }
  const GetOptionMenuAndPermission = (dataItem)=>{ 
