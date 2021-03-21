@@ -135,4 +135,12 @@ export const GetdropDownListPositionMustFill = (cssClass, selectedValue, dropNam
              
        return dropDownList.join('');    
 }
+export const GetdropDownListEnabled = (cssClass, selectedValue, dropName)=>{
+  let DefaultField = '<option value="0">--Seleccione--</option>';
+  let dropDownList = ['<select class="form-control '+ cssClass +'" data-value="'+ selectedValue +'" id="'+ dropName +'">'];
+  let dropYesNo = DefaultField +'<option class="capitalized" value="N">Si</option><option class="capitalized" value="Y">No</option></select>';
+      dropDownList.push(dropYesNo); 
+
+      return dropDownList.join('');
+}
  
