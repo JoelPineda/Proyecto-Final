@@ -33,6 +33,7 @@ import EditConsulate from "../../views/Consulate/EditConsulate";
 import New from "../../views/News/New";
 import AddNew from "../../views/News/AddNew";
 import EditNew from "../../views/News/EditNew";
+import BackendUser from "../../views/Backend_user/backendUsers";
 
 export default class Menu extends React.Component {
   constructor(props) {
@@ -77,6 +78,7 @@ export default class Menu extends React.Component {
           <PrivateRoute path="/logout" component={Logout} />
           <PrivateRoute exact path="/" component={dasboard} />
           <PrivateRoute exact path="/evaluation" component={Evaluation} />
+          <PrivateRoute exact path="/backend_users" component={BackendUser} />
           <PrivateRoute path="/changepassword" component={MyChangePassword} />
           <PrivateRoute path="/employeeVisit" component={Employee} />
           <PrivateRoute path="/employeeVisitMonth" component={EmployeeVisit} />

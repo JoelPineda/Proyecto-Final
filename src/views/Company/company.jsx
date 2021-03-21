@@ -33,7 +33,6 @@ export default function CompanyConf(props) {
           let EditBtn =
             "<a href='/addCompany'   class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Evaluación' ></a>";
           setCompany(res.data);
-          debugger;
           res.data.forEach((item) => {
             dataResult.push({
               id:

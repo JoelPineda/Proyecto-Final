@@ -24,10 +24,9 @@ export default function Employee(props) {
   const [employeeVisit, setEmployeeVisit] = useState(true);
   //+ getUser().companyId
   const fillData = () => {
-    API.getData("/Employees/get?companyId=01")
+    API.getData("/Employees/get?companyId=" + getUser().companyId)
       .then((res) => {
         setDataLoading(false);
-        debugger;
         if (res.status === 200) {
           let dataResult = [];
           setEmployeeVisit(res.data);

@@ -420,3 +420,19 @@ table#TblEvaluation {
 .draft-editor-wrapper {
   border: 1px solid #ccc;
 }
+img.img-user-grid {
+    width: 24px;
+    height: 24px;
+}
+.chosen-container.chosen-with-drop .chosen-drop {
+  text-align: left;
+  width:100%;
+ 
+}
+ul.chosen-results {
+    height: 130px;
+}
+ul.chosen-choices {
+    min-height: 37px !important;
+    border-radius: 3px;  
+}
