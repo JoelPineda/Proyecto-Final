@@ -33,6 +33,7 @@ import UnitType from "../../views/Unit_Type/UnitType";
 import CompanyUnit from "../../views/CompanyUnit/CompanyUnit";
 import AddCompanyUnit from "../../views/CompanyUnit/AddCompanyUnit";
 import EditUnitCompany from "../../views/CompanyUnit/EditCompanyUnit";
+import BackendUser from "../../views/Backend_user/backendUsers";
 export default class Menu extends React.Component {
   constructor(props) {
     super(props);
@@ -76,6 +77,7 @@ export default class Menu extends React.Component {
           <PrivateRoute path="/logout" component={Logout} />
           <PrivateRoute exact path="/" component={dasboard} />
           <PrivateRoute exact path="/evaluation" component={Evaluation} />
+          <PrivateRoute exact path="/backend_users" component={BackendUser} />
           <PrivateRoute path="/changepassword" component={MyChangePassword} />
           <PrivateRoute path="/employeeVisit" component={Employee} />
           <PrivateRoute path="/employeeVisitMonth" component={EmployeeVisit} />
