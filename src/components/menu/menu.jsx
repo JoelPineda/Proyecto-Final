@@ -25,16 +25,15 @@ import Faq from "../../views/Faq/Faq";
 import AddFaq from "../../views/Faq/AddFaq";
 import EditFaq from "../../views/Faq/EditFaq";
 import Bank from "../../views/Bank/Bank";
-import AddBank from "../../views/Bank/AddBank";
-import EditBank from "../../views/Bank/EditBank";
 import Consulate from "../../views/Consulate/Consulate";
-import AddConsulate from "../../views/Consulate/AddConsulate";
-import EditConsulate from "../../views/Consulate/EditConsulate";
 import New from "../../views/News/New";
 import AddNew from "../../views/News/AddNew";
 import EditNew from "../../views/News/EditNew";
+import UnitType from "../../views/Unit_Type/UnitType";
+import CompanyUnit from "../../views/CompanyUnit/CompanyUnit";
+import AddCompanyUnit from "../../views/CompanyUnit/AddCompanyUnit";
+import EditUnitCompany from "../../views/CompanyUnit/EditCompanyUnit";
 import BackendUser from "../../views/Backend_user/backendUsers";
-
 export default class Menu extends React.Component {
   constructor(props) {
     super(props);
@@ -102,16 +101,18 @@ export default class Menu extends React.Component {
           <PrivateRoute path="/editfaq" component={EditFaq} />
 
           <PrivateRoute path="/bank" component={Bank} />
-          <PrivateRoute path="/addbank" component={AddBank} />
-          <PrivateRoute path="/editbank" component={EditBank} />
 
           <PrivateRoute path="/consulate" component={Consulate} />
-          <PrivateRoute path="/addconsulate" component={AddConsulate} />
-          <PrivateRoute path="/editconsulate" component={EditConsulate} />
 
           <PrivateRoute path="/news" component={New} />
           <PrivateRoute path="/addNew" component={AddNew} />
           <PrivateRoute path="/editNew" component={EditNew} />
+
+          <PrivateRoute path="/company_unit_type" component={UnitType} />
+
+          <PrivateRoute path="/company_unit" component={CompanyUnit} />
+          <PrivateRoute path="/addCompanyUnit" component={AddCompanyUnit} />
+          <PrivateRoute path="/editCompanyUnit" component={EditUnitCompany} />
         </Switch>
       </Router>
     );

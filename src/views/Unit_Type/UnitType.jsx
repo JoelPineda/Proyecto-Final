@@ -1,28 +1,19 @@
 import React, { useState, useEffect } from "react";
-import Button from "../../components/Button/Button";
-import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
 import $ from "jquery";
 import Moment from "moment";
-import es from "date-fns/locale/es";
 import "moment/locale/es";
-import { getUser, removeUserSession } from "../../utils/Common";
 import API from "../../utils/api";
-import { EditConsulate } from "../Consulate/EditConsulate";
-
+import { AddTipoUnidad } from "../Unit_Type/AddUnitType";
+import { EditTipoUnidad } from "../Unit_Type/EditUnitType";
 import Loading from "../../components/loading/loading";
-import {
-  ShowConfirmationMessage,
-  ShowAlertMessage,
-  ShowPopUp,
-} from "../../utils/CommonFunctions";
-import { AddConsulate } from "../Consulate/AddConsulate";
+import { ShowPopUp, ShowAlertMessage } from "../../utils/CommonFunctions";
 import { LangSpanish } from "../../tools/dataTables.Language";
 
 $(document).ready(() => {
-  $("#sp_AddConsulate").click(() => {
+  $("#sp_AddTIPO").click(() => {
     ShowPopUp({
-      titleName: "AGREGAR NUEVO CONSULADO",
-      htmlBody: AddConsulate(),
+      titleName: "AGREGAR TIPO DE UNIDAD",
+      htmlBody: AddTipoUnidad(),
       handlerEvent: OnClickSaveConsulateBank,
       TextOk: "Guardar",
       isDisabled: true,
@@ -30,8 +21,8 @@ $(document).ready(() => {
     });
   });
   const OnClickSaveConsulateBank = () => {
-    API.postData("Consulate/add", {
-      ConsulateName: $("#tbConsulate").val(),
+    API.postData("BusinessUnitType/add", {
+      description: $("#tbDescription").val(),
       inactive: "N",
     })
       .then((response) => {
@@ -50,20 +41,23 @@ $(document).ready(() => {
       });
   };
 
-  $("body").on("change", "#tbConsulate", (e) => {
+  $("body").on("change", "#tbDescription", (e) => {
     let btnOk = $(".swal2-confirm.swal2-styled");
 
     if ($(e.currentTarget).val().length > 3) {
-      API.getData("Consulate/getName?Consulatename=" + $("#tbConsulate").val())
+      API.getData(
+        "BusinessUnitType/getDescription?description=" +
+          $("#tbDescription").val()
+      )
         .then((response) => {
           if (response.status === 200) {
             if (response.data) {
-              $("#sp_tbConsulate").text("Consulado existe");
+              $("#sp_tbDescription").text("Tipo De Unidad Existe");
 
               $(btnOk).attr("disabled", true);
             } else {
               $(btnOk).removeAttr("disabled");
-              $("#sp_tbConsulate").text("");
+              $("#sp_tbDescription").text("");
             }
           }
         })
@@ -72,14 +66,14 @@ $(document).ready(() => {
         });
     } else {
       $(btnOk).attr("disabled", true);
-      $("#sp_tbConsulate").text(" Requerido!");
+      $("#sp_tbDescription").text(" Requerido!");
     }
   });
 
-  $("body").on("click", "#TblConsulate #btEdit", function (e) {
+  $("body").on("click", "#Tbltipo #btEdit", function (e) {
     ShowPopUp({
-      titleName: "Actualizar Consulado",
-      htmlBody: EditConsulate(e),
+      titleName: "ACTUALIZAR TIPO DE UNIDAD",
+      htmlBody: EditTipoUnidad(e),
       handlerEvent: OnClickSaveEditBank,
       TextOk: "Guardar",
       isDisabled: true,
@@ -87,7 +81,7 @@ $(document).ready(() => {
     });
   });
 
-  $("body").on("change", "#tbconsulateNameEdit", (e) => {
+  $("body").on("change", "#tbDescriptionEdit", (e) => {
     let btnOk = $(".swal2-confirm.swal2-styled");
 
     $(btnOk).removeAttr("disabled");
@@ -96,9 +90,9 @@ $(document).ready(() => {
   const OnClickSaveEditBank = () => {
     let inac = $("#tbinactive").val() !== "Y" ? "N" : "Y";
 
-    API.putData("Consulate/update", {
-      id: parseInt($("#tbConsulateID").val()),
-      ConsulateName: $("#tbconsulateNameEdit").val(),
+    API.putData("BusinessUnitType/update", {
+      id: parseInt($("#tbTipoID").val()),
+      description: $("#tbDescriptionEdit").val(),
       inactive: inac,
     })
       .then((response) => {
@@ -118,38 +112,34 @@ $(document).ready(() => {
   };
 });
 
-export default function Consulate(props) {
+export default function UnitType(props) {
   const [dataLoading, setDataLoading] = useState(true);
-  const [bank, setBank] = useState(true);
+  const [unitType, setUnitType] = useState(true);
 
   const fillData = () => {
     let Record = [];
-    API.getData("Consulate/get")
+    API.getData("BusinessUnitType/get")
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
           let dataResult = [];
 
-          setBank(res.data);
+          setUnitType(res.data);
           let EditBtn =
-            "<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Consulado' ></a>";
+            "<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Tipo Unidad' ></a>";
           res.data.forEach((item) => {
             dataResult.push({
               id:
                 '<span class="container d-flex align-items-center justify-content-center">' +
                 item.id +
                 "</>",
-              consulateName:
+              description:
                 '<span class="capitalized defaultText">' +
-                item.consulateName +
+                item.description +
                 "</span>",
               inactive:
                 '<span class="capitalized defaultText">' +
                 (item.inactive !== "N" ? "Si" : "No") +
-                "</span>",
-              creationDate:
-                '<span class="capitalized defaultText">' +
-                Moment(item.creationDate).format("DD/MM/YYYY  ") +
                 "</span>",
               itemBtn:
                 "<span data-created='" +
@@ -162,7 +152,7 @@ export default function Consulate(props) {
             });
           });
 
-          $("#TblConsulate").DataTable({
+          $("#Tbltipo").DataTable({
             destroy: true,
             searching: false,
             language: LangSpanish,
@@ -175,25 +165,20 @@ export default function Consulate(props) {
               dataResult.length === 0
                 ? [
                     {
-                      consulateName: "",
+                      description: "",
                       inactive: "",
-                      creationDate: "",
+                      companyId: "",
                     },
                   ]
                 : dataResult,
             columns: [
               {
-                data: "consulateName",
-                title: "Consulado",
-                width: "40%",
+                data: "description",
+                title: "Descripción",
+                width: "25%",
                 className: "capitalized",
               },
-              {
-                data: "creationDate",
-                title: "Fecha",
-                width: "20%",
-                className: "capitalized",
-              },
+
               {
                 data: "inactive",
                 title: "Inactivo",
@@ -231,10 +216,10 @@ export default function Consulate(props) {
             <div className="lowcolor col-12">
               <br />
               <br />
-              <h2 className="h2">Consulados</h2>
+              <h2 className="h2">Tipos De Unidades</h2>
 
-              <span className="btn btn-success btn-sm" id="sp_AddConsulate">
-                <i className="fa fa-plus-circle"></i>&nbsp;Añadir Consulado
+              <span className="btn btn-success btn-sm" id="sp_AddTIPO">
+                <i className="fa fa-plus-circle"></i>&nbsp;Añadir Tipo De Unidad
               </span>
             </div>
           </div>
@@ -249,7 +234,7 @@ export default function Consulate(props) {
                         Style="min-height:600px"
                       >
                         <table
-                          id="TblConsulate"
+                          id="Tbltipo"
                           className="table table-striped table-bordered display"
                           Style="width:100% !important"
                         ></table>

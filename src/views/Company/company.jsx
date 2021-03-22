@@ -1,21 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Button from "../../components/Button/Button";
-import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
 import $ from "jquery";
-import Moment from "moment";
-import es from "date-fns/locale/es";
 import "moment/locale/es";
-import { getUser, removeUserSession } from "../../utils/Common";
 import API from "../../utils/api";
-import { EditEvaluation } from "../Evaluation/editEvaluation";
-
 import Loading from "../../components/loading/loading";
-import {
-  ShowConfirmationMessage,
-  MessageResults,
-  ShowPopUp,
-} from "../../utils/CommonFunctions";
-import { DataTable } from "datatables.net";
 import { LangSpanish } from "../../tools/dataTables.Language";
 
 export default function CompanyConf(props) {
@@ -23,7 +10,6 @@ export default function CompanyConf(props) {
   const [company, setCompany] = useState(true);
 
   const fillData = () => {
-    let Record = [];
     API.getData("/Company/getCompany")
       .then((res) => {
         setDataLoading(false);
@@ -99,13 +85,13 @@ export default function CompanyConf(props) {
               },
               {
                 data: "logo",
-                title: "Logo\u00a0Compania",
+                title: "Logo\u00a0Compañia",
                 width: "25%",
                 className: "capitalized",
               },
               {
                 data: "vision",
-                title: "Vision",
+                title: "Visión",
                 width: "20%",
                 className: "capitalized",
               },
@@ -118,7 +104,7 @@ export default function CompanyConf(props) {
 
               {
                 data: "mision",
-                title: "Mision ",
+                title: "Misión ",
                 width: "15%",
                 className: "capitalized",
               },

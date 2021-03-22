@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import API from "../../utils/api";
-import { getToken, setUserSession } from "../../utils/Common";
+import { getUser, removeUserSession } from "../../utils/Common";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { convertToRaw, EditorState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
+import { ShowAlertMessage } from "../../utils/CommonFunctions";
+import DropdownList from "../../components/dropdown/dropdownList";
 
 const getHtml = (editorState) =>
   draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -13,7 +15,7 @@ export default function AddFaq(props) {
   const [state, setState] = useState({
     answer: EditorState.createEmpty(),
   });
-
+  const [dropCompany, setDropCompany] = useState([]);
   const { answer } = state;
 
   const onEditorStateChange = (e) => {
@@ -29,10 +31,17 @@ export default function AddFaq(props) {
       faqOrder: parseInt(faqOrder.value),
       answer: getHtml(answer),
       inactive: "N",
-      companyId: "01",
+      companyId: getUser().companyId,
     })
-      .then((response) => {})
+      .then((response) => {
+        ShowAlertMessage("Información", "Guardado correctamente");
+      })
       .catch((error) => {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
         console.log(error);
       });
   };
@@ -71,6 +80,7 @@ export default function AddFaq(props) {
                 <input class="form-control" {...faqOrder} />
               </div>
             </div>
+
             <div className="row editor">
               <div class="form-group col-md-12">
                 <label class="control-label">Respuesta </label>
