@@ -1,76 +1,64 @@
 import React, { useState, useEffect } from "react";
-import Button from "../../components/Button/Button";
-import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
 import $ from "jquery";
-import Moment from "moment";
-import es from "date-fns/locale/es";
 import "moment/locale/es";
-import { getUser, removeUserSession } from "../../utils/Common";
 import API from "../../utils/api";
-import { EditEvaluation } from "../Evaluation/editEvaluation";
-
 import Loading from "../../components/loading/loading";
-import {
-  ShowConfirmationMessage,
-  MessageResults,
-  ShowPopUp,
-} from "../../utils/CommonFunctions";
-import { DataTable } from "datatables.net";
 import { LangSpanish } from "../../tools/dataTables.Language";
+import { getUser, removeUserSession } from "../../utils/Common";
 
-export default function Policy(props) {
+export default function CompanyUnit(props) {
   const [dataLoading, setDataLoading] = useState(true);
-  const [policy, setPolicy] = useState(true);
+  const [companyUnit, setCompanyUnit] = useState(true);
 
   const fillData = () => {
-    let Record = [];
-    API.getData("policies/getAll?companyId=01")
+    API.getData("BusinessUnit/get?companyId=" + getUser().companyId)
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
           let dataResult = [];
 
-          setPolicy(res.data);
+          setCompanyUnit(res.data);
+
           res.data.forEach((item) => {
             dataResult.push({
               id:
                 '<span class="container d-flex align-items-center justify-content-center">' +
                 item.id +
                 "</>",
-              title:
+              name:
                 '<span class="capitalized defaultText">' +
-                item.title +
+                item.name +
                 "</span>",
-              content:
+              shortName:
                 '<span class="capitalized defaultText">' +
-                item.content +
+                item.shortName +
                 "</span>",
-              creationDate:
+              logo:
                 '<span class="capitalized defaultText">' +
-                Moment(item.creationDate).format("DD/MM/YYYY  ") +
+                item.logo +
                 "</span>",
-              isRequired:
+              detail:
                 '<span class="capitalized defaultText">' +
-                (item.isRequired !== "N" ? "Si" : "No") +
+                item.detail +
                 "</span>",
-              levelFrom:
+              companyUnitTypeId:
                 '<span class="capitalized defaultText">' +
-                item.levelFrom +
+                item.companyUnitTypeId +
                 "</span>",
-              readAfterLogin:
+              unitOrder:
                 '<span class="capitalized defaultText">' +
-                item.readAfterLogin +
-                "</span>",
-              companyId:
-                '<span class="capitalized defaultText">' +
-                item.companyId +
+                item.unitOrder +
                 "</span>",
               inactive:
                 '<span class="capitalized defaultText">' +
                 (item.inactive !== "N" ? "Si" : "No") +
                 "</span>",
+              companyId:
+                '<span class="capitalized defaultText">' +
+                item.companyId +
+                "</span>",
               itemBtn:
-                '<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Politica" href="/editPolicy?id=' +
+                '<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Unidad de Compañia" href="/editCompanyUnit?id=' +
                 item.id +
                 '"' +
                 item.id +
@@ -78,7 +66,7 @@ export default function Policy(props) {
             });
           });
 
-          $("#TblPolicy").DataTable({
+          $("#TblCompanyUnit").DataTable({
             destroy: true,
             searching: false,
             language: LangSpanish,
@@ -91,50 +79,49 @@ export default function Policy(props) {
               dataResult.length === 0
                 ? [
                     {
-                      title: "",
-                      content: "",
-                      creationDate: "",
-                      isRequired: "",
-                      levelFrom: "",
-                      readAfterLogin: "",
-                      companyId: "",
+                      name: "",
+                      shortName: "",
+                      logo: "",
+                      detail: "",
+                      companyUnitTypeId: "",
+                      unitOrder: "",
                       inactive: "",
-                      itemBtn: "",
+                      companyId: "",
                     },
                   ]
                 : dataResult,
             columns: [
               {
-                data: "title",
-                title: "Titulo",
+                data: "name",
+                title: "Nombre",
                 width: "25%",
                 className: "capitalized",
               },
               {
-                data: "creationDate",
-                title: "Fecha\u00a0Creacion",
+                data: "shortName",
+                title: "Nombre\u00a0corto",
                 width: "25%",
                 className: "capitalized",
               },
               {
-                data: "isRequired",
-                title: "Requerido",
+                data: "detail",
+                title: "Detalle",
                 width: "20%",
                 className: "capitalized",
               },
               {
-                data: "levelFrom",
-                title: "Nivel",
+                data: "unitOrder",
+                title: "Orden\u00a0Unidad",
+                width: "20%",
+                className: "capitalized",
+              },
+              {
+                data: "inactive",
+                title: "Inactivo",
                 width: "20%",
                 className: "capitalized",
               },
 
-              {
-                data: "inactive",
-                title: "Inactivo ",
-                width: "20%",
-                className: "capitalized",
-              },
               {
                 data: "itemBtn",
                 title: "\u00a0Acciones\u00a0\u00a0\u00a0",
@@ -165,10 +152,11 @@ export default function Policy(props) {
             <div className="lowcolor col-12">
               <br />
               <br />
-              <h2 className="h2">Politica</h2>
-              <a href="/addPolicy">
+              <h2 className="h2">Unidad de compañia</h2>
+              <a href="/addCompanyUnit">
                 <span className="btn btn-success btn-sm">
-                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Politica
+                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Unidad de
+                  compañia
                 </span>
               </a>
             </div>
@@ -184,7 +172,7 @@ export default function Policy(props) {
                         Style="min-height:600px"
                       >
                         <table
-                          id="TblPolicy"
+                          id="TblCompanyUnit"
                           className="table table-striped table-bordered display"
                           Style="width:100% !important"
                         ></table>

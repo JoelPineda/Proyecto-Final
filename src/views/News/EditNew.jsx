@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import API from "../../utils/api";
-import { getToken, setUserSession } from "../../utils/Common";
+import { getUser, setUserSession } from "../../utils/Common";
 import { Editor } from "react-draft-wysiwyg";
 import Moment from "moment";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -12,7 +12,7 @@ import {
 } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import queryString from "query-string";
-import { event } from "jquery";
+import { ShowAlertMessage } from "../../utils/CommonFunctions";
 
 const getHtml = (editorState) =>
   draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -68,17 +68,24 @@ export default function EditFaq(props) {
     setState({ a: e.target.value });
   };
 
-  const updateFaq = () => {
-    API.putData("Faq/update", {
+  const updateNews = () => {
+    API.putData("News/update", {
       id: parseInt(id),
       title: document.getElementById("title ").value,
       publishingDate: document.getElementById("publishingDate ").value,
       content: getHtml(content),
       inactive: document.getElementById("activo").value,
-      companyId: "01",
+      companyId: getUser().companyId,
     })
-      .then((response) => {})
+      .then((response) => {
+        ShowAlertMessage("Información", "Actualizada correctamente");
+      })
       .catch((error) => {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
         console.log(error);
       });
   };
@@ -146,7 +153,7 @@ export default function EditFaq(props) {
                 <button
                   type="button"
                   className="mybt btn btn-outline-danger text-wrap"
-                  onClick={updateFaq}
+                  onClick={updateNews}
                 >
                   Actualizar Noticia
                 </button>

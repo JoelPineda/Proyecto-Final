@@ -52,7 +52,7 @@ export default function New(props) {
                 "</span>",
               inactive:
                 '<span class="capitalized defaultText">' +
-                item.inactive +
+                (item.inactive !== "N" ? "Si" : "No") +
                 "</span>",
               companyId:
                 '<span class="capitalized defaultText">' +

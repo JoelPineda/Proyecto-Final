@@ -5,6 +5,8 @@ import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { convertToRaw, EditorState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
+import { ShowAlertMessage } from "../../utils/CommonFunctions";
+import DropdownList from "../../components/dropdown/dropdownList";
 
 const getHtml = (editorState) =>
   draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -103,8 +105,15 @@ export default function AddCompany(props) {
       emailCaseReport: emailCaseReport.value,
       emailSupport: emailSupport.value,
     })
-      .then((response) => {})
+      .then((response) => {
+        ShowAlertMessage("Información", "Guardado correctamente");
+      })
       .catch((error) => {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
         console.log(error);
       });
   };

@@ -38,7 +38,7 @@ export default function Dasboard(props) {
             <div class="col-lg-3 col-xs-6">
               <div class="small-box bg-red">
                 <div class="inner">
-                  <h3>{NumbersWithComma(item.dayVisit)}</h3>
+                  <h3>{item.dayVisit}</h3>
                   <p>Visitas del día</p>
                 </div>
                 <div class="icon">
@@ -52,7 +52,7 @@ export default function Dasboard(props) {
             <div class="col-lg-3 col-xs-6">
               <div class="small-box bg-gray">
                 <div class="inner">
-                  <h3>{NumbersWithComma(item.monthVisit)}</h3>
+                  <h3>{item.monthVisit}</h3>
                   <p>Visitas del mes</p>
                 </div>
                 <div class="icon">
@@ -66,7 +66,7 @@ export default function Dasboard(props) {
             <div class="col-lg-3 col-xs-6">
               <div class="small-box bg-red">
                 <div class="inner">
-                  <h3>{NumbersWithComma(item.lastMonthVisit)}</h3>
+                  <h3>{item.lastMonthVisit}</h3>
                   <p>Visitas del mes anterior</p>
                 </div>
                 <div class="icon">
@@ -80,7 +80,7 @@ export default function Dasboard(props) {
             <div class="col-lg-3 col-xs-6">
               <div class="small-box bg-gray">
                 <div class="inner">
-                  <h3>{NumbersWithComma(item.employeesActive)}</h3>
+                  <h3>{item.employeesActive}</h3>
                   <p>Empleados activos registrados</p>
                 </div>
                 <div class="icon">
@@ -94,7 +94,7 @@ export default function Dasboard(props) {
             <div class="col-lg-3 col-xs-6">
               <div class="small-box bg-gray">
                 <div class="inner">
-                  <h3>{NumbersWithComma(item.policiesAccepted)}</h3>
+                  <h3>{item.policiesAccepted}</h3>
                   <p>Diferentes Empleados que han aceptado las políticas</p>
                 </div>
                 <div class="icon">
@@ -108,7 +108,7 @@ export default function Dasboard(props) {
             <div class="col-lg-3 col-xs-6">
               <div class="small-box bg-red">
                 <div class="inner">
-                  <h3>{NumbersWithComma(item.userActive)}</h3>
+                  <h3>{item.userActive}</h3>
                   <p>Usuarios activos</p>
                 </div>
                 <div class="icon">
