@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import API from "../../utils/api";
-import { getToken, setUserSession } from "../../utils/Common";
+import { getUser, setUserSession } from "../../utils/Common";
 import { Editor } from "react-draft-wysiwyg";
 import Moment from "moment";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -12,7 +12,7 @@ import {
 } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import queryString from "query-string";
-import { event } from "jquery";
+import { ShowAlertMessage } from "../../utils/CommonFunctions";
 
 const getHtml = (editorState) =>
   draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -46,12 +46,13 @@ export default function EditPolicy(props) {
 
   const [state, setState] = useState({
     title: policy.titulo,
-    creationDate: Moment(policy.creationDate).format("YYYY-MM-DD"),
+    creationDate: policy.creationDate,
     isRequired: policy.isRequired,
     levelFrom: policy.levelFrom,
     readAfterLogin: policy.readAfterLogin,
     content: policy.content,
     inactive: policy.inactive,
+    a: policy.inactive,
   });
   const id = queryString.parse(props.location.search).id;
   const {
@@ -62,6 +63,7 @@ export default function EditPolicy(props) {
     levelFrom,
     readAfterLogin,
     inactive,
+    a,
   } = state;
 
   const onEditorStateChange = (e) => {
@@ -72,15 +74,15 @@ export default function EditPolicy(props) {
   };
 
   const handleChange = (e) => {
-    setState({ title: e.target.value });
-    setState({ isRequired: e.target.value });
-    setState({ levelFrom: e.target.value });
-    setState({ readAfterLogin: e.target.value });
-    setState({ inactive: e.target.value });
-    setState({ content: content });
+    setState({ title: e.target.value, content: content });
+    setState({ isRequired: e.target.value, content: content });
+    setState({ levelFrom: e.target.value, content: content });
+    setState({ readAfterLogin: e.target.value, content: content });
+    setState({ inactive: e.target.value, content: content });
+    setState({ a: e.target.value, content: content });
   };
   const handleChangeDate = (e) => {
-    setState({ creationDate: e.target.value });
+    setState({ creationDate: e.target.value, content: content });
   };
 
   const updatePolicy = () => {
@@ -93,11 +95,17 @@ export default function EditPolicy(props) {
       levelFrom: parseInt(document.getElementById("levelFrom").value),
       readAfterLogin: document.getElementById("readAfterLogin").value,
       inactive: document.getElementById("inactive").value,
-      companyId: "01",
+      companyId: getUser().companyId,
     })
-      .then((response) => {})
+      .then((response) => {
+        ShowAlertMessage("Información", "Actualizada correctamente");
+      })
       .catch((error) => {
-        debugger;
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
         console.log(error);
       });
   };
@@ -137,6 +145,7 @@ export default function EditPolicy(props) {
               <div class="form-group col-md-6">
                 <label class="control-label">Fecha creacion</label>
                 <input
+                  readonly
                   id="creationDate"
                   type="date"
                   class="form-control"

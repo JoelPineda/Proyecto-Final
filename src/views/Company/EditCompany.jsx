@@ -11,7 +11,7 @@ import {
 } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import queryString from "query-string";
-import { event } from "jquery";
+import { ShowAlertMessage } from "../../utils/CommonFunctions";
 
 const getHtml = (editorState) =>
   draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -210,8 +210,15 @@ export default function EditCompany(props) {
       emailCaseReport: document.getElementById("emailCaseReport").value,
       emailSupport: document.getElementById("emailSupport").value,
     })
-      .then((response) => {})
+      .then((response) => {
+        ShowAlertMessage("Información", "Actualizada correctamente");
+      })
       .catch((error) => {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
         console.log(error);
       });
   };

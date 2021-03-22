@@ -13,24 +13,31 @@ import {
 import draftToHtml from "draftjs-to-html";
 import queryString from "query-string";
 import { ShowAlertMessage } from "../../utils/CommonFunctions";
+import DropdownList from "../../components/dropdown/dropdownList";
 
 const getHtml = (editorState) =>
   draftToHtml(convertToRaw(editorState.getCurrentContent()));
 
-export default function EditFaq(props) {
-  const [faq, setFaq] = useState([]);
+export default function EditUnitCompany(props) {
+  const [unitCompany, setUnitCompany] = useState([]);
+  const [dropUnitType, setUnitType] = useState([]);
+  const [dropUnitTypeValor, setUnitTypeValor] = useState("");
+
   useEffect(() => {
-    API.getData("Faq/getbyid?Id=" + id)
+    GetUniType();
+    API.getData("BusinessUnit/getbyid?Id=" + id)
       .then((response) => {
         if (response.status === 200) {
-          setFaq(response.data);
+          setUnitCompany(response.data);
           setState({
-            question: response.data.question,
+            name: response.data.name,
             inactive: response.data.inactive,
-            faqOrder: response.data.faqOrder,
-            answer: EditorState.createWithContent(
+            shortName: response.data.shortName,
+            companyUnitTypeId: response.data.companyUnitTypeId,
+            unitOrder: response.data.unitOrder,
+            detail: EditorState.createWithContent(
               ContentState.createFromBlockArray(
-                convertFromHTML(response.data.answer)
+                convertFromHTML(response.data.detail)
               )
             ),
           });
@@ -42,35 +49,69 @@ export default function EditFaq(props) {
   }, []);
 
   const [state, setState] = useState({
-    question: faq.question,
-    inactive: faq.inactive,
-    faqOrder: faq.faqOrder,
-    answer: faq.answer,
+    name: unitCompany.name,
+    inactive: unitCompany.inactive,
+    shortName: unitCompany.shortName,
+    detail: unitCompany.detail,
+    companyUnitTypeId: unitCompany.companyUnitTypeId,
+    unitOrder: unitCompany.companyUnitTypeId,
   });
   const id = queryString.parse(props.location.search).id;
-  const { question, inactive, faqOrder, answer } = state;
+  const {
+    name,
+    inactive,
+    shortName,
+    detail,
+    companyUnitTypeId,
+    unitOrder,
+  } = state;
 
   const onEditorStateChange = (e) => {
     setState({
       ...state,
-      answer: e,
+      detail: e,
     });
   };
 
+  const GetUniType = () => {
+    API.getData("BusinessUnitType/get")
+      .then((res) => {
+        if (res.status === 200) {
+          let dropData = [];
+          let desc = "";
+          res.data.forEach((item) => {
+            if (item.inactive.toString().toUpperCase() === "N") {
+              dropData.push({ label: item.description, value: item.id });
+            }
+          });
+
+          setUnitType(dropData);
+        }
+      })
+      .catch(function (err) {
+        console.error("Error de conexion " + err);
+      });
+  };
+
   const handleChange = (e) => {
-    setState({ question: e.target.value });
+    setState({ name: e.target.value });
     setState({ inactive: e.target.value });
-    setState({ faqOrder: e.target.value });
-    setState({ answer: answer });
+    setState({ shortName: e.target.value });
+    setState({ detail: detail });
+    setState({ companyUnitTypeId: companyUnitTypeId });
+    setState({ unitOrder: unitOrder });
   };
 
   const updateFaq = () => {
-    API.putData("Faq/update", {
+    alert(dropUnitTypeValor);
+    /* API.putData("Faq/update", {
       id: parseInt(id),
-      question: document.getElementById("question").value,
-      faqOrder: parseInt(document.getElementById("faqOrder").value),
-      answer: getHtml(answer),
-      inactive: document.getElementById("activo").value,
+      name: name.value,
+      shortName: shortName.value,
+      unitOrder: parseInt(unitOrder.value),
+      detail: getHtml(detail),
+      companyUnitTypeId: dropUnitTypeValor,
+      inactive: "N",
       companyId: getUser().companyId,
     })
       .then((response) => {
@@ -83,7 +124,12 @@ export default function EditFaq(props) {
           "error"
         );
         console.log(error);
-      });
+      });*/
+  };
+
+  const OnDropUnidChange = (selectedOption) => {
+    sessionStorage.setItem("UnitTypeValue", selectedOption.value);
+    setUnitTypeValor(selectedOption.value);
   };
 
   return (
@@ -92,24 +138,33 @@ export default function EditFaq(props) {
         <div class="row">
           <div class="col-md-12">
             <br />
-            <h3 className="text-center">ACTUALIZAR PREGUNTA FRECUENTE</h3>
+            <h3 className="text-center">ACTUALIZAR UNIDAD DE COMPAÑIA</h3>
 
             <div class="row">
-              <div class="form-group col-md-12">
-                <label class="control-label">PREGUNTA</label>
+              <div class="form-group col-md-6">
+                <label class="control-label">Nombre</label>
                 <input
                   id="question"
                   class="form-control"
-                  value={state.question}
+                  value={state.name}
+                  onChange={handleChange}
+                />
+              </div>{" "}
+              <div class="form-group col-md-6">
+                <label class="control-label">Nombre corto</label>
+                <input
+                  id="question"
+                  class="form-control"
+                  value={state.shortName}
                   onChange={handleChange}
                 />
               </div>
             </div>
             <div className="row editor">
               <div class="form-group col-md-12">
-                <label class="control-label">Contexto</label>
+                <label class="control-label">Detalle</label>
                 <Editor
-                  editorState={answer}
+                  editorState={detail}
                   toolbarClassName="toolbarClassName"
                   wrapperClassName="rich-editor demo-wrapper"
                   editorClassName="editorClassName"
@@ -118,12 +173,27 @@ export default function EditFaq(props) {
               </div>
             </div>
             <div class="row">
+              <div class="form-group col-md-12">
+                <label class="control-label">Tipo de unidad</label>
+                <select
+                  id="logueado"
+                  name="logueado"
+                  value={companyUnitTypeId}
+                  class="form-control"
+                >
+                  {dropUnitType.map((item) => (
+                    <option value={item.value}>{item.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div class="row">
               <div class="form-group col-md-6">
-                <label class="control-label">Orden de la pregunta </label>
+                <label class="control-label">Orden unidad </label>
                 <input
                   id="faqOrder"
                   class="form-control"
-                  value={state.faqOrder}
+                  value={state.unitOrder}
                   onChange={handleChange}
                 />
               </div>
@@ -150,7 +220,7 @@ export default function EditFaq(props) {
                   className="mybt btn btn-outline-danger text-wrap"
                   onClick={updateFaq}
                 >
-                  Actualizar Pregunta
+                  Actualizar Unidad
                 </button>
               </div>
             </center>
