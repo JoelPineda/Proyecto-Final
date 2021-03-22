@@ -166,25 +166,23 @@ export const GetdropDownListPositionMustFill = (
     '<option class="capitalized" value="EMPLEADO">Empleado</option></select>'
   );
 
-
-   return dropDownList.join(''); 
-}
-export const GetdropDownListPositionMustFill = (cssClass, selectedValue, dropName)=>{
-       let DefaultField = '<option value="0">--Seleccione--</option>';
-       let dropDownList = ['<select class="form-control '+ cssClass +'" data-optional="'+ selectedValue +'" id="'+ dropName +'">'];
-            dropDownList.push(DefaultField +'<option class="capitalized" value="DIRECTOR">Director</option>');
-            dropDownList.push('<option class="capitalized" value="GERENTE">Gerente</option>');
-            dropDownList.push('<option class="capitalized" value="SUPERVISOR">Supervisor</option>');
-            dropDownList.push('<option class="capitalized" value="EMPLEADO">Empleado</option></select>'); 
-             
-       return dropDownList.join('');    
-}
-export const GetdropDownListEnabled = (cssClass, selectedValue, dropName)=>{
+  return dropDownList.join("");
+};
+export const GetdropDownListEnabled = (cssClass, selectedValue, dropName) => {
   let DefaultField = '<option value="0">--Seleccione--</option>';
-  let dropDownList = ['<select class="form-control '+ cssClass +'" data-value="'+ selectedValue +'" id="'+ dropName +'">'];
-  let dropYesNo = DefaultField +'<option class="capitalized" value="N">Si</option><option class="capitalized" value="Y">No</option></select>';
-      dropDownList.push(dropYesNo); 
+  let dropDownList = [
+    '<select class="form-control ' +
+      cssClass +
+      '" data-value="' +
+      selectedValue +
+      '" id="' +
+      dropName +
+      '">',
+  ];
+  let dropYesNo =
+    DefaultField +
+    '<option class="capitalized" value="N">Si</option><option class="capitalized" value="Y">No</option></select>';
+  dropDownList.push(dropYesNo);
 
-      return dropDownList.join('');
-}
- 
+  return dropDownList.join("");
+};
