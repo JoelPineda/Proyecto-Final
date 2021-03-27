@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getUser, removeUserSession } from "../../utils/Common";
 import API from "../../utils/api";
 import $ from "jquery";
-import { NumbersWithComma } from "../../utils/CommonFunctions";
+import { NumbersWithComma, numberWithCommas } from "../../utils/CommonFunctions";
 
 export default function Dasboard(props) {
   const [company, setCompany] = useState([]);
@@ -38,7 +38,7 @@ export default function Dasboard(props) {
             <div class="col-lg-3 col-xs-6">
               <div class="small-box bg-red">
                 <div class="inner">
-                  <h3>{item.dayVisit}</h3>
+                  <h3>{numberWithCommas(item.dayVisit)}</h3>
                   <p>Visitas del día</p>
                 </div>
                 <div class="icon">
@@ -52,7 +52,7 @@ export default function Dasboard(props) {
             <div class="col-lg-3 col-xs-6">
               <div class="small-box bg-gray">
                 <div class="inner">
-                  <h3>{item.monthVisit}</h3>
+                  <h3>{numberWithCommas(item.monthVisit)}</h3>
                   <p>Visitas del mes</p>
                 </div>
                 <div class="icon">
@@ -66,7 +66,7 @@ export default function Dasboard(props) {
             <div class="col-lg-3 col-xs-6">
               <div class="small-box bg-red">
                 <div class="inner">
-                  <h3>{item.lastMonthVisit}</h3>
+                  <h3>{numberWithCommas(item.lastMonthVisit)}</h3>
                   <p>Visitas del mes anterior</p>
                 </div>
                 <div class="icon">
@@ -80,7 +80,7 @@ export default function Dasboard(props) {
             <div class="col-lg-3 col-xs-6">
               <div class="small-box bg-gray">
                 <div class="inner">
-                  <h3>{item.employeesActive}</h3>
+                  <h3>{numberWithCommas(item.employeesActive)}</h3>
                   <p>Empleados activos registrados</p>
                 </div>
                 <div class="icon">
@@ -94,7 +94,7 @@ export default function Dasboard(props) {
             <div class="col-lg-3 col-xs-6">
               <div class="small-box bg-gray">
                 <div class="inner">
-                  <h3>{item.policiesAccepted}</h3>
+                  <h3>{numberWithCommas(item.policiesAccepted)}</h3>
                   <p>Diferentes Empleados que han aceptado las políticas</p>
                 </div>
                 <div class="icon">
@@ -108,7 +108,7 @@ export default function Dasboard(props) {
             <div class="col-lg-3 col-xs-6">
               <div class="small-box bg-red">
                 <div class="inner">
-                  <h3>{item.userActive}</h3>
+                  <h3>{numberWithCommas(item.userActive)}</h3>
                   <p>Usuarios activos</p>
                 </div>
                 <div class="icon">

@@ -12,7 +12,7 @@ import {EditBackendUsers} from "../Backend_user/editBackendUsers";
 import {AddBackendUsers} from "../Backend_user/addNewbackendUsers";
 
 import Loading from "../../components/loading/loading";
-import {ShowConfirmationMessage, MessageResults, ShowPopUp, GetImagePatch, ShowAlertMessage} from "../../utils/CommonFunctions";
+import {ShowConfirmationMessage, MessageResults, ShowPopUp, GetImagePatch, ShowAlertMessage, GetGuiId} from "../../utils/CommonFunctions";
 import { DataTable } from 'datatables.net';
 import { LangSpanish } from "../../tools/dataTables.Language";
 registerLocale("es", es);
@@ -399,7 +399,7 @@ export default function BackendUser(props) {
                         PermissionTitle: '<span class="capitalized defaultText"  title="'+ item.PermissionTitle +'" >' + (item.PermissionTitle.length > 30? item.PermissionTitle.substr(0,30) + "...": item.PermissionTitle)  + '</span>',
                         CompanyName: '<span class="d-flex align-items-center justify-content-center" data-companyid="'+ item.CompanyId +'" title="'+ item.CompanyName +'"><img src="'+ GetImagePatch("/images/" + item.CompanyLogoName) +'"  class="img-user-grid"  alt="Logo" /></span>',
                         IsActive: '<span class="capitalized defaultText d-flex align-items-center justify-content-center">' + (item.IsActive !== 'N'? "Si":"No") + '</span>',
-                        itemBtn: "<span data-permission-text='"+ item.PermissionTitleList +"' data-item='"+ btoa(JSON.stringify([item])) +"'>" + EditBtn + DeleteBtn  + "</span>" 
+                        itemBtn: "<span class='d-flex align-items-center justify-content-center' data-permission-text='"+ item.PermissionTitleList +"' data-item='"+ btoa(JSON.stringify([item])) +"'>" + EditBtn + DeleteBtn  + "</span>" 
                     }); 
                   
                 });
@@ -412,9 +412,35 @@ export default function BackendUser(props) {
                             lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200],
                             "order": [[0, "desc"]],
                             dom: 'Bfrtip',
-                                buttons: [ 
-                                    'copy','excel','pdf'
-                                ],                            
+                            buttons: [
+                                {
+                                    extend: 'excel',
+                                    text: '<i class="btn btn-success fa fa-file-excel-o white">&nbsp;Excel</i>',
+                                    titleAttr: 'Excel',
+                                    exportOptions: {
+                                        columns: ':visible'
+                                    },
+                                    title: 'excelBackEndUser_' + GetGuiId().substr(0, 8)
+                                },
+                                {
+                                    extend: 'csv',
+                                    text: '<i class="btn btn-primary fa fa-file-text-o white">&nbsp;CSV</i>',
+                                    titleAttr: 'csv',
+                                    exportOptions: {
+                                        columns: ':visible'
+                                    },
+                                    title: 'csvBackEndUser_' + GetGuiId().substr(0,8)
+                                } ,
+                                {
+                                    extend: 'print',
+                                    text: '<i class="btn btn-danger fa fa-print white">&nbsp;Imprimir</i>',
+                                    titleAttr: 'print',
+                                    exportOptions: {
+                                        columns: ':visible'
+                                    },
+                                    title: 'printBackEndUser_' + GetGuiId().substr(0, 8)
+                                }
+                            ],                        
                             data:  (dataResult.length === 0? [{Alias:'', User:'',Psw:'',PermissionTitle:'', CompanyName:'', IsActive:'',itemBtn: ''}] : dataResult),
                             columns: [  
                                 { data: "Alias", title: "Alias", width:'20%', className:"capitalized" }, 
@@ -423,11 +449,11 @@ export default function BackendUser(props) {
                                 { data: "PermissionTitle", title: "Permisos", width:'30%', className:"capitalized" },  
                                 { data: "CompanyName", title: "Compañía\u00a0", width:'10%', className:"capitalized" }, 
                                 { data: "IsActive", title: "Inactivo", width:'10%', className:"capitalized" },                        
-                                { data: "itemBtn", title: "\u00a0Acciones\u00a0\u00a0\u00a0", width:'30%', orderable: false},
+                                { data: "itemBtn", title: "\u00a0Acciones\u00a0\u00a0\u00a0", className:"capitalized", width:'30%', orderable: false},
                             ]
     
                         });
-                    $('.csHidden').attr('style', 'display:none');
+                    // $(".dt-buttons").prepend($("#TblBackendUser_filter"));
               
     
             }   
@@ -488,7 +514,8 @@ export default function BackendUser(props) {
                     
                 :
                 <div className="container">
-                <Loading />  
+                    <br />
+                    <Loading />  
                 </div>
                 
                 }
