@@ -11,7 +11,7 @@ import {EditEvaluation} from "../Evaluation/editEvaluation";
 import {AddEvaluation} from "../Evaluation/addEvaluation";
 import {AddEvaluationCalendar, AllFn_EvaluationCalendar} from "../Evaluation/addEvaluationCalendar";
 import {AddEvaluationPossibleAnswer, AllFn_EvaluationPossibleAnswer} from "../Evaluation/addEvaluationPossibleAnswer";
-import {AddEvaluationQuestion} from "../Evaluation/addEvaluationQuestion";
+import {AddEvaluationQuestion, AllFn_EvaluationQuestion} from "../Evaluation/addEvaluationQuestion";
 import {GetdropDownListYesNo, GetdropDownListYesNoClosed, getCurTimeAndAddtoDateStr} from "../../utils/CommonFunctions";
 import Loading from "../../components/loading/loading";
 import {ShowConfirmationMessage, MessageResults, ShowPopUp, ShowPopUpDataTable, ShowAlertMessage} from "../../utils/CommonFunctions";
@@ -24,6 +24,7 @@ $(document).ready(()=>{
     AllFn_Evaluations();
     AllFn_EvaluationCalendar();
     AllFn_EvaluationPossibleAnswer();
+    AllFn_EvaluationQuestion();
 });
 export const AllFn_Evaluations = ()=>{
     $('body').on('click', '#TblEvaluation #btEdit', function(e){
