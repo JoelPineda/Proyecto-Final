@@ -8,7 +8,7 @@ import "moment/locale/es";
 import { getUser, removeUserSession } from "../../utils/Common";
 import API from "../../utils/api";
 import {EditEvaluation} from "../Evaluation/editEvaluation";
-import {AddEvaluation} from "../Evaluation/AddEvaluation";
+import {AddEvaluation} from "../Evaluation/addEvaluation";
 import {AddEvaluationCalendar, AllFn_EvaluationCalendar} from "../Evaluation/addEvaluationCalendar";
 import {AddEvaluationPossibleAnswer, AllFn_EvaluationPossibleAnswer} from "../Evaluation/addEvaluationPossibleAnswer";
 import {AddEvaluationQuestion} from "../Evaluation/addEvaluationQuestion";
@@ -35,8 +35,8 @@ export const AllFn_Evaluations = ()=>{
  
 
 
-    $('#sp_AddEvaluation').click(()=>{
-        ShowPopUp({titleName: "Añadir Evaluación", htmlBody: AddEvaluation(), handlerEvent: OnClickSaveAdd, TextOk:"Guardar", isDisabled:true, EnabledDisabled:true});
+    $('#sp_AddEvaluation').click((e)=>{
+        ShowPopUp({titleName: "Añadir Evaluación", htmlBody: AddEvaluation(e), handlerEvent: OnClickSaveAdd, TextOk:"Guardar", isDisabled:true, EnabledDisabled:true});
     })
     $('body').on('change', '#tbEvaluationName', function(e){
         if($(e.currentTarget).val().length < 2 ){

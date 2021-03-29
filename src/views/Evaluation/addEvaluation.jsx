@@ -6,11 +6,11 @@ import {
 import $ from "jquery";
 
 export const AddEvaluation = (e) => {
-  let dataObj = $("#TblEvaluation").attr("data-evaluation-Ojb");
+  let dataObj = $("#TblEvaluation").attr("data-evaluation-ojb");
   let DefaultField = '<option value="0">--Seleccione--</option>';
   let evaluationObject = dataObj !== undefined ? JSON.parse(atob(dataObj)) : [];
   let evaluationHierarchy = JSON.parse(
-    atob($("#sp_AddEvaluation").attr("data-evaluation-Hierarchy"))
+    atob($("#sp_AddEvaluation").attr("data-evaluation-hierarchy"))
   );
   let dropObject = [
     '<select class="form-control validate-option" data-value="null" id="dropObject">' +
