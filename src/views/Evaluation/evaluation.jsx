@@ -25,7 +25,6 @@ $(document).ready(()=>{
     AllFn_EvaluationCalendar();
     AllFn_EvaluationPossibleAnswer();
     AllFn_EvaluationQuestion();
-    
 });
 export const AllFn_Evaluations = ()=>{
     $('body').on('click', '#TblEvaluation #btEdit', function(e){
