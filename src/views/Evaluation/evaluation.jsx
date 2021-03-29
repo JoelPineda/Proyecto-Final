@@ -23,8 +23,10 @@ registerLocale("es", es);
 $(document).ready(()=>{
     AllFn_Evaluations();
     AllFn_EvaluationCalendar();
-    AllFn_EvaluationPossibleAnswer();
     AllFn_EvaluationQuestion();
+    AllFn_EvaluationPossibleAnswer();
+    
+    
 });
 export const AllFn_Evaluations = ()=>{
     $('body').on('click', '#TblEvaluation #btEdit', function(e){
