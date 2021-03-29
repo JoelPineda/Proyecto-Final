@@ -23,9 +23,8 @@ registerLocale("es", es);
 $(document).ready(()=>{
     AllFn_Evaluations();
     AllFn_EvaluationCalendar();
-    AllFn_EvaluationQuestion();
     AllFn_EvaluationPossibleAnswer();
-    
+    AllFn_EvaluationQuestion();
     
 });
 export const AllFn_Evaluations = ()=>{
