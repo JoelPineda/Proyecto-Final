@@ -1,16 +1,65 @@
 import DropdownList from "../../components/dropdown/dropdownList";
-import {
-  GetdropDownListYesNo,
-  GetdropDownListPositionMustFill,
-} from "../../utils/CommonFunctions";
+import {GetdropDownListYesNo, GetdropDownListYesNoClosed, getCurTimeAndAddtoDateStr, GetdropDownListPositionMustFill} from "../../utils/CommonFunctions";
 import $ from "jquery";
+import { registerLocale } from "react-datepicker";
+import Moment from "moment";
+import es from "date-fns/locale/es";
+import "moment/locale/es";
+import { getUser, removeUserSession } from "../../utils/Common";
+import API from "../../utils/api";
+import {ShowConfirmationMessage, MessageResults, ShowPopUp, ShowPopUpDataTable, ShowAlertMessage} from "../../utils/CommonFunctions";
+import { LangSpanish } from "../../tools/dataTables.Language";
+registerLocale("es", es);
 
+export const AllFn_EvaluationPossibleAnswer = () =>{
+   $('body').on('click', '#TblEvaluation #btPossibleAsw', function(e){
+
+        ShowPopUp({titleName: "Posibles Respuestas", htmlBody: AddEvaluationPossibleAnswer(e), handlerEvent: OnClickSaveEditPossibleAnswer, TextOk:"Guardar", isDisabled:true, EnabledDisabled:true});
+         
+    })
+
+const OnClickSaveEditPossibleAnswer = ()=>{
+ let param = {
+                EvaluationId: parseInt($("#tbEvaluationName").attr('data-id')),
+                EvaluationName: $("#tbEvaluationName").val(),
+                EvaluationObjectId: parseInt($("#dropObject").val()), 
+                EvaluationHierarchyId: ($("#dropHierarchy").val() ==="0"? null: parseInt($("#dropHierarchy").val())),
+                PositionMustFill: ($("#dropPositionMustFill").val() ==="0"? null: $("#dropPositionMustFill").val()),
+                FillAfterLogin: $("#dropFillAfterLogin").val(),
+                AfterHiringDate: $("#dropAfterHiringDate").val(),
+                Inactive: $("#dropInactive").val()
+            }; 
+    ShowConfirmationMessage('', '',param);
+}
+const SaveEditPossibleAnswerChanges = (params)=>{ 
+    //   API.putData("Evaluations/Update", params)
+    //   .then((res) => {
+    //       if (res.status === 200) {
+    //           MessageResults(res.status);
+    //           setTimeout(() => {
+    //               window.location.reload(true);
+    //           }, 1200);
+    //       } 
+    //   })
+    //   .catch(function (err) {
+    //   console.error("Error de conexion " + err);
+    //       MessageResults(400, err);
+    //   });     
+}
+
+
+
+
+
+
+
+}
 export const AddEvaluationPossibleAnswer = (e) => {
-  let dataObj = $("#TblEvaluation").attr("data-evaluation-Ojb");
+  let dataObj = $("#TblEvaluation").attr("data-evaluation-ojb");
   let DefaultField = '<option value="0">--Seleccione--</option>';
   let evaluationObject = dataObj !== undefined ? JSON.parse(atob(dataObj)) : [];
   let evaluationHierarchy = JSON.parse(
-    atob($("#sp_AddEvaluation").attr("data-evaluation-Hierarchy"))
+    atob($("#sp_AddEvaluation").attr("data-evaluation-hierarchy"))
   );
   let dropObject = [
     '<select class="form-control validate-option" data-value="null" id="dropObject">' +
