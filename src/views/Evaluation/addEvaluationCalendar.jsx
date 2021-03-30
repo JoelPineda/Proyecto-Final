@@ -15,7 +15,7 @@ export const AllFn_EvaluationCalendar = ()=>{
 
   $('body').on('click', '#TblEvaluation #btCalendar', function(e){
 
-    ShowPopUpDataTable({titleName: "Calendario de Evaluaci&oacute;n", htmlBody: AddEvaluationCalendar(e), handlerEvent: OnClickSaveEditCalendar, TextOk:"Guardar"});
+    ShowPopUpDataTable({titleName: "Calendario de Evaluaci&oacute;n", htmlBody: AddEvaluationCalendar(e)});
     fillCalendarData(e);
 
 
@@ -32,6 +32,7 @@ $('body').on('click', '#TblEvaluationCalendar #btEditCalendar', function(e){
             
         }
         $($controlRoot.find('.currentdrop-exist')[0]).removeAttr('disabled');
+        $($controlRoot.find('.currentdrop-exist')[1]).removeAttr('disabled');
 
     }else{
         
@@ -54,7 +55,7 @@ $('body').on('click', '#TblEvaluationCalendar #btEditCalendar', function(e){
                     EvaluationDateTo: getCurTimeAndAddtoDateStr($controlRoot.find('.param-inpEvalTo').val()),
                     DateEnabledFrom: getCurTimeAndAddtoDateStr($controlRoot.find('.param-inpEnabFrom').val()),
                     DateEnabledTo: getCurTimeAndAddtoDateStr($controlRoot.find('.param-inpEnabTo').val()),
-                    Quarter: dataItem[0].quarter,
+                    Quarter: ($controlRoot.find('#dropQuarter-exist').val() === "N"? null: 1),
                     Inactive: $controlRoot.find('#dropInactive-exist').val()}; 
         UpdateCalendar(e,evaluationCalendar);  
         $(e.currentTarget).parent().find('.fa-floppy-o').removeClass('fa-floppy-o temp-class green').addClass('fa-pencil-square-o');
@@ -88,6 +89,7 @@ $('body').on('click', '#sp_AddEvaluationCalendar', function(e){
                   DateEnabledTo: '<div><input id="inpEnabTo" type="date" class="form-control current-td-cal-line defaultText" title="Dar click en el Calendario"  value="'+ Moment(new Date()).format("YYYY-MM-DD") + '" min="'+ Moment(new Date()).format("YYYY-MM-DD") +'"  /></div>',
                   EvaluationDateFrom: '<div><input id="inpEvalFrom" type="date" class="form-control current-td-cal-line defaultText" title="Dar click en el Calendario"  value="'+ Moment(new Date()).format("YYYY-MM-DD") + '" min="'+ Moment(new Date()).format("YYYY-MM-DD") +'"  /></div>',
                   EvaluationDateTo: '<div><input id="inpEvalTo" type="date" class="form-control current-td-cal-line defaultText" title="Dar click en el Calendario"  value="'+ Moment(new Date()).format("YYYY-MM-DD") + '" min="'+ Moment(new Date()).format("YYYY-MM-DD") +'"  /></div>',
+                  Quarter: '<div>'+ GetdropDownListYesNoClosed("validate-option current-td-line  defaultText", "Y" , "dropQuarter") +'</div>', 
                   Inactive: '<div>'+ GetdropDownListYesNoClosed("validate-option current-td-line defaultText", "N", "dropInactive") +'</div>',
                   itemBtn: '<div><span class="btn btn-success btn-sm  custom-color size-effect" id="btaddNewCalendar" title="Agregar Calendario"  ><i class="fa fa-plus-circle"></i></span></div>' 
                   }).draw(false);
@@ -135,7 +137,7 @@ $('body').on('click', '#btaddNewCalendar', function(e){
               EvaluationDateTo: getCurTimeAndAddtoDateStr($('#inpEvalTo').val()),
               DateEnabledFrom: getCurTimeAndAddtoDateStr($('#inpEnabFrom').val()),
               DateEnabledTo: getCurTimeAndAddtoDateStr($('#inpEnabTo').val()),
-              Quarter: 1,
+              Quarter:  ($('#dropQuarter').val() === "N"? null: 1),
               Inactive:$('#dropInactive').val()};
 
       SaveAddNewCalendar(e, evaluationCalendar);
@@ -164,14 +166,14 @@ const  fillCalendarData =(e) => {
               dataResult.push({ 
                   Id: '<span class="d-flex justify-content-start capitalized defaultText" data-evaluationQuestionId-id="'+ item.id +'">' + item.id + '</span>',
                   EvaluationCalendarName: '<span class="d-flex justify-content-start capitalized defaultText evaluation-calendar-name">' + item.evaluationCalendarName + '</span>', 
-                  Quarter: '<span class="d-flex justify-content-start capitalized defaultText">' + item.quarter + '</span>',                       
-                  CreationDate: '<span class="d-flex align-items-center justify-content-center">' + Moment(item.creationDate).format("DD/MM/YYYY hh:mm A") + '</>',
+                  Quarter: '<div>'+ GetdropDownListYesNoClosed("validate-option current-td-line currentdrop-exist defaultText", (item.quarter === null? "N": "Y") , "dropQuarter-exist") +'</div>',                       
+                  CreationDate: '<span class="d-flex align-items-center justify-content-center">' + Moment(item.creationDate).format("DD/MM/YYYY") + '</>',
                   DateEnabledFrom: '<div><input type="date" class="form-control param-inpEnabFrom current-td-cal-line-exist defaultText" title="Dar click en el Calendario" value="'+ Moment(item.dateEnabledFrom).format("YYYY-MM-DD") + '" min="'+ Moment(new Date()).format("YYYY-MM-DD") +'" readonly  /></div>',
                   DateEnabledTo: '<div><input type="date" class="form-control param-inpEnabTo current-td-cal-line-exist defaultText" title="Dar click en el Calendario" value="'+ Moment(item.dateEnabledTo).format("YYYY-MM-DD") + '" min="'+ Moment(new Date()).format("YYYY-MM-DD") +'" readonly  /></div>',
                   EvaluationDateFrom: '<div><input type="date" class="form-control param-inpEvalFrom current-td-cal-line-exist defaultText" title="Dar click en el Calendario" value="'+ Moment(item.evaluationDateFrom).format("YYYY-MM-DD") + '" min="'+ Moment(new Date()).format("YYYY-MM-DD") +'" readonly  /></div>',
                   EvaluationDateTo: '<div><input type="date" class="form-control param-inpEvalTo current-td-cal-line-exist defaultText" title="Dar click en el Calendario" value="'+ Moment(item.evaluationDateTo).format("YYYY-MM-DD") + '" min="'+ Moment(new Date()).format("YYYY-MM-DD") +'" readonly  /></div>',
                   Inactive: '<div>'+ GetdropDownListYesNoClosed("validate-option current-td-line currentdrop-exist defaultText", item.inactive, "dropInactive-exist") +'</div>',
-                  itemBtn: "<span class='d-flex align-items-center justify-content-center'  data-item='"+ btoa(JSON.stringify([item])) +"'>"+ EditBtn + DelBtn + "</span>" 
+                  itemBtn: "<span class='d-flex align-items-left justify-content-left'  data-item='"+ btoa(JSON.stringify([item])) +"'>"+ EditBtn + DelBtn + "</span>" 
               }); 
             
           });
@@ -192,11 +194,12 @@ const  fillCalendarData =(e) => {
                       columns: [ 
                           { data: "Id", title: "Reg.\u00a0", width:'4%', className:"capitalized defaultText" }, 
                           { data: "EvaluationCalendarName", title: "Pregunta\u00a0Evaluación", width:'30%', className:"capitalized defaultText" },
-                          { data: "CreationDate", title: "Registrado\u00a0En\u00a0\u00a0", width:'20%', className:"capitalized defaultText" }, 
+                          { data: "CreationDate", title: "Registrado\u00a0En", width:'8%', className:"capitalized defaultText" }, 
                           { data: "EvaluationDateFrom", title: "Eval.\u00a0Desde", width:'10%', className:"capitalized defaultText" },
                           { data: "EvaluationDateTo", title: "Eval.\u00a0Hasta", width:'10%', className:"capitalized defaultText" },                                
                           { data: "DateEnabledFrom", title: "Habt.\u00a0Desde", width:'10%', className:"capitalized defaultText" },
-                          { data: "DateEnabledTo", title: "Habt\u00a0Hasta", width:'10%', className:"capitalized defaultText" }, 
+                          { data: "DateEnabledTo", title: "Habt\u00a0Hasta", width:'10%', className:"capitalized defaultText" },
+                          { data: "Quarter", title: "Trimestral", width:'10%', className:"capitalized defaultText" },  
                           { data: "Inactive", title: "Inactivo", width:'10%', className:"capitalized defaultText" },                        
                           { data: "itemBtn", title: "\u00a0Acciones\u00a0\u00a0\u00a0", width:'20%', className:"defaultText", orderable: false},
                       ]
@@ -217,34 +220,6 @@ const  fillCalendarData =(e) => {
     });
 
 }  
-const OnClickSaveEditCalendar = ()=>{
-  let param = {
-                 EvaluationId: parseInt($("#tbEvaluationName").attr('data-id')),
-                 EvaluationName: $("#tbEvaluationName").val(),
-                 EvaluationObjectId: parseInt($("#dropObject").val()), 
-                 EvaluationHierarchyId: ($("#dropHierarchy").val() ==="0"? null: parseInt($("#dropHierarchy").val())),
-                 PositionMustFill: ($("#dropPositionMustFill").val() ==="0"? null: $("#dropPositionMustFill").val()),
-                 FillAfterLogin: $("#dropFillAfterLogin").val(),
-                 AfterHiringDate: $("#dropAfterHiringDate").val(),
-                 Inactive: $("#dropInactive").val()
-             }; 
-     ShowConfirmationMessage(SaveEditCalendarChanges, '',param);
-}
-const SaveEditCalendarChanges = (params)=>{ 
-  //   API.putData("Evaluations/Update", params)
-  //   .then((res) => {
-  //       if (res.status === 200) {
-  //           MessageResults(res.status);
-  //           setTimeout(() => {
-  //               window.location.reload(true);
-  //           }, 1200);
-  //       } 
-  //   })
-  //   .catch(function (err) {
-  //   console.error("Error de conexion " + err);
-  //       MessageResults(400, err);
-  //   });     
-}
 const SaveAddNewCalendar = (e, params)=>{ 
    API.postData("EvaluationCalendar/add", params)
    .then((res) => {
