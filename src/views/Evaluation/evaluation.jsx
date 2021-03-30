@@ -12,6 +12,7 @@ import {AddEvaluation} from "../Evaluation/addEvaluation";
 import {AddEvaluationCalendar, AllFn_EvaluationCalendar} from "../Evaluation/addEvaluationCalendar";
 import {AddEvaluationPossibleAnswer, AllFn_EvaluationPossibleAnswer} from "../Evaluation/addEvaluationPossibleAnswer";
 import {AddEvaluationQuestion, AllFn_EvaluationQuestion} from "../Evaluation/addEvaluationQuestion";
+import {AddEvaluationQuestionGroup, AllFn_EvaluationQuestionGroup} from "../Evaluation/addEvaluationQuestionGroup";
 import {GetdropDownListYesNo, GetdropDownListYesNoClosed, getCurTimeAndAddtoDateStr} from "../../utils/CommonFunctions";
 import Loading from "../../components/loading/loading";
 import {ShowConfirmationMessage, MessageResults, ShowPopUp, ShowPopUpDataTable, ShowAlertMessage} from "../../utils/CommonFunctions";
@@ -25,6 +26,7 @@ $(document).ready(()=>{
     AllFn_EvaluationCalendar();
     AllFn_EvaluationPossibleAnswer();
     AllFn_EvaluationQuestion();
+    AllFn_EvaluationQuestionGroup();
 });
 export const AllFn_Evaluations = ()=>{
     $('body').on('click', '#TblEvaluation #btEdit', function(e){
@@ -303,7 +305,8 @@ const GetEvaluationHierarchy = ()=>{
               <br />
               <br />
               <h2 className="h2">Evaluaci&oacute;n</h2>
-              <span className="btn btn-success btn-sm" id="sp_AddEvaluation" data-evaluation-hierarchy={evaluationHierarchy} ><i className="fa fa-plus-circle"></i>&nbsp;Añadir Evaliaci&oacute;n</span>
+              <span className="btn btn-success btn-sm" id="sp_AddEvaluation" data-evaluation-hierarchy={evaluationHierarchy} title="Añadir Evaluación" ><i className="fa fa-plus-circle"></i>&nbsp;Añadir Evaluaci&oacute;n</span>&nbsp;
+              <span className="btn btn-danger btn-sm" id="sp_AddEvaluationQuestionGroup" title="Añadir Grupo de Preguntas"><i className="fa fa-question-circle-o"></i>&nbsp;Añadir Grupo Preguntas</span>
                 
             </div>
           </div>        
