@@ -95,13 +95,13 @@ const getMaxGroupOrder = ()=>{
 }
 $('body').on('click', '#btaddNewQuestionGroup', function(e){                    
   let  $GroupName = $('#inpGroupName');
-  let eventCalendarNameItem = $('#TblEvaluationQuestionGroup').find('.evaluation-calendar-name');
+  let eventCalendarNameItem = $('#TblEvaluationQuestionGroup').find('.current-td-groupname');
   let resultData = '';
 
   for (let index = 0; index < eventCalendarNameItem.length; index++) {
       const element = eventCalendarNameItem[index];
-      if($(element).text().trim().toLowerCase() === $GroupName.val().trim().toLowerCase()){
-          resultData = 'Ya existe el nombre!';
+      if($(element).val().trim().toLowerCase() === $GroupName.val().trim().toLowerCase()){
+          resultData = 'Ya existe el grupo!';
       }
       
   }
@@ -139,7 +139,7 @@ const  fillQuestionGroupData =(e) => {
           res.data.forEach(item => {
               dataResult.push({ 
                   QuestionGroupId: '<span class="d-flex justify-content-start capitalized" data-evaluationQuestionId-id="'+ item.questionGroupId +'">' + item.questionGroupId + '</span>',
-                  QuestionGroupName: '<div><input   autocomplete="off" type="text" class="current-td-groupname defaultText" value="'+ item.questionGroupName +'"  /><span id="sp_current_inpGroupName" class="fa faa-flash animated faa-fast red"></span></div>', 
+                  QuestionGroupName: '<div><input   autocomplete="off" type="text" class="current-td-groupname defaultText" value="'+ item.questionGroupName +'"  /><span id="sp_current_inpGroupName" class="fa faa-flash animated faa-fast red"></span><span class="cs-miniText">'+ item.questionGroupName +'</span></div>', 
                   QuestionGroupOrder: '<div><input   autocomplete="off" type="number" min="1" class="current-td-groupOr  current-td-line defaultText" value="'+ item.questionGroupOrder +'"  /></div>',
                   CreationDate: '<span class="d-flex align-items-center justify-content-center defaultText">' + Moment(item.creationDate).format("DD/MM/YYYY") + '</>',
                   Inactive: '<div>'+ GetdropDownListYesNoClosed("validate-option current-td-line currentdrop-exist defaultText", item.inactive, "dropInactiveQg-exist") +'</div>',
