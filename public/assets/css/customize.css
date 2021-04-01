@@ -693,5 +693,39 @@ input:disabled {
     width: 98% !important; 
     height: 2.0rem !important;
 }
-
+.current-td-question-name{
+  display: block !important; 
+  padding: 0 !important; 
+  margin: 0 !important; 
+  border-radius: 3px !important; 
+  width: 98% !important; 
+  height: 2.0rem !important;  
+}
+.current-td-order-question{
+  display: block !important; 
+  padding: 0 !important; 
+  margin: 0 !important; 
+  border-radius: 3px !important; 
+  width: 98% !important; 
+  height: 2.0rem !important; 
+}
+.current-td-question-type{
+  display: block !important; 
+  padding: 0 !important; 
+  margin: 0 !important; 
+  border-radius: 3px !important; 
+  width: 98% !important; 
+  height: 2.0rem !important;   
+}
+#TblEvaluationQuestion_filter.dataTables_filter {
+  float: left !important;
+  margin: 0px;
+  padding: 5px;
+}
+.cs-miniText{
+    font-size: 0.5px !important;
+    opacity: 0.01 !important;
+    color: transparent !important;
+}
+ 
 

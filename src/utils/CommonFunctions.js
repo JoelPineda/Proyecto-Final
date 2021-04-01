@@ -225,10 +225,11 @@ export const GetdropDownListEnabled = (cssClass, selectedValue, dropName)=>{
       return dropDownList.join('');
 }
 export const GetdropDownListEvaluationQuestion = (cssClass, selectedValue, dropName)=>{
-  let DefaultField = '<option value="0">--Seleccione--</option>';
   let dropDownList = ['<select class="form-control '+ cssClass +'" data-value="'+ selectedValue +'" id="'+ dropName +'">'];
-  let dropYesNo = DefaultField +'<option class="capitalized" value="SI_NO">Si / No</option><option class="capitalized" value="MULTIPLE">Multiple</option></select>';
-      dropDownList.push(dropYesNo); 
+  let yesNoOpc = '<option class="capitalized" value="SI_NO">Si / No</option>';
+  let multp = '<option class="capitalized" value="MULTIPLE">Multiple</option>';
+  let dropYesNo =  (selectedValue ==="SI_NO"?  yesNoOpc + multp: multp + yesNoOpc) + '</select>';
+      dropDownList.push(dropYesNo);
 
       return dropDownList.join('');
 }
@@ -259,3 +260,4 @@ export const getCurTimeAndAddtoDateStr = (dateStr)=>{
   }
   return new Date(dateStr)
 }
+ 
