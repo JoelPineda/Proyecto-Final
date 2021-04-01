@@ -18,7 +18,7 @@ export default {
       method: "POST",
       url: url,
       data: data,
-    }),
+    }),   
   putData: (url, data) =>
     instance({
       method: "Put",

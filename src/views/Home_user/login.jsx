@@ -13,6 +13,7 @@ export default function Login(props) {
       .then((response) => {
         setLoading(false);
         setUserSession(response.data.token, response.data.user);
+        sessionStorage.setItem("configBaseURL", btoa(response.config.baseURL));
         window.location.reload(false);
 
       })
