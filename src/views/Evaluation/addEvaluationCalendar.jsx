@@ -128,7 +128,7 @@ $('body').on('click', '#btaddNewCalendar', function(e){
       $('#sp_inpAswEval').text(resultData);
       $("#inpAswEval").focus(); 
   }else{
-
+        $('#sp_inpAswEval').text('');
       let dataItem = JSON.parse(atob($('#hdEvaluationItem').val()))[0];
       let evaluationCalendar = {
               EvaluationId:  dataItem.evaluationId,
