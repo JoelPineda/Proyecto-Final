@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import API from "../../utils/api";
-import { getUser, setUserSession } from "../../utils/Common";
+import { getUser } from "../../utils/Common";
 import { Editor } from "react-draft-wysiwyg";
-import Moment from "moment";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import {
   convertToRaw,
@@ -12,7 +11,7 @@ import {
 } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import queryString from "query-string";
-import { ShowAlertMessage } from "../../utils/CommonFunctions";
+import { ShowAlertMessage, MessageResults } from "../../utils/CommonFunctions";
 
 const getHtml = (editorState) =>
   draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -74,7 +73,10 @@ export default function EditFaq(props) {
       companyId: getUser().companyId,
     })
       .then((response) => {
-        ShowAlertMessage("Información", "Actualizada correctamente");
+        MessageResults(response.status);
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 1200);
       })
       .catch((error) => {
         ShowAlertMessage(

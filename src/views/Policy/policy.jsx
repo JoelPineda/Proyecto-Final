@@ -18,18 +18,45 @@ import {
 import { DataTable } from "datatables.net";
 import { LangSpanish } from "../../tools/dataTables.Language";
 
+$(document).ready(() => {
+  $("body").on("click", "#TblPolicy #btDel", function (e) {
+    let param = JSON.parse(
+      atob($(e.currentTarget).parent().attr("data-item"))
+    )[0];
+    ShowConfirmationMessage(SaveDisableChanges, "", param);
+  });
+
+  const SaveDisableChanges = (params) => {
+    let id = params.id;
+    API.putData("policies/DisableRegister?id=" + id)
+      .then((res) => {
+        if (res.status === 200) {
+          MessageResults(res.status);
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 1200);
+        }
+      })
+      .catch(function (err) {
+        console.error("Error de conexion " + err);
+        MessageResults(400, err);
+      });
+  };
+});
+
 export default function Policy(props) {
   const [dataLoading, setDataLoading] = useState(true);
   const [policy, setPolicy] = useState(true);
 
   const fillData = () => {
     let Record = [];
-    API.getData("policies/getAll?companyId=01")
+    API.getData("policies/getAll?companyId=" + getUser().companyId)
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
           let dataResult = [];
-
+          let DeleteBtn =
+            "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Politica' ></a>";
           setPolicy(res.data);
           res.data.forEach((item) => {
             dataResult.push({
@@ -69,18 +96,25 @@ export default function Policy(props) {
                 '<span class="capitalized defaultText">' +
                 (item.inactive !== "N" ? "Si" : "No") +
                 "</span>",
+
               itemBtn:
-                '<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Politica" href="/editPolicy?id=' +
+                "<span data-created='" +
+                item.id +
+                "'  data-item='" +
+                btoa(JSON.stringify([item])) +
+                "'>" +
+                '&nbsp;<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Politica" href="/editpolicy?id=' +
                 item.id +
                 '"' +
-                item.id +
-                " ></a>",
+                " ></a>&nbsp;" +
+                DeleteBtn +
+                "</span>",
             });
           });
 
           $("#TblPolicy").DataTable({
             destroy: true,
-            searching: false,
+            searching: true,
             language: LangSpanish,
             bLengthChange: false,
             lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200],

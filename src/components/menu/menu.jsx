@@ -34,6 +34,13 @@ import CompanyUnit from "../../views/CompanyUnit/CompanyUnit";
 import AddCompanyUnit from "../../views/CompanyUnit/AddCompanyUnit";
 import EditUnitCompany from "../../views/CompanyUnit/EditCompanyUnit";
 import BackendUser from "../../views/Backend_user/backendUsers";
+import BenefitsCategory from "../../views/BenefitsCategory/BenefitsCategory";
+import CompanyBenefits from "../../views/CompanyBenefits/CompanyBenefits";
+import AddCompanyBenefits from "../../views/CompanyBenefits/AddCompanyBenefits";
+import EditCompanyBenefits from "../../views/CompanyBenefits/EditCompanyBenefits";
+
+import Slider from "../../views/Slider/Slider";
+
 export default class Menu extends React.Component {
   constructor(props) {
     super(props);
@@ -76,43 +83,52 @@ export default class Menu extends React.Component {
           <PublicRoute path="/Login" component={Login} />
           <PrivateRoute path="/logout" component={Logout} />
           <PrivateRoute exact path="/" component={dasboard} />
+          <PrivateRoute exact path="/dashboard" component={dasboard} />
           <PrivateRoute exact path="/evaluation" component={Evaluation} />
           <PrivateRoute exact path="/backend_users" component={BackendUser} />
           <PrivateRoute path="/changepassword" component={MyChangePassword} />
-          <PrivateRoute path="/employeeVisit" component={Employee} />
-          <PrivateRoute path="/employeeVisitMonth" component={EmployeeVisit} />
+          <PrivateRoute path="/employeeVisit" component={EmployeeVisit} />
           <PrivateRoute
-            path="/employeeVisitLastMonth"
+            path="/employeeVisitMonth"
             component={EmployeeVisitMonth}
           />
-          <PrivateRoute path="/employee" component={EmployeeVisitLastMonth} />
+          <PrivateRoute
+            path="/employeeVisitLastMonth"
+            component={EmployeeVisitLastMonth}
+          />
+          <PrivateRoute path="/employee" component={Employee} />
           <PrivateRoute path="/policyAccepted" component={AcceptePolicy} />
-
           <PrivateRoute path="/settings" component={CompanyConf} />
           <PrivateRoute path="/addCompany" component={NewCompany} />
           <PrivateRoute path="/editCompany" component={EditCompany} />
-
           <PrivateRoute path="/policies" component={PolicyInd} />
           <PrivateRoute path="/addPolicy" component={AddPolicy} />
           <PrivateRoute path="/editPolicy" component={EditPolicy} />
-
           <PrivateRoute path="/faq" component={Faq} />
           <PrivateRoute path="/addfaq" component={AddFaq} />
           <PrivateRoute path="/editfaq" component={EditFaq} />
-
           <PrivateRoute path="/bank" component={Bank} />
-
           <PrivateRoute path="/consulate" component={Consulate} />
-
           <PrivateRoute path="/news" component={New} />
           <PrivateRoute path="/addNew" component={AddNew} />
           <PrivateRoute path="/editNew" component={EditNew} />
-
           <PrivateRoute path="/company_unit_type" component={UnitType} />
-
           <PrivateRoute path="/company_unit" component={CompanyUnit} />
           <PrivateRoute path="/addCompanyUnit" component={AddCompanyUnit} />
           <PrivateRoute path="/editCompanyUnit" component={EditUnitCompany} />
+
+          <PrivateRoute path="/comment" component={BenefitsCategory} />
+          <PrivateRoute path="/company_benefits" component={CompanyBenefits} />
+          <PrivateRoute
+            path="/addCompanyBenefits"
+            component={AddCompanyBenefits}
+          />
+          <PrivateRoute
+            path="/editCompanyBenefits"
+            component={EditCompanyBenefits}
+          />
+
+          <PrivateRoute path="/banners" component={Slider} />
         </Switch>
       </Router>
     );

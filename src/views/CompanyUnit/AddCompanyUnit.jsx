@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import API from "../../utils/api";
+import $ from "jquery";
 import { getUser, removeUserSession } from "../../utils/Common";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { convertToRaw, EditorState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
-import { ShowAlertMessage } from "../../utils/CommonFunctions";
+import { ShowAlertMessage, MessageResults } from "../../utils/CommonFunctions";
 import DropdownList from "../../components/dropdown/dropdownList";
 
 const getHtml = (editorState) =>
@@ -27,17 +28,42 @@ export default function AddFaq(props) {
   };
 
   const addUnitCompany = () => {
+    let dataUpload = $("#logo")[0];
+    let formData = new FormData();
+    formData.append("postedFiles", dataUpload.files[0]);
+    API.postData("BusinessUnit/UploadFiles", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          addUnit(res.data);
+        }
+      })
+      .catch(function (err) {
+        debugger;
+        console.error("Error de conexion " + err);
+        alert(400, err);
+      });
+  };
+
+  const addUnit = (img) => {
     API.postData("BusinessUnit/add", {
       name: name.value,
       shortName: shortName.value,
+      logo: img[0],
       unitOrder: parseInt(unitOrder.value),
       detail: getHtml(detail),
       companyUnitTypeId: dropUnitTypeValor,
       inactive: "N",
       companyId: getUser().companyId,
     })
-      .then((response) => {
-        ShowAlertMessage("Información", "Guardado correctamente");
+      .then((res) => {
+        MessageResults(res.status);
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 1200);
       })
       .catch((error) => {
         ShowAlertMessage(
@@ -98,12 +124,16 @@ export default function AddFaq(props) {
 
   const convertiraBase64 = (e) => {
     const output = document.getElementById("output");
+
+    let req = new XMLHttpRequest();
+    let formData = new FormData();
+    formData.append("IMG", output);
+
     output.src = URL.createObjectURL(e.target.files[0]);
 
     output.onload = function () {
       const url = URL.revokeObjectURL(output.src); // free memory
     };
-    console.log(output);
   };
   const [error, setError] = useState(null);
   const shortName = useFormInput("");
@@ -153,14 +183,12 @@ export default function AddFaq(props) {
                 <input class="form-control" {...unitOrder} />
               </div>
               <div class="form-group col-md-6">
-                <label class="control-label">Logo </label>
-                <br />
+                <label class="control-label">Logo</label>&nbsp;&nbsp;
                 <input
                   type="file"
                   id="logo"
-                  multiple
-                  accept="image/png, image/PNG"
                   onChange={(e) => convertiraBase64(e)}
+                  multiple
                 />
                 <br />
                 <img id="output" width="150" height="100" />

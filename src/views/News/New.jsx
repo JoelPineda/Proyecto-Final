@@ -1,22 +1,41 @@
 import React, { useState, useEffect } from "react";
-import Button from "../../components/Button/Button";
-import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
 import $ from "jquery";
 import Moment from "moment";
-import es from "date-fns/locale/es";
 import "moment/locale/es";
-import { getUser, removeUserSession } from "../../utils/Common";
 import API from "../../utils/api";
-import { EditEvaluation } from "../Evaluation/editEvaluation";
-
 import Loading from "../../components/loading/loading";
 import {
   ShowConfirmationMessage,
   MessageResults,
   ShowPopUp,
 } from "../../utils/CommonFunctions";
-import { DataTable } from "datatables.net";
 import { LangSpanish } from "../../tools/dataTables.Language";
+
+$(document).ready(() => {
+  $("body").on("click", "#TblNew #btDel", function (e) {
+    let param = JSON.parse(
+      atob($(e.currentTarget).parent().attr("data-item"))
+    )[0];
+    ShowConfirmationMessage(SaveDisableChanges, "", param);
+  });
+
+  const SaveDisableChanges = (params) => {
+    let id = params.id;
+    API.putData("News/DisableRegister?id=" + id)
+      .then((res) => {
+        if (res.status === 200) {
+          MessageResults(res.status);
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 1200);
+        }
+      })
+      .catch(function (err) {
+        console.error("Error de conexion " + err);
+        MessageResults(400, err);
+      });
+  };
+});
 
 export default function New(props) {
   const [dataLoading, setDataLoading] = useState(true);
@@ -31,7 +50,8 @@ export default function New(props) {
           let dataResult = [];
 
           setFaq(res.data);
-
+          let DeleteBtn =
+            "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Usuario' ></a>";
           res.data.forEach((item) => {
             dataResult.push({
               id:
@@ -58,18 +78,25 @@ export default function New(props) {
                 '<span class="capitalized defaultText">' +
                 item.companyId +
                 "</span>",
+
               itemBtn:
-                '<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Noticia" href="/editNew?id=' +
+                "<span data-created='" +
+                item.id +
+                "'  data-item='" +
+                btoa(JSON.stringify([item])) +
+                "'>" +
+                '&nbsp;<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Noticia" href="/editNew?id=' +
                 item.id +
                 '"' +
-                item.id +
-                " ></a>",
+                " ></a>&nbsp;" +
+                DeleteBtn +
+                "</span>",
             });
           });
 
           $("#TblNew").DataTable({
             destroy: true,
-            searching: false,
+            searching: true,
             language: LangSpanish,
             bLengthChange: false,
             lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200],
