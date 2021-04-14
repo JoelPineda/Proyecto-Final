@@ -96,9 +96,10 @@ export default function PolicyAccepted(props) {
         }
       })
       .catch(function (err) {
+        setDataLoading(false);
         console.error("Error de conexion " + err);
       });
-    setDataLoading(false);
+    
   };
 
   useEffect(() => {

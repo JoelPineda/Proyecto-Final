@@ -129,9 +129,10 @@ export default function Employee(props) {
         }
       })
       .catch(function (err) {
+        setDataLoading(false);
         console.error("Error de conexion " + err);
       });
-    setDataLoading(false);
+    
   };
 
   useEffect(() => {

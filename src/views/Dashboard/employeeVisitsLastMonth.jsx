@@ -94,9 +94,10 @@ export default function EmployeeVisitMonth(props) {
         }
       })
       .catch(function (err) {
+        setDataLoading(false);
         console.error("Error de conexion " + err);
       });
-    setDataLoading(false);
+    
   };
 
   useEffect(() => {
