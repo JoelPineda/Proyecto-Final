@@ -17,6 +17,7 @@ export default {
     instance({
       method: "POST",
       url: url,
+
       data: data,
     }),
   putData: (url, data) =>

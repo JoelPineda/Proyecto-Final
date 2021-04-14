@@ -5,7 +5,12 @@ import "moment/locale/es";
 import API from "../../utils/api";
 import Loading from "../../components/loading/loading";
 import { LangSpanish } from "../../tools/dataTables.Language";
-import { ShowPopUp, ShowAlertMessage } from "../../utils/CommonFunctions";
+import {
+  ShowPopUp,
+  MessageResults,
+  ShowAlertMessage,
+  ShowConfirmationMessage,
+} from "../../utils/CommonFunctions";
 import { AddBank } from "../Bank/AddBank";
 import { EditBank } from "../Bank/EditBank";
 
@@ -109,6 +114,30 @@ $(document).ready(() => {
     }
     // alert($(e.currentTarget).val());
   });
+
+  $("body").on("click", "#TblBank #btDel", function (e) {
+    let param = JSON.parse(
+      atob($(e.currentTarget).parent().attr("data-item"))
+    )[0];
+    ShowConfirmationMessage(SaveDisableChanges, "", param);
+  });
+
+  const SaveDisableChanges = (params) => {
+    let id = params.id;
+    API.putData("Bank/DisableRegister?id=" + id)
+      .then((res) => {
+        if (res.status === 200) {
+          MessageResults(res.status);
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 1200);
+        }
+      })
+      .catch(function (err) {
+        console.error("Error de conexion " + err);
+        MessageResults(400, err);
+      });
+  };
 });
 
 export default function Bank(props) {
@@ -123,7 +152,10 @@ export default function Bank(props) {
           let dataResult = [];
           setBank(res.data);
           let EditBtn =
-            "<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Banco' ></a>";
+            "&nbsp;<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Banco' ></a>&nbsp;";
+
+          let DeleteBtn =
+            "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Banco' ></a>";
           res.data.forEach((item) => {
             dataResult.push({
               id:
@@ -150,13 +182,14 @@ export default function Bank(props) {
                 btoa(JSON.stringify([item])) +
                 "'>" +
                 EditBtn +
+                DeleteBtn +
                 "</span>",
             });
           });
 
           $("#TblBank").DataTable({
             destroy: true,
-            searching: false,
+            searching: true,
             language: LangSpanish,
             bLengthChange: false,
             lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200],

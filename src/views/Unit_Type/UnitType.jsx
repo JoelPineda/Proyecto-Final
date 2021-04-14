@@ -6,7 +6,12 @@ import API from "../../utils/api";
 import { AddTipoUnidad } from "../Unit_Type/AddUnitType";
 import { EditTipoUnidad } from "../Unit_Type/EditUnitType";
 import Loading from "../../components/loading/loading";
-import { ShowPopUp, ShowAlertMessage } from "../../utils/CommonFunctions";
+import {
+  ShowPopUp,
+  ShowAlertMessage,
+  ShowConfirmationMessage,
+  MessageResults,
+} from "../../utils/CommonFunctions";
 import { LangSpanish } from "../../tools/dataTables.Language";
 
 $(document).ready(() => {
@@ -95,11 +100,11 @@ $(document).ready(() => {
       description: $("#tbDescriptionEdit").val(),
       inactive: inac,
     })
-      .then((response) => {
+      .then((res) => {
+        MessageResults(res.status);
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);
-        ShowAlertMessage("Información", "Actualizado correctamente");
       })
       .catch((error) => {
         ShowAlertMessage(
@@ -108,6 +113,30 @@ $(document).ready(() => {
           "error"
         );
         console.log(error);
+      });
+  };
+
+  $("body").on("click", "#Tbltipo #btDel", function (e) {
+    let param = JSON.parse(
+      atob($(e.currentTarget).parent().attr("data-item"))
+    )[0];
+    ShowConfirmationMessage(SaveDisableChanges, "", param);
+  });
+
+  const SaveDisableChanges = (params) => {
+    let id = params.id;
+    API.putData("BusinessUnitType/DisableRegister?id=" + id)
+      .then((res) => {
+        if (res.status === 200) {
+          MessageResults(res.status);
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 1200);
+        }
+      })
+      .catch(function (err) {
+        console.error("Error de conexion " + err);
+        MessageResults(400, err);
       });
   };
 });
@@ -126,7 +155,10 @@ export default function UnitType(props) {
 
           setUnitType(res.data);
           let EditBtn =
-            "<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Tipo Unidad' ></a>";
+            "&nbsp;<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Tipo Unidad' ></a>&nbsp;";
+
+          let DeleteBtn =
+            "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Tipo Unidad' ></a>";
           res.data.forEach((item) => {
             dataResult.push({
               id:
@@ -148,13 +180,14 @@ export default function UnitType(props) {
                 btoa(JSON.stringify([item])) +
                 "'>" +
                 EditBtn +
+                DeleteBtn +
                 "</span>",
             });
           });
 
           $("#Tbltipo").DataTable({
             destroy: true,
-            searching: false,
+            searching: true,
             language: LangSpanish,
             bLengthChange: false,
             lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200],

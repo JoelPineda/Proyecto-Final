@@ -5,6 +5,37 @@ import API from "../../utils/api";
 import Loading from "../../components/loading/loading";
 import { LangSpanish } from "../../tools/dataTables.Language";
 import { getUser, removeUserSession } from "../../utils/Common";
+import {
+  MessageResults,
+  ShowConfirmationMessage,
+  GetImagePatch,
+} from "../../utils/CommonFunctions";
+
+$(document).ready(() => {
+  $("body").on("click", "#TblCompanyUnit #btDel", function (e) {
+    let param = JSON.parse(
+      atob($(e.currentTarget).parent().attr("data-item"))
+    )[0];
+    ShowConfirmationMessage(SaveDisableChanges, "", param);
+  });
+
+  const SaveDisableChanges = (params) => {
+    let id = params.id;
+    API.putData("BusinessUnit/DisableRegister?id=" + id)
+      .then((res) => {
+        if (res.status === 200) {
+          MessageResults(res.status);
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 1200);
+        }
+      })
+      .catch(function (err) {
+        console.error("Error de conexion " + err);
+        MessageResults(400, err);
+      });
+  };
+});
 
 export default function CompanyUnit(props) {
   const [dataLoading, setDataLoading] = useState(true);
@@ -18,6 +49,9 @@ export default function CompanyUnit(props) {
           let dataResult = [];
 
           setCompanyUnit(res.data);
+
+          let DeleteBtn =
+            "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Unidad De Compañia' ></a>";
 
           res.data.forEach((item) => {
             dataResult.push({
@@ -34,9 +68,9 @@ export default function CompanyUnit(props) {
                 item.shortName +
                 "</span>",
               logo:
-                '<span class="capitalized defaultText">' +
-                item.logo +
-                "</span>",
+                '<img src="' +
+                GetImagePatch("/images/units/" + item.logo) +
+                '"  class="img-fluid "  alt="Logo" />',
               detail:
                 '<span class="capitalized defaultText">' +
                 item.detail +
@@ -58,17 +92,23 @@ export default function CompanyUnit(props) {
                 item.companyId +
                 "</span>",
               itemBtn:
-                '<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Unidad de Compañia" href="/editCompanyUnit?id=' +
+                "<span data-created='" +
+                item.id +
+                "'  data-item='" +
+                btoa(JSON.stringify([item])) +
+                "'>" +
+                '&nbsp;<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Unidad De Compañia" href="/editCompanyUnit?id=' +
                 item.id +
                 '"' +
-                item.id +
-                " ></a>",
+                " ></a>&nbsp;" +
+                DeleteBtn +
+                "</span>",
             });
           });
 
           $("#TblCompanyUnit").DataTable({
             destroy: true,
-            searching: false,
+            searching: true,
             language: LangSpanish,
             bLengthChange: false,
             lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200],
@@ -94,6 +134,12 @@ export default function CompanyUnit(props) {
               {
                 data: "name",
                 title: "Nombre",
+                width: "25%",
+                className: "capitalized",
+              },
+              {
+                data: "logo",
+                title: "Logo",
                 width: "25%",
                 className: "capitalized",
               },
@@ -152,11 +198,11 @@ export default function CompanyUnit(props) {
             <div className="lowcolor col-12">
               <br />
               <br />
-              <h2 className="h2">Unidad de compañia</h2>
+              <h2 className="h2">Unidad De Compañia</h2>
               <a href="/addCompanyUnit">
                 <span className="btn btn-success btn-sm">
-                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Unidad de
-                  compañia
+                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Unidad De
+                  Compañia
                 </span>
               </a>
             </div>

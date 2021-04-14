@@ -4,6 +4,7 @@ import "moment/locale/es";
 import API from "../../utils/api";
 import Loading from "../../components/loading/loading";
 import { LangSpanish } from "../../tools/dataTables.Language";
+import { GetImagePatch } from "../../utils/CommonFunctions";
 
 export default function CompanyConf(props) {
   const [dataLoading, setDataLoading] = useState(true);
@@ -26,9 +27,9 @@ export default function CompanyConf(props) {
                 item.id +
                 "</>",
               logo:
-                '<span class="capitalized defaultText">' +
-                item.logo +
-                "</span>",
+                '<img src="' +
+                GetImagePatch("/images/" + item.logo) +
+                '"  class="img-fluid "  alt="Logo" />',
               vision:
                 '<span class="capitalized defaultText">' +
                 item.vision +
@@ -56,7 +57,7 @@ export default function CompanyConf(props) {
 
           $("#TblCompany").DataTable({
             destroy: true,
-            searching: false,
+            searching: true,
             language: LangSpanish,
             bLengthChange: false,
             lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200],
@@ -86,7 +87,7 @@ export default function CompanyConf(props) {
               {
                 data: "logo",
                 title: "Logo\u00a0Compañia",
-                width: "25%",
+                width: "15%",
                 className: "capitalized",
               },
               {

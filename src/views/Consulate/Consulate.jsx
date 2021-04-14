@@ -14,6 +14,7 @@ import {
   ShowConfirmationMessage,
   ShowAlertMessage,
   ShowPopUp,
+  MessageResults,
 } from "../../utils/CommonFunctions";
 import { AddConsulate } from "../Consulate/AddConsulate";
 import { LangSpanish } from "../../tools/dataTables.Language";
@@ -116,6 +117,30 @@ $(document).ready(() => {
         console.log(error);
       });
   };
+
+  $("body").on("click", "#TblConsulate #btDel", function (e) {
+    let param = JSON.parse(
+      atob($(e.currentTarget).parent().attr("data-item"))
+    )[0];
+    ShowConfirmationMessage(SaveDisableChanges, "", param);
+  });
+
+  const SaveDisableChanges = (params) => {
+    let id = params.id;
+    API.putData("Consulate/DisableRegister?id=" + id)
+      .then((res) => {
+        if (res.status === 200) {
+          MessageResults(res.status);
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 1200);
+        }
+      })
+      .catch(function (err) {
+        console.error("Error de conexion " + err);
+        MessageResults(400, err);
+      });
+  };
 });
 
 export default function Consulate(props) {
@@ -132,7 +157,10 @@ export default function Consulate(props) {
 
           setBank(res.data);
           let EditBtn =
-            "<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Consulado' ></a>";
+            "&nbsp;<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Consulado' ></a>&nbsp;";
+
+          let DeleteBtn =
+            "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Consulado' ></a>";
           res.data.forEach((item) => {
             dataResult.push({
               id:
@@ -158,13 +186,14 @@ export default function Consulate(props) {
                 btoa(JSON.stringify([item])) +
                 "'>" +
                 EditBtn +
+                DeleteBtn +
                 "</span>",
             });
           });
 
           $("#TblConsulate").DataTable({
             destroy: true,
-            searching: false,
+            searching: true,
             language: LangSpanish,
             bLengthChange: false,
             lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200],

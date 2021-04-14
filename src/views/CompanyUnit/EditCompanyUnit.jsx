@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import API from "../../utils/api";
-import { getUser, setUserSession } from "../../utils/Common";
+import { getUser } from "../../utils/Common";
 import { Editor } from "react-draft-wysiwyg";
-import Moment from "moment";
+import $ from "jquery";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import {
   convertToRaw,
@@ -12,8 +12,11 @@ import {
 } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import queryString from "query-string";
-import { ShowAlertMessage } from "../../utils/CommonFunctions";
-import DropdownList from "../../components/dropdown/dropdownList";
+import {
+  ShowAlertMessage,
+  MessageResults,
+  GetImagePatch,
+} from "../../utils/CommonFunctions";
 
 const getHtml = (editorState) =>
   draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -31,6 +34,7 @@ export default function EditUnitCompany(props) {
           setUnitCompany(response.data);
           setState({
             name: response.data.name,
+            logo: response.data.logo,
             inactive: response.data.inactive,
             shortName: response.data.shortName,
             companyUnitTypeId: response.data.companyUnitTypeId,
@@ -50,6 +54,7 @@ export default function EditUnitCompany(props) {
 
   const [state, setState] = useState({
     name: unitCompany.name,
+    logo: unitCompany.logo,
     inactive: unitCompany.inactive,
     shortName: unitCompany.shortName,
     detail: unitCompany.detail,
@@ -61,6 +66,7 @@ export default function EditUnitCompany(props) {
     name,
     inactive,
     shortName,
+    logo,
     detail,
     companyUnitTypeId,
     unitOrder,
@@ -94,28 +100,62 @@ export default function EditUnitCompany(props) {
   };
 
   const handleChange = (e) => {
-    setState({ name: e.target.value });
-    setState({ inactive: e.target.value });
-    setState({ shortName: e.target.value });
-    setState({ detail: detail });
-    setState({ companyUnitTypeId: companyUnitTypeId });
-    setState({ unitOrder: unitOrder });
+    setState({ name: e.target.value, detail: detail, logo: logo });
+    setState({ inactive: e.target.value, detail: detail, logo: logo });
+    setState({ shortName: e.target.value, detail: detail, logo: logo });
+    setState({ detail: detail, logo: logo });
+    setState({
+      companyUnitTypeId: companyUnitTypeId,
+      detail: detail,
+      logo: logo,
+    });
+    setState({ unitOrder: unitOrder, detail: detail, logo: logo });
   };
 
-  const updateFaq = () => {
-    alert(dropUnitTypeValor);
-    /* API.putData("Faq/update", {
+  const updateBusinessUnit = () => {
+    let dataUpload = $("#logo")[0];
+    let formData = new FormData();
+
+    formData.append("postedFiles", dataUpload.files[0]);
+    API.postData("BusinessUnit/UploadFiles", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((res) => {
+        bussinessunitUpdate(res);
+      })
+      .catch(function (err) {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema cargando la imagen intente de nuevo",
+          "error"
+        );
+        console.error("Error de conexion " + err);
+      });
+  };
+
+  const bussinessunitUpdate = (res) => {
+    if (res.data[0] == undefined) {
+      res.data[0] = logo;
+    }
+
+    API.putData("BusinessUnit/update", {
       id: parseInt(id),
-      name: name.value,
-      shortName: shortName.value,
-      unitOrder: parseInt(unitOrder.value),
+      logo: res.data[0],
+      name: $("#name").val(),
+      shortName: $("#shortName").val(),
+      unitOrder: parseInt($("#unitOrder").val()),
       detail: getHtml(detail),
-      companyUnitTypeId: dropUnitTypeValor,
-      inactive: "N",
+      companyUnitTypeId: companyUnitTypeId,
+      inactive: $("#inactive").val(),
       companyId: getUser().companyId,
     })
       .then((response) => {
-        ShowAlertMessage("Información", "Actualizada correctamente");
+        MessageResults(response.status);
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 1200);
       })
       .catch((error) => {
         ShowAlertMessage(
@@ -124,12 +164,27 @@ export default function EditUnitCompany(props) {
           "error"
         );
         console.log(error);
-      });*/
+      });
   };
 
-  const OnDropUnidChange = (selectedOption) => {
-    sessionStorage.setItem("UnitTypeValue", selectedOption.value);
-    setUnitTypeValor(selectedOption.value);
+  const OnDropUnidChange = (e) => {
+    setState({
+      companyUnitTypeId: e.target.value,
+      detail: detail,
+      logo: logo,
+    });
+    sessionStorage.setItem("UnitTypeValue", e.value);
+    setUnitTypeValor(e.value);
+  };
+
+  const convertiraBase64 = (e) => {
+    const output = document.getElementById("output");
+    output.src = URL.createObjectURL(e.target.files[0]);
+
+    output.onload = function () {
+      const url = URL.revokeObjectURL(output.src); // free memory
+    };
+    console.log(output);
   };
 
   return (
@@ -144,7 +199,7 @@ export default function EditUnitCompany(props) {
               <div class="form-group col-md-6">
                 <label class="control-label">Nombre</label>
                 <input
-                  id="question"
+                  id="name"
                   class="form-control"
                   value={state.name}
                   onChange={handleChange}
@@ -153,7 +208,7 @@ export default function EditUnitCompany(props) {
               <div class="form-group col-md-6">
                 <label class="control-label">Nombre corto</label>
                 <input
-                  id="question"
+                  id="shortName"
                   class="form-control"
                   value={state.shortName}
                   onChange={handleChange}
@@ -173,12 +228,12 @@ export default function EditUnitCompany(props) {
               </div>
             </div>
             <div class="row">
-              <div class="form-group col-md-12">
+              <div class="form-group col-md-6">
                 <label class="control-label">Tipo de unidad</label>
                 <select
-                  id="logueado"
-                  name="logueado"
+                  id="unitType"
                   value={companyUnitTypeId}
+                  onChange={OnDropUnidChange}
                   class="form-control"
                 >
                   {dropUnitType.map((item) => (
@@ -186,22 +241,39 @@ export default function EditUnitCompany(props) {
                   ))}
                 </select>
               </div>
-            </div>
-            <div class="row">
+
               <div class="form-group col-md-6">
                 <label class="control-label">Orden unidad </label>
                 <input
-                  id="faqOrder"
+                  id="unitOrder"
                   class="form-control"
                   value={state.unitOrder}
                   onChange={handleChange}
                 />
               </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label class="control-label">Logo</label>&nbsp;&nbsp;
+                <input
+                  type="file"
+                  id="logo"
+                  onChange={(e) => convertiraBase64(e)}
+                  multiple
+                />
+                <br />
+                <img
+                  id="output"
+                  src={GetImagePatch("/images/units/" + state.logo)}
+                  width="150"
+                  height="150"
+                />
+              </div>
               <div class="form-group col-md-6">
                 <label class="control-label">Activo</label>
                 <select
-                  id="activo"
-                  name="activo"
+                  id="inactive"
+                  name="inactive"
                   value={state.inactive}
                   onChange={handleChange}
                   class="form-control"
@@ -218,7 +290,7 @@ export default function EditUnitCompany(props) {
                 <button
                   type="button"
                   className="mybt btn btn-outline-danger text-wrap"
-                  onClick={updateFaq}
+                  onClick={updateBusinessUnit}
                 >
                   Actualizar Unidad
                 </button>

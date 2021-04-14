@@ -59,7 +59,7 @@ export default function PolicyAccepted(props) {
 
           $("#TblVisita").DataTable({
             destroy: true,
-            searching: false,
+            searching: true,
             language: LangSpanish,
             bLengthChange: false,
             lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200],

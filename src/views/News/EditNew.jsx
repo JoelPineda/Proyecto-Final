@@ -12,7 +12,7 @@ import {
 } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import queryString from "query-string";
-import { ShowAlertMessage } from "../../utils/CommonFunctions";
+import { MessageResults, ShowAlertMessage } from "../../utils/CommonFunctions";
 
 const getHtml = (editorState) =>
   draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -51,8 +51,7 @@ export default function EditFaq(props) {
   const id = queryString.parse(props.location.search).id;
   const { title, inactive, publishingDate, content, a } = state;
   const handleChangeDate = (e) => {
-    setState({ creationDate: e.target.value });
-    setState({ content: content });
+    setState({ content: content, publishingDate: e.target.value });
   };
   const onEditorStateChange = (e) => {
     setState({
@@ -62,10 +61,10 @@ export default function EditFaq(props) {
   };
 
   const handleChange = (e) => {
-    setState({ title: e.target.value });
-    setState({ inactive: e.target.value });
-    setState({ content: content });
-    setState({ a: e.target.value });
+    setState({ title: e.target.value, content: content });
+
+    setState({ inactive: e.target.value, content: content });
+    setState({ content: content, publishingDate: publishingDate });
   };
 
   const updateNews = () => {
@@ -74,11 +73,14 @@ export default function EditFaq(props) {
       title: document.getElementById("title ").value,
       publishingDate: document.getElementById("publishingDate ").value,
       content: getHtml(content),
-      inactive: document.getElementById("activo").value,
+      inactive: document.getElementById("inactive").value,
       companyId: getUser().companyId,
     })
-      .then((response) => {
-        ShowAlertMessage("Información", "Actualizada correctamente");
+      .then((resp) => {
+        MessageResults(resp.status);
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 1200);
       })
       .catch((error) => {
         ShowAlertMessage(
@@ -135,8 +137,7 @@ export default function EditFaq(props) {
               <div class="form-group col-md-6">
                 <label class="control-label">Activo</label>
                 <select
-                  id="inactive "
-                  name="inactive "
+                  id="inactive"
                   value={state.inactive}
                   onChange={handleChange}
                   class="form-control"

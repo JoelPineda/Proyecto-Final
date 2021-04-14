@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import API from "../../utils/api";
-import { getUser, setUserSession } from "../../utils/Common";
+import { getUser } from "../../utils/Common";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { convertToRaw, EditorState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
-import { ShowAlertMessage } from "../../utils/CommonFunctions";
+import { ShowAlertMessage, MessageResults } from "../../utils/CommonFunctions";
 
 const getHtml = (editorState) =>
   draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -36,7 +36,10 @@ export default function AddPolicy(props) {
       companyId: getUser().companyId,
     })
       .then((response) => {
-        ShowAlertMessage("Información", "Guardado correctamente");
+        MessageResults(response.status);
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 1200);
       })
       .catch((error) => {
         ShowAlertMessage(
