@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import API from "../../utils/api";
-import { getToken, setUserSession } from "../../utils/Common";
+import $ from "jquery";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { convertToRaw, EditorState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import { ShowAlertMessage } from "../../utils/CommonFunctions";
-import DropdownList from "../../components/dropdown/dropdownList";
 
 const getHtml = (editorState) =>
   draftToHtml(convertToRaw(editorState.getCurrentContent()));
 
 export default function AddCompany(props) {
   const [state, setState] = useState({
-    showEmergencyMessage: EditorState.createEmpty(),
+    mottoPrimary: EditorState.createEmpty(),
+    mottoSecundary: EditorState.createEmpty(),
     emergencyMessage: EditorState.createEmpty(),
     aboutUs: EditorState.createEmpty(),
     mision: EditorState.createEmpty(),
@@ -24,7 +24,8 @@ export default function AddCompany(props) {
   });
 
   const {
-    showEmergencyMessage,
+    mottoPrimary,
+    mottoSecundary,
     emergencyMessage,
     aboutUs,
     mision,
@@ -37,7 +38,13 @@ export default function AddCompany(props) {
   const onEditorStateChange = (e) => {
     setState({
       ...state,
-      showEmergencyMessage: e,
+      mottoPrimary: e,
+    });
+  };
+  const onEditorStateChangeM = (e) => {
+    setState({
+      ...state,
+      mottoSecundary: e,
     });
   };
 
@@ -87,13 +94,39 @@ export default function AddCompany(props) {
       fundacionCorripio: e,
     });
   };
-  const guardarCompany = () => {
+
+  const guardarCompany = async () => {
+    let image = "";
+    let imagen = "";
+    let dataUpload = $("#logo")[0];
+    let dataUpload1 = $("#logoTitulo")[0];
+    let formData = new FormData();
+    formData.append("postedFiles", dataUpload.files[0]);
+    formData.append("postedFiles", dataUpload1.files[0]);
+    await API.postData("Company/UploadFiles", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((res) => {
+        image = res.data[0];
+        imagen = res.data[0];
+        add(image, imagen);
+      })
+      .catch(function (err) {
+        debugger;
+        console.error("Error de conexion " + err);
+        alert(400, err);
+      });
+  };
+
+  const add = (img, imagen) => {
     API.postData("Company/add", {
-      logo: logo.value,
+      logo: img,
       primaryColor: primaryColor.value,
       accentColor: accentColor.value,
       name: name.value,
-      showEmergencyMessage: getHtml(showEmergencyMessage),
+      showEmergencyMessage: "N",
       emergencyMessage: getHtml(emergencyMessage),
       aboutUs: getHtml(aboutUs),
       mision: getHtml(mision),
@@ -104,6 +137,10 @@ export default function AddCompany(props) {
       suggestionEmail: suggestionEmail.value,
       emailCaseReport: emailCaseReport.value,
       emailSupport: emailSupport.value,
+      companyId: companyid.value,
+      companyLogoWithTitle: imagen,
+      mottoPrimary: getHtml(mottoPrimary),
+      mottoSecundary: getHtml(mottoSecundary),
     })
       .then((response) => {
         ShowAlertMessage("Información", "Guardado correctamente");
@@ -139,6 +176,15 @@ export default function AddCompany(props) {
     console.log(output);
   };
 
+  const convertiraBase641 = (e) => {
+    const output = document.getElementById("output1");
+    output.src = URL.createObjectURL(e.target.files[0]);
+
+    output.onload = function () {
+      const url = URL.revokeObjectURL(output.src); // free memory
+    };
+    console.log(output);
+  };
   const [error, setError] = useState(null);
   const name = useFormInput("");
   const logo = useFormInput("");
@@ -147,6 +193,7 @@ export default function AddCompany(props) {
   const suggestionEmail = useFormInput("");
   const emailCaseReport = useFormInput("");
   const emailSupport = useFormInput("");
+  const companyid = useFormInput("");
 
   return (
     <div class="container">
@@ -161,20 +208,38 @@ export default function AddCompany(props) {
                 <label class="control-label">Nombre</label>
                 <input class="form-control" {...name} />
               </div>
+
               <div class="form-group col-md-6">
-                <label class="control-label">Logo </label>
-                <br />
+                <label class="control-label">Código Compañia</label>
+                <input class="form-control" {...companyid} />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label class="control-label">Logo</label>&nbsp;&nbsp;
                 <input
                   type="file"
                   id="logo"
-                  multiple
-                  accept="image/png, image/PNG"
                   onChange={(e) => convertiraBase64(e)}
+                  multiple
                 />
                 <br />
                 <img id="output" width="150" height="100" />
               </div>
+              <div class="form-group col-md-6">
+                <label class="control-label">Logo Titulo</label>&nbsp;&nbsp;
+                <input
+                  type="file"
+                  id="logoTitulo"
+                  onChange={(e) => convertiraBase641(e)}
+                  multiple
+                />
+                <br />
+                <img id="output1" width="150" height="100" />
+              </div>
             </div>
+
             <div class="row">
               <div class="form-group col-md-6">
                 <label class="control-label">Color primario</label>
@@ -188,17 +253,27 @@ export default function AddCompany(props) {
 
             <div className="row editor">
               <div class="form-group col-md-6">
-                <label class="control-label">
-                  Mostrar mensaje de emergencia
-                </label>
+                <label class="control-label">Lema Primario</label>
                 <Editor
-                  editorState={showEmergencyMessage}
+                  editorState={mottoPrimary}
                   toolbarClassName="toolbarClassName"
                   wrapperClassName="rich-editor demo-wrapper"
                   editorClassName="editorClassName"
                   onEditorStateChange={onEditorStateChange}
                 />
               </div>
+              <div class="form-group col-md-6">
+                <label class="control-label">Lema Secundario</label>
+                <Editor
+                  editorState={mottoSecundary}
+                  toolbarClassName="toolbarClassName"
+                  wrapperClassName="rich-editor demo-wrapper"
+                  editorClassName="editorClassName"
+                  onEditorStateChange={onEditorStateChangeM}
+                />
+              </div>
+            </div>
+            <div class="row">
               <div class="form-group col-md-6">
                 <label class="control-label">Mensaje de emergencia</label>
                 <Editor
@@ -301,16 +376,17 @@ export default function AddCompany(props) {
                 <span class="text-danger"></span>
               </div>
             </div>
-
-            <div class="form-group col-md-2">
-              <button
-                type="button"
-                className="mybt btn btn-outline-danger text-wrap"
-                onClick={guardarCompany}
-              >
-                Guardar Compania
-              </button>
-            </div>
+            <center>
+              <div class="form-group col-md-2">
+                <button
+                  type="button"
+                  className="mybt btn btn-outline-danger text-wrap"
+                  onClick={guardarCompany}
+                >
+                  Guardar Compania
+                </button>
+              </div>
+            </center>
           </div>
         </div>
       </div>

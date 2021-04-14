@@ -1,45 +1,72 @@
 import React, { useState, useEffect } from "react";
-import Button from "../../components/Button/Button";
-import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
 import $ from "jquery";
 import Moment from "moment";
-import es from "date-fns/locale/es";
 import "moment/locale/es";
-import { getUser, removeUserSession } from "../../utils/Common";
 import API from "../../utils/api";
-import { EditConsulate } from "../Consulate/EditConsulate";
 
+import { getUser, removeUserSession } from "../../utils/Common";
+import { AddBenefitsCategory } from "../BenefitsCategory/AddBenefitsCategory";
+import { EditBenefitsCategory } from "../BenefitsCategory/EditBenefitsCategory";
 import Loading from "../../components/loading/loading";
 import {
-  ShowConfirmationMessage,
-  ShowAlertMessage,
   ShowPopUp,
+  ShowAlertMessage,
+  ShowConfirmationMessage,
   MessageResults,
+  GetImagePatch,
 } from "../../utils/CommonFunctions";
-import { AddConsulate } from "../Consulate/AddConsulate";
 import { LangSpanish } from "../../tools/dataTables.Language";
 
 $(document).ready(() => {
-  $("#sp_AddConsulate").click(() => {
+  $("#sp_AddTIPO").click(() => {
     ShowPopUp({
-      titleName: "AGREGAR NUEVO CONSULADO",
-      htmlBody: AddConsulate(),
-      handlerEvent: OnClickSaveConsulateBank,
+      titleName: "AGREGAR CATEGORÍA DE BENEFICIOS",
+      htmlBody: AddBenefitsCategory(),
+      handlerEvent: SaveCategory,
       TextOk: "Guardar",
       isDisabled: true,
       EnabledDisabled: true,
     });
   });
-  const OnClickSaveConsulateBank = () => {
-    API.postData("Consulate/add", {
-      ConsulateName: $("#tbConsulate").val(),
-      inactive: "N",
+  const SaveCategory = () => {
+    let imagen = "";
+
+    let dataUpload = $("#inplogo")[0];
+    let formData = new FormData();
+    formData.append("postedFiles", dataUpload.files[0]);
+
+    API.postData("BenefitsCategory/UploadFiles", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     })
-      .then((response) => {
-        setTimeout(() => {
-          window.location.reload(true);
-        }, 1200);
-        ShowAlertMessage("Información", "Guardado correctamente");
+      .then((res) => {
+        imagen = res.data[0];
+      })
+      .catch(function (err) {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
+        console.error("Error de conexion " + err);
+      });
+    if (imagen != "") {
+      alert("Entro");
+      OnClickSaveBenefitsCategory(imagen);
+    }
+  };
+
+  const OnClickSaveBenefitsCategory = (imagen) => {
+    API.postData("BenefitsCategory/add", {
+      description: $("#tbDescriptionB").val(),
+      inactive: "N",
+      logo: imagen,
+      orderCat: parseInt($("#tbcat").val()),
+      companyId: getUser().companyId,
+    })
+      .then((res) => {
+        MessageResults(res.status);
       })
       .catch((error) => {
         ShowAlertMessage(
@@ -51,20 +78,23 @@ $(document).ready(() => {
       });
   };
 
-  $("body").on("change", "#tbConsulate", (e) => {
+  $("body").on("change", "#tbDescriptionB", (e) => {
     let btnOk = $(".swal2-confirm.swal2-styled");
 
     if ($(e.currentTarget).val().length > 3) {
-      API.getData("Consulate/getName?Consulatename=" + $("#tbConsulate").val())
+      API.getData(
+        "BenefitsCategory/getDescription?description=" +
+          $("#tbDescriptionB").val()
+      )
         .then((response) => {
           if (response.status === 200) {
             if (response.data) {
-              $("#sp_tbConsulate").text("Consulado existe");
+              $("#sp_tbDescriptionB").text("CATEGORÍA DE BENEFICIOS EXISTE");
 
               $(btnOk).attr("disabled", true);
             } else {
               $(btnOk).removeAttr("disabled");
-              $("#sp_tbConsulate").text("");
+              $("#sp_tbDescriptionB").text("");
             }
           }
         })
@@ -73,40 +103,74 @@ $(document).ready(() => {
         });
     } else {
       $(btnOk).attr("disabled", true);
-      $("#sp_tbConsulate").text(" Requerido!");
+      $("#sp_tbDescriptionB").text(" Requerido!");
     }
   });
 
-  $("body").on("click", "#TblConsulate #btEdit", function (e) {
+  $("body").on("click", "#TblBenefitsCategory #btEdit", function (e) {
     ShowPopUp({
-      titleName: "Actualizar Consulado",
-      htmlBody: EditConsulate(e),
-      handlerEvent: OnClickSaveEditBank,
+      titleName: "ACTUALIZAR CATEGORÍA DE BENEFICIOS",
+      htmlBody: EditBenefitsCategory(e),
+      handlerEvent: ClickSave,
       TextOk: "Guardar",
       isDisabled: true,
       EnabledDisabled: true,
     });
   });
 
-  $("body").on("change", "#tbconsulateNameEdit", (e) => {
+  $("body").on("change", "#tbDescriptionEdit", (e) => {
     let btnOk = $(".swal2-confirm.swal2-styled");
 
     $(btnOk).removeAttr("disabled");
   });
 
-  const OnClickSaveEditBank = () => {
+  const ClickSave = async () => {
+    let imagen = $("#logoName").val();
+
+    let dataUpload = $("#tblogo")[0];
+    let formData = new FormData();
+    formData.append("postedFiles", dataUpload.files[0]);
+
+    await API.postData("BenefitsCategory/UploadFiles", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((res) => {
+        if (res.data[0] != undefined) {
+          imagen = res.data[0];
+        }
+      })
+      .catch(function (err) {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema al cargar la imagen intente de nuevo",
+          "error"
+        );
+        console.error("Error de conexion " + err);
+      });
+    OnClickSaveEditBank(imagen);
+    setTimeout(() => {
+      window.location.reload(true);
+    }, 1200);
+  };
+
+  const OnClickSaveEditBank = (imagen) => {
     let inac = $("#tbinactive").val() !== "Y" ? "N" : "Y";
 
-    API.putData("Consulate/update", {
-      id: parseInt($("#tbConsulateID").val()),
-      ConsulateName: $("#tbconsulateNameEdit").val(),
+    API.putData("BenefitsCategory/update", {
+      id: parseInt($("#tbTipoID").val()),
+      description: $("#tbDescriptionEdit").val(),
+      logo: imagen,
+      orderCat: parseInt($("#tbcat").val()),
+      companyId: getUser().companyId,
       inactive: inac,
     })
-      .then((response) => {
+      .then((res) => {
+        MessageResults(res.status);
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);
-        ShowAlertMessage("Información", "Actualizado correctamente");
       })
       .catch((error) => {
         ShowAlertMessage(
@@ -118,7 +182,7 @@ $(document).ready(() => {
       });
   };
 
-  $("body").on("click", "#TblConsulate #btDel", function (e) {
+  $("body").on("click", "#TblBenefitsCategory #btDel", function (e) {
     let param = JSON.parse(
       atob($(e.currentTarget).parent().attr("data-item"))
     )[0];
@@ -127,7 +191,7 @@ $(document).ready(() => {
 
   const SaveDisableChanges = (params) => {
     let id = params.id;
-    API.putData("Consulate/DisableRegister?id=" + id)
+    API.putData("BenefitsCategory/DisableRegister?id=" + id)
       .then((res) => {
         if (res.status === 200) {
           MessageResults(res.status);
@@ -143,45 +207,46 @@ $(document).ready(() => {
   };
 });
 
-export default function Consulate(props) {
+export default function BenefitsCategory(props) {
   const [dataLoading, setDataLoading] = useState(true);
-  const [bank, setBank] = useState(true);
+  const [benefitsCategory, setBenefitsCategory] = useState(true);
 
   const fillData = () => {
     let Record = [];
-    API.getData("Consulate/get")
+    API.getData("BenefitsCategory/get?companyId=" + getUser().companyId)
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
           let dataResult = [];
 
-          setBank(res.data);
+          setBenefitsCategory(res.data);
           let EditBtn =
-            "&nbsp;<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Consulado' ></a>&nbsp;";
+            "&nbsp;<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Categoría De Beneficios' ></a>&nbsp;";
 
           let DeleteBtn =
-            "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Consulado' ></a>";
+            "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Categoría De Beneficios' ></a>";
           res.data.forEach((item) => {
             dataResult.push({
               id:
                 '<span class="container d-flex align-items-center justify-content-center">' +
                 item.id +
                 "</>",
-              consulateName:
+              description:
                 '<span class="capitalized defaultText">' +
-                item.consulateName +
+                item.description +
                 "</span>",
-              inactive:
+              logo:
+                '<img src="' +
+                GetImagePatch("/images/" + item.logo) +
+                '"  class="img-fluid"  alt="Logo" />',
+              orderCat:
                 '<span class="capitalized defaultText">' +
-                (item.inactive !== "N" ? "Si" : "No") +
+                item.orderCat +
                 "</span>",
-              creationDate:
-                '<span class="capitalized defaultText">' +
-                Moment(item.creationDate).format("DD/MM/YYYY  ") +
-                "</span>",
+
               itemBtn:
                 "<span data-created='" +
-                Moment(item.creationDate).format("DD/MM/YYYY ") +
+                item.inactive +
                 "'  data-item='" +
                 btoa(JSON.stringify([item])) +
                 "'>" +
@@ -191,7 +256,7 @@ export default function Consulate(props) {
             });
           });
 
-          $("#TblConsulate").DataTable({
+          $("#TblBenefitsCategory").DataTable({
             destroy: true,
             searching: true,
             language: LangSpanish,
@@ -204,28 +269,30 @@ export default function Consulate(props) {
               dataResult.length === 0
                 ? [
                     {
-                      consulateName: "",
+                      description: "",
                       inactive: "",
-                      creationDate: "",
+                      orderCat: "",
+                      logo: "",
                     },
                   ]
                 : dataResult,
             columns: [
               {
-                data: "consulateName",
-                title: "Consulado",
-                width: "40%",
+                data: "description",
+                title: "Descripción",
+                width: "25%",
                 className: "capitalized",
               },
               {
-                data: "creationDate",
-                title: "Fecha",
-                width: "20%",
+                data: "logo",
+                title: "Logo",
+                width: "10%",
                 className: "capitalized",
               },
+
               {
-                data: "inactive",
-                title: "Inactivo",
+                data: "orderCat",
+                title: "Orden Categoría",
                 width: "20%",
                 className: "capitalized",
               },
@@ -260,11 +327,14 @@ export default function Consulate(props) {
             <div className="lowcolor col-12">
               <br />
               <br />
-              <h2 className="h2">Consulados</h2>
+              <h2 className="h2">CATEGORÍA DE BENEFICIOS</h2>
 
-              <span className="btn btn-success btn-sm" id="sp_AddConsulate">
-                <i className="fa fa-plus-circle"></i>&nbsp;Añadir Consulado
+              <span className="btn btn-success btn-sm" id="sp_AddTIPO">
+                <i className="fa fa-plus-circle"></i>&nbsp;Añadir CATEGORÍA DE
+                BENEFICIOS
               </span>
+              <br />
+              <br />
             </div>
           </div>
           <div className="row ">
@@ -278,7 +348,7 @@ export default function Consulate(props) {
                         Style="min-height:600px"
                       >
                         <table
-                          id="TblConsulate"
+                          id="TblBenefitsCategory"
                           className="table table-striped table-bordered display"
                           Style="width:100% !important"
                         ></table>

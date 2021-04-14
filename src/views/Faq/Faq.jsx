@@ -1,22 +1,41 @@
 import React, { useState, useEffect } from "react";
-import Button from "../../components/Button/Button";
-import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
 import $ from "jquery";
-import Moment from "moment";
-import es from "date-fns/locale/es";
 import "moment/locale/es";
-import { getUser, removeUserSession } from "../../utils/Common";
+import { getUser } from "../../utils/Common";
 import API from "../../utils/api";
-import { EditEvaluation } from "../Evaluation/editEvaluation";
 
 import Loading from "../../components/loading/loading";
 import {
   ShowConfirmationMessage,
   MessageResults,
-  ShowPopUp,
 } from "../../utils/CommonFunctions";
-import { DataTable } from "datatables.net";
 import { LangSpanish } from "../../tools/dataTables.Language";
+
+$(document).ready(() => {
+  $("body").on("click", "#TblFaq #btDel", function (e) {
+    let param = JSON.parse(
+      atob($(e.currentTarget).parent().attr("data-item"))
+    )[0];
+    ShowConfirmationMessage(SaveDisableChanges, "", param);
+  });
+
+  const SaveDisableChanges = (params) => {
+    let id = params.id;
+    API.putData("Faq/DisableRegister?id=" + id)
+      .then((res) => {
+        if (res.status === 200) {
+          MessageResults(res.status);
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 1200);
+        }
+      })
+      .catch(function (err) {
+        console.error("Error de conexion " + err);
+        MessageResults(400, err);
+      });
+  };
+});
 
 export default function Faq(props) {
   const [dataLoading, setDataLoading] = useState(true);
@@ -24,14 +43,15 @@ export default function Faq(props) {
 
   const fillData = () => {
     let Record = [];
-    API.getData("Faq/get?companyId=01")
+    API.getData("Faq/get?companyId=" + getUser().companyId)
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
           let dataResult = [];
 
           setFaq(res.data);
-
+          let DeleteBtn =
+            "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Pregunta' ></a>";
           res.data.forEach((item) => {
             dataResult.push({
               id:
@@ -58,18 +78,25 @@ export default function Faq(props) {
                 '<span class="capitalized defaultText">' +
                 item.companyId +
                 "</span>",
+
               itemBtn:
-                '<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Pregunta" href="/editfaq?id=' +
+                "<span data-created='" +
+                item.id +
+                "'  data-item='" +
+                btoa(JSON.stringify([item])) +
+                "'>" +
+                '&nbsp;<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Pregunta" href="/editfaq?id=' +
                 item.id +
                 '"' +
-                item.id +
-                " ></a>",
+                " ></a>&nbsp;" +
+                DeleteBtn +
+                "</span>",
             });
           });
 
           $("#TblFaq").DataTable({
             destroy: true,
-            searching: false,
+            searching: true,
             language: LangSpanish,
             bLengthChange: false,
             lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200],
@@ -98,19 +125,19 @@ export default function Faq(props) {
               {
                 data: "answer",
                 title: "Respuesta",
-                width: "25%",
+                width: "30%",
                 className: "capitalized",
               },
               {
                 data: "faqOrder",
                 title: "Orden",
-                width: "20%",
+                width: "15%",
                 className: "capitalized",
               },
               {
                 data: "inactive",
                 title: "Inactivo",
-                width: "20%",
+                width: "15%",
                 className: "capitalized",
               },
 

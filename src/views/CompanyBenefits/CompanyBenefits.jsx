@@ -1,61 +1,109 @@
 import React, { useState, useEffect } from "react";
 import $ from "jquery";
 import "moment/locale/es";
+import { getUser } from "../../utils/Common";
 import API from "../../utils/api";
-import Loading from "../../components/loading/loading";
-import { LangSpanish } from "../../tools/dataTables.Language";
-import { GetImagePatch } from "../../utils/CommonFunctions";
 
-export default function CompanyConf(props) {
+import Loading from "../../components/loading/loading";
+import {
+  ShowConfirmationMessage,
+  MessageResults,
+  GetImagePatch,
+} from "../../utils/CommonFunctions";
+import { LangSpanish } from "../../tools/dataTables.Language";
+
+$(document).ready(() => {
+  $("body").on("click", "#TblFaq #btDel", function (e) {
+    let param = JSON.parse(
+      atob($(e.currentTarget).parent().attr("data-item"))
+    )[0];
+    ShowConfirmationMessage(SaveDisableChanges, "", param);
+  });
+
+  const SaveDisableChanges = (params) => {
+    let id = params.id;
+    API.putData("Faq/DisableRegister?id=" + id)
+      .then((res) => {
+        if (res.status === 200) {
+          MessageResults(res.status);
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 1200);
+        }
+      })
+      .catch(function (err) {
+        console.error("Error de conexion " + err);
+        MessageResults(400, err);
+      });
+  };
+});
+
+export default function CompanyBenefits(props) {
   const [dataLoading, setDataLoading] = useState(true);
-  const [company, setCompany] = useState(true);
+  const [companyBenefits, setCompanyBenefits] = useState(true);
 
   const fillData = () => {
-    API.getData("/Company/getCompany")
+    let Record = [];
+    API.getData("CompanyBenefits/get?companyId=" + getUser().companyId)
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
           let dataResult = [];
 
-          let EditBtn =
-            "<a href='/addCompany'   class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Evaluación' ></a>";
-          setCompany(res.data);
+          setCompanyBenefits(res.data);
+          let DeleteBtn =
+            "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Pregunta' ></a>";
           res.data.forEach((item) => {
             dataResult.push({
               id:
                 '<span class="container d-flex align-items-center justify-content-center">' +
                 item.id +
                 "</>",
-              logo:
+              company:
+                '<span class="capitalized defaultText">' +
+                item.company +
+                "</span>",
+              saving:
+                '<span class="capitalized defaultText">' +
+                item.saving +
+                "</span>",
+              address:
+                '<span class="capitalized defaultText">' +
+                item.address +
+                "</span>",
+              note:
+                '<span class="capitalized defaultText">' +
+                item.note +
+                "</span>",
+              banner:
                 '<img src="' +
-                GetImagePatch("/images/" + item.logo) +
-                '"  class="img-fluid "  alt="Logo" />',
-              vision:
+                GetImagePatch("/images/Pensando/" + item.banner) +
+                '"  class="img-fluid"  alt="Logo" />',
+              inactive:
                 '<span class="capitalized defaultText">' +
-                item.vision +
+                (item.inactive !== "N" ? "Si" : "No") +
                 "</span>",
-              values:
+              companyId:
                 '<span class="capitalized defaultText">' +
-                item.values +
+                item.companyId +
                 "</span>",
-              name:
-                '<span class="capitalized defaultText">' +
-                item.name +
-                "</span>",
-              mision:
-                '<span class="capitalized defaultText">' +
-                item.mision +
-                "</span>",
+
               itemBtn:
-                '<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Compañia" href="/editCompany?id=' +
+                "<span data-created='" +
+                item.id +
+                "'  data-item='" +
+                btoa(JSON.stringify([item])) +
+                "'>" +
+                '&nbsp;<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Pregunta" href="/editCompanyBenefits?id=' +
                 item.id +
                 '"' +
-                item.id +
-                " ></a>",
+                " ></a>&nbsp;" +
+                DeleteBtn +
+                "</span>",
             });
           });
 
-          $("#TblCompany").DataTable({
+          $("#TblCompanyBenefits").DataTable({
             destroy: true,
             searching: true,
             language: LangSpanish,
@@ -68,47 +116,54 @@ export default function CompanyConf(props) {
               dataResult.length === 0
                 ? [
                     {
-                      logo: "",
-                      vision: "",
-                      name: "",
-                      mision: "",
-                      values: "",
-                      itemBtn: "",
+                      company: "",
+                      saving: "",
+                      address: "",
+                      inactive: "",
+                      banner: "",
+                      note: "",
                     },
                   ]
                 : dataResult,
             columns: [
               {
-                data: "name",
-                title: "Nombre ",
-                width: "15%",
-                className: "capitalized",
-              },
-              {
-                data: "logo",
-                title: "Logo\u00a0Compañia",
-                width: "15%",
-                className: "capitalized",
-              },
-              {
-                data: "vision",
-                title: "Visión",
+                data: "company",
+                title: "Compañia",
                 width: "20%",
                 className: "capitalized",
               },
               {
-                data: "values",
-                title: "Valores",
-                width: "20%",
+                data: "banner",
+                title: "Logo",
+                width: "10%",
                 className: "capitalized",
               },
 
               {
-                data: "mision",
-                title: "Misión ",
+                data: "saving",
+                title: "Descuento",
+                width: "20%",
+                className: "capitalized",
+              },
+              {
+                data: "note",
+                title: "Nota",
+                width: "20%",
+                className: "capitalized",
+              },
+              {
+                data: "address",
+                title: "Dirección",
                 width: "15%",
                 className: "capitalized",
               },
+              {
+                data: "inactive",
+                title: "Inactivo",
+                width: "15%",
+                className: "capitalized",
+              },
+
               {
                 data: "itemBtn",
                 title: "\u00a0Acciones\u00a0\u00a0\u00a0",
@@ -139,10 +194,11 @@ export default function CompanyConf(props) {
             <div className="lowcolor col-12">
               <br />
               <br />
-              <h2 className="h2">CompaÑia</h2>
-              <a href="/addCompany">
+              <h2 className="h2">Beneficios De La Empresa</h2>
+              <a href="/addCompanyBenefits">
                 <span className="btn btn-success btn-sm">
-                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Compania
+                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Beneficios
+                  De La Empresa
                 </span>
               </a>
             </div>
@@ -158,7 +214,7 @@ export default function CompanyConf(props) {
                         Style="min-height:600px"
                       >
                         <table
-                          id="TblCompany"
+                          id="TblCompanyBenefits"
                           className="table table-striped table-bordered display"
                           Style="width:100% !important"
                         ></table>
