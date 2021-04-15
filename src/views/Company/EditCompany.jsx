@@ -258,6 +258,8 @@ export default function EditCompany(props) {
   };
 
   const companyUpdate = (res) => {
+    alert(res.data[0]);
+    alert(res.data[1]);
     if (res.data[0] == undefined) {
       res.data[0] = logo;
     }
@@ -281,7 +283,7 @@ export default function EditCompany(props) {
       suggestionEmail: "Y",
       emailCaseReport: $("#emailCaseReport").val(),
       emailSupport: $("#emailSupport").val(),
-      companyId: companyid.value,
+      companyId: $("#companyId").val(),
       companyLogoWithTitle: res.data[1],
       mottoPrimary: getHtml(mottoPrimary),
       mottoSecundary: getHtml(mottoSecundary),
