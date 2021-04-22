@@ -198,7 +198,6 @@ export default function EditCompany(props) {
     setState({ suggestionEmail: e.target.value });
     setState({ emailCaseReport: e.target.value });
     setState({ emailSupport: e.target.value });
-    setState({ companyid: e.target.value });
     setState({
       emergencyMessage: emergencyMessage,
       showEmergencyMessage: showEmergencyMessage,
@@ -209,6 +208,8 @@ export default function EditCompany(props) {
       fundacionCorripio: fundacionCorripio,
       mottoPrimary: mottoPrimary,
       mottoSecundary: mottoSecundary,
+      logo: logo,
+      companyLogoWithTitle: companyLogoWithTitle,
     });
   };
 
@@ -246,6 +247,7 @@ export default function EditCompany(props) {
     })
       .then((res) => {
         companyUpdate(res);
+        props.history.push("/settings");
       })
       .catch(function (err) {
         ShowAlertMessage(
@@ -258,14 +260,14 @@ export default function EditCompany(props) {
   };
 
   const companyUpdate = (res) => {
-    alert(res.data[0]);
-    alert(res.data[1]);
     if (res.data[0] == undefined) {
       res.data[0] = logo;
     }
     if (res.data[1] == undefined) {
       res.data[1] = companyLogoWithTitle;
     }
+
+    alert($("#companyId").val());
     API.putData("Company/update", {
       id: parseInt(id),
       logo: res.data[0],
@@ -322,6 +324,7 @@ export default function EditCompany(props) {
                   class="form-control"
                   id="companyId"
                   value={state.companyid}
+                  onChange={handleChangeName}
                 />
               </div>
             </div>
@@ -523,16 +526,17 @@ export default function EditCompany(props) {
                 <span class="text-danger"></span>
               </div>
             </div>
-
-            <div class="form-group col-md-2">
-              <button
-                type="button"
-                className="mybt btn btn-outline-danger text-wrap"
-                onClick={ActualizarCompany}
-              >
-                Actualizar
-              </button>
-            </div>
+            <center>
+              <div class="form-group col-md-2">
+                <button
+                  type="button"
+                  className="mybt btn btn-outline-danger text-wrap"
+                  onClick={ActualizarCompany}
+                >
+                  Actualizar
+                </button>
+              </div>
+            </center>
           </div>
         </div>
       </div>

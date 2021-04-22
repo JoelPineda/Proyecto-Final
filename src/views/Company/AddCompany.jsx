@@ -112,6 +112,7 @@ export default function AddCompany(props) {
         image = res.data[0];
         imagen = res.data[0];
         add(image, imagen);
+        props.history.push("/settings");
       })
       .catch(function (err) {
         debugger;

@@ -8,7 +8,7 @@ export const EditConsulate = (e) => {
 
   let formulario =
     "<br /><div id='divAddconsulateName' class='container d-flex flex-column'><hr />" +
-    "<input  value='" +
+    "<input type='hidden' value='" +
     dataItem.id +
     "' class='form-control' id='tbConsulateID' /> <div class='form-group'>" +
     "  <label for='tbconsulateName' class='float-left' >Nombre Consulado</label>&nbsp;<span class='float-left defaultText red' id=sp_tbconsulateNameEdit></span>" +

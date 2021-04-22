@@ -44,18 +44,17 @@ $(document).ready(() => {
   });
 
   const OnClickSaveEditBank = () => {
-    alert($("#tbBankID").val());
     let inac = $("#tbinactive").val() !== "Y" ? "N" : "Y";
     API.putData("Bank/update", {
       id: parseInt($("#tbBankID").val()),
       bankName: $("#tbBankEdit").val(),
       inactive: inac,
     })
-      .then((response) => {
+      .then((res) => {
+        MessageResults(res.status);
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);
-        ShowAlertMessage("Información", "Actualizado correctamente");
       })
       .catch((error) => {
         ShowAlertMessage(
@@ -72,11 +71,11 @@ $(document).ready(() => {
       bankName: $("#tbBank").val(),
       inactive: "N",
     })
-      .then((response) => {
+      .then((res) => {
+        MessageResults(res.status);
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);
-        ShowAlertMessage("Información", "Guardado correctamente");
       })
       .catch((error) => {
         ShowAlertMessage(

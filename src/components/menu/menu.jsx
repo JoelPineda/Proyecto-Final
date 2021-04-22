@@ -41,6 +41,9 @@ import EditCompanyBenefits from "../../views/CompanyBenefits/EditCompanyBenefits
 
 import Slider from "../../views/Slider/Slider";
 
+import StaffLetter from "../../views/StaffLetter/StaffLetter";
+import ServiceDescAdm from "../../views/Home_user/userApp";
+
 export default class Menu extends React.Component {
   constructor(props) {
     super(props);
@@ -128,7 +131,9 @@ export default class Menu extends React.Component {
             component={EditCompanyBenefits}
           />
 
+          <PrivateRoute path="/staff_letter" component={StaffLetter} />
           <PrivateRoute path="/banners" component={Slider} />
+          <PrivateRoute path="/frontend_users" component={ServiceDescAdm} />
         </Switch>
       </Router>
     );

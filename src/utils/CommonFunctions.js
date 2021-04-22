@@ -62,9 +62,9 @@ export const ShowPopUpDataTable = (props) => {
     html: props.htmlBody ?? "<p></p>",
     showCloseButton: true,
     customClass: {
-      container: 'showpopUp-datatable-container',
-      popup: 'showpopUp-datatable-modal',
-      content: 'showpopUp-datatable-content container text-left',
+      container: "showpopUp-datatable-container",
+      popup: "showpopUp-datatable-modal",
+      content: "showpopUp-datatable-content container text-left",
       // header: 'your-header-class',
       // title: 'your-title-class',
       // closeButton: 'your-close-button-class',
@@ -76,7 +76,7 @@ export const ShowPopUpDataTable = (props) => {
       // confirmButton: 'your-confirm-button-class',
       // cancelButton: 'your-cancel-button-class',
       // footer: 'your-footer-class'
-    },    
+    },
     allowOutsideClick: false,
     showCancelButton: props.cancelBtn ?? true,
     onOpen: () => {
@@ -144,6 +144,34 @@ export const ShowConfirmationMessage = (
     }
   });
 };
+
+export const ShowConfirmationReset = (
+  handlerEvent,
+  withIcon,
+  param = undefined,
+  name
+) => {
+  Swal.fire({
+    title: "SEGURO?",
+    text: "DESEA RESETEAR LA CLAVE DE " + name + "?",
+    type: withIcon ?? "warning",
+    showCancelButton: true,
+    allowOutsideClick: false,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Resetear",
+    cancelButtonText: "Cancelar",
+  }).then((result) => {
+    if (result.value ?? false) {
+      if (param !== undefined) {
+        handlerEvent(param);
+      } else {
+        handlerEvent();
+      }
+    }
+  });
+};
+
 export const ShowInfoMessage = (htmlBody) => {
   Swal.fire({
     position: "top-center",
@@ -187,26 +215,60 @@ export const GetdropDownListYesNo = (cssClass, selectedValue, dropName) => {
 
   return dropDownList.join("");
 };
-export const GetdropDownListYesNoClosed = (cssClass, selectedValue, dropName) => {
-  let dropDownList = ['<select class="form-control ' +  cssClass + '" data-value="' + selectedValue +  '" id="' +  dropName + '">'];
+export const GetdropDownListYesNoClosed = (
+  cssClass,
+  selectedValue,
+  dropName
+) => {
+  let dropDownList = [
+    '<select class="form-control ' +
+      cssClass +
+      '" data-value="' +
+      selectedValue +
+      '" id="' +
+      dropName +
+      '">',
+  ];
   let noOpc = '<option class="capitalized" value="N">No</option>';
   let yesOpc = '<option class="capitalized" value="Y">Si</option>';
-  let dropYesNo =  (selectedValue ==="N"?  noOpc + yesOpc: yesOpc + noOpc) + '</select>';
+  let dropYesNo =
+    (selectedValue === "N" ? noOpc + yesOpc : yesOpc + noOpc) + "</select>";
   dropDownList.push(dropYesNo);
 
   return dropDownList.join("");
 };
-export const GetdropDownListPositionMustFill = (cssClass, selectedValue, dropName)=>{
-       let DefaultField = '<option value="0">--Seleccione--</option>';
-       let dropDownList = ['<select class="form-control '+ cssClass +'" data-optional="'+ selectedValue +'" id="'+ dropName +'">'];
-            dropDownList.push(DefaultField +'<option class="capitalized" value="DIRECTOR">Director</option>');
-            dropDownList.push('<option class="capitalized" value="GERENTE">Gerente</option>');
-            dropDownList.push('<option class="capitalized" value="SUPERVISOR">Supervisor</option>');
-            dropDownList.push('<option class="capitalized" value="EMPLEADO">Empleado</option></select>'); 
-             
-       return dropDownList.join('');    
-}
-export const GetdropDownListEnabled = (cssClass, selectedValue, dropName)=>{
+export const GetdropDownListPositionMustFill = (
+  cssClass,
+  selectedValue,
+  dropName
+) => {
+  let DefaultField = '<option value="0">--Seleccione--</option>';
+  let dropDownList = [
+    '<select class="form-control ' +
+      cssClass +
+      '" data-optional="' +
+      selectedValue +
+      '" id="' +
+      dropName +
+      '">',
+  ];
+  dropDownList.push(
+    DefaultField +
+      '<option class="capitalized" value="DIRECTOR">Director</option>'
+  );
+  dropDownList.push(
+    '<option class="capitalized" value="GERENTE">Gerente</option>'
+  );
+  dropDownList.push(
+    '<option class="capitalized" value="SUPERVISOR">Supervisor</option>'
+  );
+  dropDownList.push(
+    '<option class="capitalized" value="EMPLEADO">Empleado</option></select>'
+  );
+
+  return dropDownList.join("");
+};
+export const GetdropDownListEnabled = (cssClass, selectedValue, dropName) => {
   let DefaultField = '<option value="0">--Seleccione--</option>';
   let dropDownList = [
     '<select class="form-control ' +
@@ -222,42 +284,55 @@ export const GetdropDownListEnabled = (cssClass, selectedValue, dropName)=>{
     '<option class="capitalized" value="N">Si</option><option class="capitalized" value="Y">No</option></select>';
   dropDownList.push(dropYesNo);
 
-      return dropDownList.join('');
-}
-export const GetdropDownListEvaluationQuestion = (cssClass, selectedValue, dropName)=>{
-  let dropDownList = ['<select class="form-control '+ cssClass +'" data-value="'+ selectedValue +'" id="'+ dropName +'">'];
+  return dropDownList.join("");
+};
+export const GetdropDownListEvaluationQuestion = (
+  cssClass,
+  selectedValue,
+  dropName
+) => {
+  let dropDownList = [
+    '<select class="form-control ' +
+      cssClass +
+      '" data-value="' +
+      selectedValue +
+      '" id="' +
+      dropName +
+      '">',
+  ];
   let yesNoOpc = '<option class="capitalized" value="SI_NO">Si / No</option>';
   let multp = '<option class="capitalized" value="MULTIPLE">Multiple</option>';
-  let dropYesNo =  (selectedValue ==="SI_NO"?  yesNoOpc + multp: multp + yesNoOpc) + '</select>';
-      dropDownList.push(dropYesNo);
+  let dropYesNo =
+    (selectedValue === "SI_NO" ? yesNoOpc + multp : multp + yesNoOpc) +
+    "</select>";
+  dropDownList.push(dropYesNo);
 
-      return dropDownList.join('');
-}
-export const GetGuiId = ()=> {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-}
-export const  numberWithCommas = (strNumb) => {
+  return dropDownList.join("");
+};
+export const GetGuiId = () => {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
+export const numberWithCommas = (strNumb) => {
   return strNumb.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-export const onlyUnique = (value, index, self)=> {
+};
+export const onlyUnique = (value, index, self) => {
   return self.indexOf(value) === index;
-}
+};
 export const onlyNumberFormmat = (evt) => {
-  var keyCode = (evt.which) ? evt.which : evt.keyCode;
-  if (keyCode > 31 && (keyCode < 48 || keyCode > 57))
-      return false;
+  var keyCode = evt.which ? evt.which : evt.keyCode;
+  if (keyCode > 31 && (keyCode < 48 || keyCode > 57)) return false;
   return true;
 };
-export const getCurTimeAndAddtoDateStr = (dateStr)=>{
-  if(dateStr.length !== 10){
+export const getCurTimeAndAddtoDateStr = (dateStr) => {
+  if (dateStr.length !== 10) {
     dateStr = new Date().toString("YYYY-MM-DD ");
-  }else{
-    let currentTime = new Date().toString().split(' ')[4];
+  } else {
+    let currentTime = new Date().toString().split(" ")[4];
     dateStr = dateStr + " " + currentTime;
   }
-  return new Date(dateStr)
-}
- 
+  return new Date(dateStr);
+};

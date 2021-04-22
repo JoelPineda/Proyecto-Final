@@ -35,11 +35,11 @@ $(document).ready(() => {
       ConsulateName: $("#tbConsulate").val(),
       inactive: "N",
     })
-      .then((response) => {
+      .then((res) => {
+        MessageResults(res.status);
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);
-        ShowAlertMessage("Información", "Guardado correctamente");
       })
       .catch((error) => {
         ShowAlertMessage(
@@ -102,11 +102,11 @@ $(document).ready(() => {
       ConsulateName: $("#tbconsulateNameEdit").val(),
       inactive: inac,
     })
-      .then((response) => {
+      .then((res) => {
+        MessageResults(res.status);
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);
-        ShowAlertMessage("Información", "Actualizado correctamente");
       })
       .catch((error) => {
         ShowAlertMessage(

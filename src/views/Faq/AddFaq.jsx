@@ -34,6 +34,7 @@ export default function AddFaq(props) {
     })
       .then((response) => {
         MessageResults(response.status);
+        props.history.push("/faq");
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);

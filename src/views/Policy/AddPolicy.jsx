@@ -37,6 +37,8 @@ export default function AddPolicy(props) {
     })
       .then((response) => {
         MessageResults(response.status);
+
+        props.history.push("/policies");
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);
