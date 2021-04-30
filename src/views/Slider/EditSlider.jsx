@@ -31,9 +31,9 @@ export const EditSlider = (e) => {
     "</div>" +
     "<div class='form-group'>" +
     "<label  class='float-left' >Logo</label>&nbsp;&nbsp;" +
-    "<input class='form-control' type='file'  id='Edittblogo'     multiple/> <br />" +
+    "<input class='form-control' accept='image/png' type='file'  id='Edittblogo'     multiple/> <br />" +
     "<img id='output' src='" +
-    GetImagePatch("/images/Slider/" + dataItem.imageName) +
+    dataItem.imageName +
     "' width='150' height='150' />" +
     "<input  type='hidden' value='" +
     dataItem.logo +

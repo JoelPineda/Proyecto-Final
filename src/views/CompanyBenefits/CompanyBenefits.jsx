@@ -77,8 +77,8 @@ export default function CompanyBenefits(props) {
                 "</span>",
               banner:
                 '<img src="' +
-                GetImagePatch("/images/Pensando/" + item.banner) +
-                '"  class="img-fluid"  alt="Logo" />',
+                item.banner +
+                '"  class="img-fluid"  alt="Banner" />',
               inactive:
                 '<span class="capitalized defaultText">' +
                 (item.inactive !== "N" ? "Si" : "No") +

@@ -207,7 +207,7 @@ export default function Slider(props) {
                 "</>",
               imageName:
                 '<img src="' +
-                GetImagePatch("/images/Slider/" + item.imageName) +
+                item.imageName +
                 '"  class="img-fluid"  alt="Logo" />',
               showOrder:
                 '<span class="capitalized defaultText">' +

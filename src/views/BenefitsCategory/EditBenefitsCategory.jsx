@@ -34,7 +34,7 @@ export const EditBenefitsCategory = (e) => {
     "</div>" +
     "<div class='form-group'>" +
     "<label  class='float-left' >Logo</label>&nbsp;&nbsp;" +
-    "<input class='form-control' type='file'  id='tblogo'     multiple/> <br />" +
+    "<input class='form-control' accept='image/png' type='file'  id='tblogo'     multiple/> <br />" +
     "<img id='output1' src='" +
     GetImagePatch("/images/" + dataItem.logo) +
     "' width='150' height='150' />" +

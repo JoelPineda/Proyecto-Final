@@ -345,16 +345,12 @@ export default function EditCompanyBenefits(props) {
                 <input
                   type="file"
                   id="logo"
+                  accept="image/png"
                   onChange={(e) => convertiraBase64(e)}
                   multiple
                 />
                 <br />
-                <img
-                  id="output"
-                  src={GetImagePatch("/images/Pensando/" + state.banner)}
-                  width="150"
-                  height="100"
-                />
+                <img id="output" src={state.banner} width="150" height="100" />
               </div>
               <div class="form-group col-md-6">
                 <label class="control-label">Imagen Menú </label>&nbsp;&nbsp;
@@ -367,7 +363,7 @@ export default function EditCompanyBenefits(props) {
                 <br />
                 <img
                   id="output1"
-                  src={GetImagePatch("/images/Pensando/" + state.imageMenu)}
+                  src={state.imageMenu}
                   width="150"
                   height="100"
                 />

@@ -23,7 +23,7 @@ export const AddBenefitsCategory = (e) => {
     "</div>" +
     "<div class='form-group'>" +
     "<label  class='float-left' >Logo</label>&nbsp;&nbsp;" +
-    "<input class='form-control' type='file'  id='inplogo'     multiple/> <br />" +
+    "<input class='form-control' accept='image/png' type='file'  id='inplogo'     multiple/> <br />" +
     "<img  id='output'   width='150'  height='150'/>" +
     "</div>" +
     "</div>" +

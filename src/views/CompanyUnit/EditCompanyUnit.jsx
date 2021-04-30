@@ -258,16 +258,12 @@ export default function EditUnitCompany(props) {
                 <input
                   type="file"
                   id="logo"
+                  accept="image/png"
                   onChange={(e) => convertiraBase64(e)}
                   multiple
                 />
                 <br />
-                <img
-                  id="output"
-                  src={GetImagePatch("/images/units/" + state.logo)}
-                  width="150"
-                  height="150"
-                />
+                <img id="output" src={state.logo} width="150" height="150" />
               </div>
               <div class="form-group col-md-6">
                 <label class="control-label">Activo</label>

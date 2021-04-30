@@ -52,7 +52,6 @@ $(document).ready(() => {
         console.error("Error de conexion " + err);
       });
     if (imagen != "") {
-      alert("Entro");
       OnClickSaveBenefitsCategory(imagen);
     }
   };

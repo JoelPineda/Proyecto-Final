@@ -20,7 +20,7 @@ export const AddSlider = (e) => {
     "</div>" +
     "<div class='form-group'>" +
     "<label  class='float-left' >Imagen</label>&nbsp;&nbsp;" +
-    "<input class='form-control' type='file'  id='inpBanner'     multiple/> <br />" +
+    "<input class='form-control' accept='image/png' type='file'  id='inpBanner'     multiple/> <br />" +
     "<img  id='output'   width='150'  height='150'/>" +
     "</div>" +
     "</div>" +

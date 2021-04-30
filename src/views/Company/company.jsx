@@ -28,7 +28,7 @@ export default function CompanyConf(props) {
                 "</>",
               logo:
                 '<img src="' +
-                GetImagePatch("/images/" + item.logo) +
+                item.logo +
                 '"  class="img-fluid "  alt="Logo" />',
               vision:
                 '<span class="capitalized defaultText">' +
