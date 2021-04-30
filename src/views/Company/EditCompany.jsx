@@ -11,7 +11,11 @@ import {
 } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import queryString from "query-string";
-import { ShowAlertMessage, GetImagePatch } from "../../utils/CommonFunctions";
+import {
+  ShowAlertMessage,
+  GetImagePatch,
+  MessageResults,
+} from "../../utils/CommonFunctions";
 
 const getHtml = (editorState) =>
   draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -266,15 +270,13 @@ export default function EditCompany(props) {
     if (res.data[1] == undefined) {
       res.data[1] = companyLogoWithTitle;
     }
-
-    alert($("#companyId").val());
     API.putData("Company/update", {
       id: parseInt(id),
       logo: res.data[0],
       primaryColor: $("#primaryColor").val(),
       accentColor: $("#accentColor").val(),
       name: $("#name").val(),
-      showEmergencyMessage: getHtml(showEmergencyMessage),
+      showEmergencyMessage: "Y",
       emergencyMessage: getHtml(emergencyMessage),
       aboutUs: getHtml(aboutUs),
       mision: getHtml(mision),
@@ -282,7 +284,7 @@ export default function EditCompany(props) {
       values: getHtml(values),
       history: getHtml(history),
       fundacionCorripio: getHtml(fundacionCorripio),
-      suggestionEmail: "Y",
+      suggestionEmail: $("#suggestionEmail").val(),
       emailCaseReport: $("#emailCaseReport").val(),
       emailSupport: $("#emailSupport").val(),
       companyId: $("#companyId").val(),
@@ -291,7 +293,7 @@ export default function EditCompany(props) {
       mottoSecundary: getHtml(mottoSecundary),
     })
       .then((response) => {
-        ShowAlertMessage("Información", "Actualizada correctamente");
+        MessageResults(response.status);
       })
       .catch((error) => {
         ShowAlertMessage(
@@ -334,29 +336,26 @@ export default function EditCompany(props) {
                 <input
                   type="file"
                   id="logo"
+                  accept="image/png"
                   onChange={(e) => convertiraBase64(e)}
                   multiple
                 />
                 <br />
-                <img
-                  id="output"
-                  src={GetImagePatch("/images/" + state.logo)}
-                  width="150"
-                  height="100"
-                />
+                <img id="output" src={state.logo} width="150" height="100" />
               </div>
               <div class="form-group col-md-6">
                 <label class="control-label">Logo Titulo</label>&nbsp;&nbsp;
                 <input
                   type="file"
                   id="logoTitulo"
+                  accept="image/png"
                   onChange={(e) => convertiraBase641(e)}
                   multiple
                 />
                 <br />
                 <img
                   id="output1"
-                  src={GetImagePatch("/images/" + state.logo)}
+                  src={state.companyLogoWithTitle}
                   width="150"
                   height="100"
                 />
@@ -409,7 +408,7 @@ export default function EditCompany(props) {
               </div>
             </div>
             <div class="row">
-              <div class="form-group col-md-6">
+              <div class="form-group col-md-12">
                 <label class="control-label">Mensaje de emergencia</label>
                 <Editor
                   editorState={emergencyMessage}
