@@ -113,6 +113,9 @@ export default function AddCompany(props) {
         imagen = res.data[0];
         add(image, imagen);
         props.history.push("/settings");
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 1200);
       })
       .catch(function (err) {
         debugger;

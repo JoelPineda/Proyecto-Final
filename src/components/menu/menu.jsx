@@ -35,14 +35,17 @@ import AddCompanyUnit from "../../views/CompanyUnit/AddCompanyUnit";
 import EditUnitCompany from "../../views/CompanyUnit/EditCompanyUnit";
 import BackendUser from "../../views/Backend_user/backendUsers";
 import BenefitsCategory from "../../views/BenefitsCategory/BenefitsCategory";
+import AddBenefitsCategory from "../../views/BenefitsCategory/AddBenefitsCategory";
+import EditBenefitsCategory from "../../views/BenefitsCategory/EditBenefitsCategory";
 import CompanyBenefits from "../../views/CompanyBenefits/CompanyBenefits";
 import AddCompanyBenefits from "../../views/CompanyBenefits/AddCompanyBenefits";
 import EditCompanyBenefits from "../../views/CompanyBenefits/EditCompanyBenefits";
-
 import Slider from "../../views/Slider/Slider";
-
+import AddSlider from "../../views/Slider/AddSlider";
+import EditSlider from "../../views/Slider/EditSlider";
 import StaffLetter from "../../views/StaffLetter/StaffLetter";
 import ServiceDescAdm from "../../views/Home_user/userApp";
+import MedicalLicenses from "../../views/StaffLetter/MedicalLicenses";
 
 export default class Menu extends React.Component {
   constructor(props) {
@@ -119,8 +122,9 @@ export default class Menu extends React.Component {
           <PrivateRoute path="/company_unit" component={CompanyUnit} />
           <PrivateRoute path="/addCompanyUnit" component={AddCompanyUnit} />
           <PrivateRoute path="/editCompanyUnit" component={EditUnitCompany} />
-
           <PrivateRoute path="/comment" component={BenefitsCategory} />
+          <PrivateRoute path="/addcategory" component={AddBenefitsCategory} />
+          <PrivateRoute path="/editcategory" component={EditBenefitsCategory} />
           <PrivateRoute path="/company_benefits" component={CompanyBenefits} />
           <PrivateRoute
             path="/addCompanyBenefits"
@@ -130,10 +134,12 @@ export default class Menu extends React.Component {
             path="/editCompanyBenefits"
             component={EditCompanyBenefits}
           />
-
           <PrivateRoute path="/staff_letter" component={StaffLetter} />
           <PrivateRoute path="/banners" component={Slider} />
+          <PrivateRoute path="/addSlider" component={AddSlider} />
+          <PrivateRoute path="/editSlider" component={EditSlider} />
           <PrivateRoute path="/frontend_users" component={ServiceDescAdm} />
+          <PrivateRoute path="/medical_licenses" component={MedicalLicenses} />
         </Switch>
       </Router>
     );

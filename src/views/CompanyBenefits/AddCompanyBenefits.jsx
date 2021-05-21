@@ -48,12 +48,13 @@ export default function AddCompanyBenefits(props) {
       note: note.value,
       banner: imagen,
       imageMenu: imagen1,
-      Inactive: "Y",
+      Inactive: "N",
       webAddress: webAddress.value,
       companyId: getUser().companyId,
     })
       .then((res) => {
         MessageResults(res.status);
+        props.history.push("/company_benefits");
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);
@@ -212,7 +213,7 @@ export default function AddCompanyBenefits(props) {
                   multiple
                 />
                 <br />
-                <img id="output" width="150" height="100" />
+                <img id="output" width="250" height="200" />
               </div>
               <div class="form-group col-md-6">
                 <label class="control-label">Imagen Menú </label>&nbsp;&nbsp;
@@ -223,7 +224,7 @@ export default function AddCompanyBenefits(props) {
                   multiple
                 />
                 <br />
-                <img id="output1" width="150" height="100" />
+                <img id="output1" width="250" height="200" />
               </div>
             </div>
           </div>

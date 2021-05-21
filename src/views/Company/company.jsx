@@ -4,7 +4,7 @@ import "moment/locale/es";
 import API from "../../utils/api";
 import Loading from "../../components/loading/loading";
 import { LangSpanish } from "../../tools/dataTables.Language";
-import { GetImagePatch } from "../../utils/CommonFunctions";
+import { ShowAlertMessage } from "../../utils/CommonFunctions";
 
 export default function CompanyConf(props) {
   const [dataLoading, setDataLoading] = useState(true);
@@ -121,6 +121,11 @@ export default function CompanyConf(props) {
         }
       })
       .catch(function (err) {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
         console.error("Error de conexion " + err);
       });
     setDataLoading(false);
