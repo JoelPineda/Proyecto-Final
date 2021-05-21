@@ -7,155 +7,11 @@ import Loading from "../../components/loading/loading";
 import {
   ShowConfirmationMessage,
   MessageResults,
-  GetImagePatch,
-  ShowPopUp,
   ShowAlertMessage,
 } from "../../utils/CommonFunctions";
 import { LangSpanish } from "../../tools/dataTables.Language";
 
-import { AddSlider } from "../Slider/AddSlider";
-import { EditSlider } from "../Slider/EditSlider";
-
 $(document).ready(() => {
-  $("#sp_AddSlider").click(() => {
-    ShowPopUp({
-      titleName: "AGREGAR IMAGEN",
-      htmlBody: AddSlider(),
-      handlerEvent: SaveSlider,
-      TextOk: "Guardar",
-      isDisabled: true,
-      EnabledDisabled: true,
-    });
-  });
-  const SaveSlider = async () => {
-    let img = "";
-
-    let dataUpload = $("#inpBanner")[0];
-    let formData = new FormData();
-    formData.append("postedFiles", dataUpload.files[0]);
-
-    await API.postData("Slider/UploadFiles", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-      .then((res) => {
-        img = res.data[0];
-      })
-      .catch(function (err) {
-        ShowAlertMessage(
-          "Información",
-          "Hubo un problema intente de nuevo",
-          "error"
-        );
-        console.error("Error de conexion " + err);
-      });
-    if (img != "") {
-      SaveSliderIMG(img);
-    }
-  };
-
-  const SaveSliderIMG = (imagen) => {
-    API.postData("Slider/add", {
-      showOrder: parseInt($("#tbOrden").val()),
-      inactive: "N",
-      imageName: imagen,
-      companyId: getUser().companyId,
-    })
-      .then((res) => {
-        MessageResults(res.status);
-      })
-      .catch((error) => {
-        ShowAlertMessage(
-          "Información",
-          "Hubo un problema intente de nuevo",
-          "error"
-        );
-        console.log(error);
-      });
-  };
-  $("body").on("change", "#tbOrden", (e) => {
-    let btnOk = $(".swal2-confirm.swal2-styled");
-
-    $(btnOk).removeAttr("disabled");
-  });
-  /////////////////////////////////////////////////////////
-  $("body").on("click", "#TblSlider #btEdit", function (e) {
-    ShowPopUp({
-      titleName: "ACTUALIZAR IMAGEN",
-      htmlBody: EditSlider(e),
-      handlerEvent: ClickSave,
-      TextOk: "Guardar",
-      isDisabled: true,
-      EnabledDisabled: true,
-    });
-  });
-
-  $("body").on("change", "#tbDescriptionEdit", (e) => {
-    let btnOk = $(".swal2-confirm.swal2-styled");
-
-    $(btnOk).removeAttr("disabled");
-  });
-
-  const ClickSave = async () => {
-    let imagen = $("#logoName").val();
-
-    let dataUpload = $("#tblogo")[0];
-    let formData = new FormData();
-    formData.append("postedFiles", dataUpload.files[0]);
-
-    await API.postData("BenefitsCategory/UploadFiles", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-      .then((res) => {
-        if (res.data[0] != undefined) {
-          imagen = res.data[0];
-        }
-      })
-      .catch(function (err) {
-        ShowAlertMessage(
-          "Información",
-          "Hubo un problema al cargar la imagen intente de nuevo",
-          "error"
-        );
-        console.error("Error de conexion " + err);
-      });
-    OnClickSaveEditBank(imagen);
-    setTimeout(() => {
-      window.location.reload(true);
-    }, 1200);
-  };
-
-  const OnClickSaveEditBank = (imagen) => {
-    let inac = $("#tbinactive").val() !== "Y" ? "N" : "Y";
-
-    API.putData("BenefitsCategory/update", {
-      id: parseInt($("#tbSliderID").val()),
-      showOrder: parseInt($("#EdittbOrden").val()),
-      inactive: "N",
-      imageName: imagen,
-      companyId: getUser().companyId,
-    })
-      .then((res) => {
-        MessageResults(res.status);
-        setTimeout(() => {
-          window.location.reload(true);
-        }, 1200);
-      })
-      .catch((error) => {
-        ShowAlertMessage(
-          "Información",
-          "Hubo un problema intente de nuevo",
-          "error"
-        );
-        console.log(error);
-      });
-  };
-
-  //*//*/////////////////////////////////////////////
-
   $("body").on("click", "#TblSlider #btDel", function (e) {
     let param = JSON.parse(
       atob($(e.currentTarget).parent().attr("data-item"))
@@ -228,7 +84,11 @@ export default function Slider(props) {
                 "'  data-item='" +
                 btoa(JSON.stringify([item])) +
                 "'>" +
-                EditBtn +
+                '&nbsp;<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Slider" href="/editSlider?id=' +
+                item.id +
+                '"' +
+                item.id +
+                " ></a>&nbsp;" +
                 DeleteBtn +
                 "</span>",
             });
@@ -257,7 +117,7 @@ export default function Slider(props) {
               {
                 data: "imageName",
                 title: "Imagen",
-                width: "30%",
+                width: "10%",
                 className: "capitalized",
               },
               {
@@ -277,7 +137,7 @@ export default function Slider(props) {
               {
                 data: "itemBtn",
                 title: "\u00a0Acciones\u00a0\u00a0\u00a0",
-                width: "30%",
+                width: "10%",
                 orderable: false,
               },
             ],
@@ -286,6 +146,11 @@ export default function Slider(props) {
         }
       })
       .catch(function (err) {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
         console.error("Error de conexion " + err);
       });
     setDataLoading(false);
@@ -305,9 +170,11 @@ export default function Slider(props) {
               <br />
               <br />
               <h2 className="h2">Slider</h2>
-              <span className="btn btn-success btn-sm" id="sp_AddSlider">
-                <i className="fa fa-plus-circle"></i>&nbsp;Añadir Imagen
-              </span>
+              <a href="/addSlider">
+                <span className="btn btn-success btn-sm">
+                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Imagen
+                </span>
+              </a>
             </div>
           </div>
           <div className="row ">

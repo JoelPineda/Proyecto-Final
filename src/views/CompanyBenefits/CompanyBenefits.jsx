@@ -6,6 +6,7 @@ import API from "../../utils/api";
 
 import Loading from "../../components/loading/loading";
 import {
+  ShowAlertMessage,
   ShowConfirmationMessage,
   MessageResults,
   GetImagePatch,
@@ -13,7 +14,7 @@ import {
 import { LangSpanish } from "../../tools/dataTables.Language";
 
 $(document).ready(() => {
-  $("body").on("click", "#TblFaq #btDel", function (e) {
+  $("body").on("click", "#TblCompanyBenefits #btDel", function (e) {
     let param = JSON.parse(
       atob($(e.currentTarget).parent().attr("data-item"))
     )[0];
@@ -22,7 +23,7 @@ $(document).ready(() => {
 
   const SaveDisableChanges = (params) => {
     let id = params.id;
-    API.putData("Faq/DisableRegister?id=" + id)
+    API.putData("CompanyBenefits/DisableRegister?id=" + id)
       .then((res) => {
         if (res.status === 200) {
           MessageResults(res.status);
@@ -176,6 +177,11 @@ export default function CompanyBenefits(props) {
         }
       })
       .catch(function (err) {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
         console.error("Error de conexion " + err);
       });
     setDataLoading(false);

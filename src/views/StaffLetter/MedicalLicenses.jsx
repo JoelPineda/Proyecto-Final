@@ -1,118 +1,114 @@
 import React, { useState, useEffect } from "react";
-import Button from "../../components/Button/Button";
-import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
 import $ from "jquery";
-import Moment from "moment";
-import es from "date-fns/locale/es";
 import "moment/locale/es";
-import { getUser, removeUserSession } from "../../utils/Common";
 import API from "../../utils/api";
-import { EditEvaluation } from "../Evaluation/editEvaluation";
-
+import Moment from "moment";
 import Loading from "../../components/loading/loading";
-import {
-  ShowConfirmationMessage,
-  MessageResults,
-  ShowAlertMessage,
-} from "../../utils/CommonFunctions";
-import { DataTable } from "datatables.net";
 import { LangSpanish } from "../../tools/dataTables.Language";
+import { getUser, removeUserSession } from "../../utils/Common";
+import {
+  ShowPopUp,
+  ShowAlertMessage,
+  ShowConfirmationMessage,
+  GetImagePatch,
+} from "../../utils/CommonFunctions";
+import { GetLetter } from "../../components/letters/letterWitoutSalary";
 
 $(document).ready(() => {
-  $("body").on("click", "#TblPolicy #btDel", function (e) {
+  $("body").on("click", "#TblMedicalLicenses #btDel", function (e) {
     let param = JSON.parse(
       atob($(e.currentTarget).parent().attr("data-item"))
     )[0];
-    ShowConfirmationMessage(SaveDisableChanges, "", param);
+
+    ShowPopUp({
+      handlerEvent: SaveDisableChanges,
+      htmlBody: GetCat(
+        param.employeeNumber,
+        param.img,
+        param.employee,
+        param.creationDate,
+        param.description
+      ),
+      isDisabled: true,
+    });
   });
 
-  const SaveDisableChanges = (params) => {
-    let id = params.id;
-    API.putData("policies/DisableRegister?id=" + id)
-      .then((res) => {
-        if (res.status === 200) {
-          MessageResults(res.status);
-          setTimeout(() => {
-            window.location.reload(true);
-          }, 1200);
-        }
-      })
-      .catch(function (err) {
-        console.error("Error de conexion " + err);
-        MessageResults(400, err);
-      });
+  const GetCat = (number, img, name, fecha, description) => {
+    return `<html><body><section>
+    <div class="container">
+    <p style="margin-bottom: 0.25in; line-height: 100%; text-align-center: left;"><font face="Times New Roman, serif"><font size="3"> LICENCIA MÉDICA</font></font></p>
+    <p   style="margin-bottom: 0in; line-height: 100%"> ${number} ${name}  <br /></p>  
+    <p style="margin-bottom: 0in; line-height: 100%; text-align: left;">
+            <img src="${img}" class="img-fluid" style="width: 600px !important;min-width: 200px;min-height: 45px;margin-top: 20px;" name="Logo DC" align="bottom" width="200" height="45" border="0" /> <font color="#575757"><font face="Segoe UI, serif"><font size="2" style="font-size: 10pt"><br /> <br /></font></font></font><br />
+        </p>
+        <p style="margin-bottom: 0.25in; line-height: 100%; text-align: left;"><font face="Times New Roman, serif">Fecha ${Moment(
+          fecha
+        ).format("DD/MM/YYYY")}<font size="3"> </font></font></p>
+        
+        <p style="margin-bottom: 0.25in; line-height: 100%; text-align: left;"><font face="Times New Roman, serif">COMENTARIO: ${description.toUpperCase()}</font><br /></p>
+    </div>	
+</section></body></html>`;
   };
+
+  const SaveDisableChanges = () => {};
 });
 
-export default function Policy(props) {
+export default function MedicalLicenses(props) {
   const [dataLoading, setDataLoading] = useState(true);
-  const [policy, setPolicy] = useState(true);
+  const [medicalLicenses, setMedicalLicenses] = useState(true);
 
   const fillData = () => {
-    let Record = [];
-    API.getData("policies/getAll?companyId=" + getUser().companyId)
+    API.getData("MedicalLicenses/get?companyId=" + getUser().companyId)
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
           let dataResult = [];
+
+          setMedicalLicenses(res.data);
+
           let DeleteBtn =
-            "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Politica' ></a>";
-          setPolicy(res.data);
+            "<a href='#' id='btDel'  class='fa fa-eye custom-color size-effect-x2 ' title='Visualizar Licencia' ></a>&nbsp;";
           res.data.forEach((item) => {
             dataResult.push({
               id:
                 '<span class="container d-flex align-items-center justify-content-center">' +
                 item.id +
                 "</>",
-              title:
+              name:
                 '<span class="capitalized defaultText">' +
-                item.title +
+                item.employee +
                 "</span>",
-              content:
+              employeeNumber:
                 '<span class="capitalized defaultText">' +
-                item.content +
+                item.employeeNumber +
                 "</span>",
-              creationDate:
+              img:
+                '<img src="' + item.img + '"  class="img-fluid "  alt="img" />',
+              description:
                 '<span class="capitalized defaultText">' +
-                Moment(item.creationDate).format("DD/MM/YYYY  ") +
-                "</span>",
-              isRequired:
-                '<span class="capitalized defaultText">' +
-                (item.isRequired !== "N" ? "Si" : "No") +
-                "</span>",
-              levelFrom:
-                '<span class="capitalized defaultText">' +
-                item.levelFrom +
-                "</span>",
-              readAfterLogin:
-                '<span class="capitalized defaultText">' +
-                item.readAfterLogin +
+                item.description +
                 "</span>",
               companyId:
                 '<span class="capitalized defaultText">' +
                 item.companyId +
                 "</span>",
-              inactive:
-                '<span class="capitalized defaultText">' +
-                (item.inactive !== "N" ? "Si" : "No") +
-                "</span>",
 
+              creationDate:
+                '<span class="capitalized defaultText">' +
+                Moment(item.creationDate).format("DD/MM/YYYY  ") +
+                "</span>",
               itemBtn:
                 "<span data-created='" +
                 item.id +
                 "'  data-item='" +
                 btoa(JSON.stringify([item])) +
                 "'>" +
-                '&nbsp;<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Politica" href="/editpolicy?id=' +
-                item.id +
-                '"' +
-                " ></a>&nbsp;" +
                 DeleteBtn +
                 "</span>",
             });
           });
 
-          $("#TblPolicy").DataTable({
+          $("#TblMedicalLicenses").DataTable({
             destroy: true,
             searching: true,
             language: LangSpanish,
@@ -125,54 +121,52 @@ export default function Policy(props) {
               dataResult.length === 0
                 ? [
                     {
-                      title: "",
-                      content: "",
-                      creationDate: "",
-                      isRequired: "",
-                      levelFrom: "",
-                      readAfterLogin: "",
+                      name: "",
+                      employeeNumber: "",
+                      img: "",
+                      description: "",
                       companyId: "",
-                      inactive: "",
-                      itemBtn: "",
+                      creationDate: "",
                     },
                   ]
                 : dataResult,
             columns: [
               {
-                data: "title",
-                title: "Titulo",
+                data: "employeeNumber",
+                title: "Empleado",
+                width: "fa-rotate-180%",
+                className: "capitalized",
+              },
+              {
+                data: "name",
+                title: "Nombre",
+                width: "25%",
+                className: "capitalized",
+              },
+
+              {
+                data: "img",
+                title: "Foto",
+                width: "20%",
+                className: "capitalized",
+              },
+              {
+                data: "description",
+                title: "Comentario",
                 width: "25%",
                 className: "capitalized",
               },
               {
                 data: "creationDate",
-                title: "Fecha\u00a0Creacion",
-                width: "25%",
-                className: "capitalized",
-              },
-              {
-                data: "isRequired",
-                title: "Requerido",
-                width: "20%",
-                className: "capitalized",
-              },
-              {
-                data: "levelFrom",
-                title: "Nivel",
+                title: "Fecha",
                 width: "20%",
                 className: "capitalized",
               },
 
               {
-                data: "inactive",
-                title: "Inactivo ",
-                width: "20%",
-                className: "capitalized",
-              },
-              {
                 data: "itemBtn",
                 title: "\u00a0Acciones\u00a0\u00a0\u00a0",
-                width: "30%",
+                width: "10%",
                 orderable: false,
               },
             ],
@@ -204,12 +198,7 @@ export default function Policy(props) {
             <div className="lowcolor col-12">
               <br />
               <br />
-              <h2 className="h2">Politica</h2>
-              <a href="/addPolicy">
-                <span className="btn btn-success btn-sm">
-                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Politica
-                </span>
-              </a>
+              <h2 className="h2">Licencias Médicas</h2>
             </div>
           </div>
           <div className="row ">
@@ -223,7 +212,7 @@ export default function Policy(props) {
                         Style="min-height:600px"
                       >
                         <table
-                          id="TblPolicy"
+                          id="TblMedicalLicenses"
                           className="table table-striped table-bordered display"
                           Style="width:100% !important"
                         ></table>

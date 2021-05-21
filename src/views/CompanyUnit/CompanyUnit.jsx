@@ -8,7 +8,7 @@ import { getUser, removeUserSession } from "../../utils/Common";
 import {
   MessageResults,
   ShowConfirmationMessage,
-  GetImagePatch,
+  ShowAlertMessage,
 } from "../../utils/CommonFunctions";
 
 $(document).ready(() => {
@@ -180,6 +180,11 @@ export default function CompanyUnit(props) {
         }
       })
       .catch(function (err) {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
         console.error("Error de conexion " + err);
       });
     setDataLoading(false);

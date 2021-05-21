@@ -6,6 +6,7 @@ import API from "../../utils/api";
 
 import Loading from "../../components/loading/loading";
 import {
+  ShowAlertMessage,
   ShowConfirmationMessage,
   MessageResults,
 } from "../../utils/CommonFunctions";
@@ -153,6 +154,11 @@ export default function Faq(props) {
         }
       })
       .catch(function (err) {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
         console.error("Error de conexion " + err);
       });
     setDataLoading(false);

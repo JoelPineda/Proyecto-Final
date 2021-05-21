@@ -7,7 +7,7 @@ import Loading from "../../components/loading/loading";
 import {
   ShowConfirmationMessage,
   MessageResults,
-  ShowPopUp,
+  ShowAlertMessage,
 } from "../../utils/CommonFunctions";
 import { LangSpanish } from "../../tools/dataTables.Language";
 
@@ -153,6 +153,11 @@ export default function New(props) {
         }
       })
       .catch(function (err) {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
         console.error("Error de conexion " + err);
       });
     setDataLoading(false);

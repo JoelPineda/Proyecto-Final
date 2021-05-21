@@ -122,11 +122,12 @@ export const ShowAlertMessage = (textMessage, htmlBody, typeMessage) => {
 export const ShowConfirmationMessage = (
   handlerEvent,
   withIcon,
-  param = undefined
+  param = undefined,
+  optionalText = undefined
 ) => {
   Swal.fire({
     title: "Seguro?",
-    text: "Desea continuar?",
+    text: optionalText !== undefined ? optionalText : "Desea continuar?",
     type: withIcon ?? "warning",
     showCancelButton: true,
     allowOutsideClick: false,
@@ -160,6 +161,33 @@ export const ShowConfirmationReset = (
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
     confirmButtonText: "Resetear",
+    cancelButtonText: "Cancelar",
+  }).then((result) => {
+    if (result.value ?? false) {
+      if (param !== undefined) {
+        handlerEvent(param);
+      } else {
+        handlerEvent();
+      }
+    }
+  });
+};
+
+export const ShowConfirmationStatus = (
+  handlerEvent,
+  withIcon,
+  param = undefined,
+  name
+) => {
+  Swal.fire({
+    title: "SEGURO?",
+    text: "DESEA CAMBIAR EL ESTADO " + name + "?",
+    type: withIcon ?? "warning",
+    showCancelButton: true,
+    allowOutsideClick: false,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Cambiar",
     cancelButtonText: "Cancelar",
   }).then((result) => {
     if (result.value ?? false) {

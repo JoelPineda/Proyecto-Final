@@ -252,6 +252,9 @@ export default function EditCompany(props) {
       .then((res) => {
         companyUpdate(res);
         props.history.push("/settings");
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 1200);
       })
       .catch(function (err) {
         ShowAlertMessage(

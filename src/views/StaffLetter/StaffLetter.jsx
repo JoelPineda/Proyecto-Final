@@ -8,13 +8,128 @@ import { getUser, removeUserSession } from "../../utils/Common";
 import Loading from "../../components/loading/loading";
 import {
   ShowPopUp,
-  ShowAlertMessage,
+  ShowConfirmationStatus,
   ShowConfirmationMessage,
   MessageResults,
+  ShowAlertMessage,
 } from "../../utils/CommonFunctions";
 import { LangSpanish } from "../../tools/dataTables.Language";
+import { GetLetterParam } from "../../components/letters/GetLetterParam";
 
-$(document).ready(() => {});
+import { GetLetter } from "../../components/letters/letterWitoutSalary";
+import { GetLetterWithSalary } from "../../components/letters/letterWithSalary";
+import { GetLetterBankWithSalary } from "../../components/letters/letterBankWithSalary";
+import { GetLetterConsulateWithSalary } from "../../components/letters/letterConsulateWithSalary";
+import { GetLetterOtherWithSalary } from "../../components/letters/letterOtherWithSalary";
+
+$(document).ready(() => {
+  $("body").on("click", "#TblStaffLetter #btEdit", function (e) {
+    let param = JSON.parse(
+      atob($(e.currentTarget).parent().attr("data-item"))
+    )[0];
+    if (param.statusCardId == 1) {
+      ShowConfirmationStatus(SaveDisableChanges, "", param, "A EN PROCESO");
+    } else if (param.statusCardId == 2) {
+      ShowConfirmationStatus(
+        SaveDisableChanges,
+        "",
+        param,
+        "A LISTA PARA ENTREGAR"
+      );
+    } else if (param.statusCardId == 5) {
+      ShowConfirmationStatus(
+        SaveDisableChanges,
+        "",
+        param,
+        "A LA CARTA RECHAZADA A EN PROCESO"
+      );
+    } else if (param.statusCardId == 3) {
+      ShowConfirmationStatus(SaveDisableChanges, "", param, "A ENTREGAR");
+    }
+  });
+
+  const SaveDisableChanges = (params) => {};
+
+  $("body").on("click", "#TblStaffLetter #btDel", function (e) {
+    let param = JSON.parse(
+      atob($(e.currentTarget).parent().attr("data-item"))
+    )[0];
+    let DataResult = GetLetterParam(param.employeesList);
+    switch (param.cardTypeId) {
+      case 1:
+        ShowPopUp({
+          handlerEvent: SaveDisableChanges,
+          htmlBody: GetLetter({ props: DataResult }),
+          isDisabled: true,
+        });
+        break;
+      case 2:
+        ShowPopUp({
+          handlerEvent: SaveDisableChanges,
+          htmlBody: GetLetterWithSalary({ props: DataResult }),
+          isDisabled: true,
+        });
+        break;
+      case 4:
+        ShowPopUp({
+          handlerEvent: SaveDisableChanges,
+          htmlBody: GetLetterBankWithSalary({ props: DataResult }),
+          isDisabled: true,
+        });
+        break;
+      case 5:
+        ShowPopUp({
+          handlerEvent: SaveDisableChanges,
+          htmlBody: GetLetterConsulateWithSalary({ props: DataResult }),
+          isDisabled: true,
+        });
+        break;
+      case 6:
+        ShowPopUp({
+          handlerEvent: SaveDisableChanges,
+          htmlBody: GetLetterOtherWithSalary({ props: DataResult }),
+          isDisabled: true,
+        });
+        break;
+
+      default:
+        ShowAlertMessage(
+          "Información",
+          "Favor asegurarse de tener todos los campos completados"
+        );
+        break;
+    }
+  });
+
+  $("body").on("click", "#TblStaffLetter #btRec", function (e) {
+    let param = JSON.parse(
+      atob($(e.currentTarget).parent().attr("data-item"))
+    )[0];
+    ShowConfirmationMessage(
+      SaveRejectedChanges,
+      "",
+      param,
+      "DESEA RECHAZAR ESTA SOLICITUD"
+    );
+  });
+
+  const SaveRejectedChanges = (params) => {
+    let id = params.staffLetterId;
+    API.putData("StaffLetter/RejectedCard?id=" + id)
+      .then((res) => {
+        if (res.status === 200) {
+          MessageResults(res.status);
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 1200);
+        }
+      })
+      .catch(function (err) {
+        console.error("Error de conexion " + err);
+        MessageResults(400, err);
+      });
+  };
+});
 
 export default function StaffLetter(props) {
   const [dataLoading, setDataLoading] = useState(true);
@@ -22,7 +137,7 @@ export default function StaffLetter(props) {
 
   const fillData = () => {
     let Record = [];
-    API.getData("StaffLetterSign/Get?companyId=" + getUser().companyId)
+    API.getData("StaffLetter/Get?companyId=" + getUser().companyId)
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
@@ -30,35 +145,46 @@ export default function StaffLetter(props) {
 
           setStaffLetter(res.data);
           let EditBtn =
-            "&nbsp;<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Tipo Unidad' ></a>&nbsp;";
-
+            "&nbsp;<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Carta' ></a>&nbsp;";
+          let RechazarBtn =
+            "<a href='#' id='btRec'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Rechazar Solicitud' ></a>&nbsp;";
           let DeleteBtn =
-            "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Tipo Unidad' ></a>";
+            "<a href='#' id='btDel'  class='fa fa-eye custom-color size-effect-x2 ' title='Visualizar Carta' ></a>&nbsp;";
           res.data.forEach((item) => {
             dataResult.push({
-              staffLetterSignId:
+              bank:
                 '<span class="container d-flex align-items-center justify-content-center">' +
-                item.staffLetterSignId +
+                (item.bank == null ? " " : item.bank.bankName) +
                 "</>",
-              staffLetterSignName:
+              cardType:
                 '<span class="capitalized defaultText">' +
-                item.staffLetterSignName +
+                (item.cardType == null ? " " : item.cardType) +
                 "</span>",
-              employeePosition:
+              consulate:
                 '<span class="capitalized defaultText">' +
-                item.employeePosition +
+                (item.consulate == null ? " " : item.consulate.consulateName) +
                 "</span>",
-              priorityOrderToDisplaySign:
+              employeeName:
                 '<span class="capitalized defaultText">' +
-                item.priorityOrderToDisplaySign +
+                item.employeeName +
+                "</span>",
+              employeeNumber:
+                '<span class="capitalized defaultText">' +
+                item.employeeNumber +
+                "</span>",
+              other:
+                '<span class="capitalized defaultText">' +
+                (item.other == null ? " " : item.other) +
+                "</span>",
+              statusCard:
+                '<span class="capitalized defaultText ' +
+                item.statusCssClass +
+                '">' +
+                item.statusCard +
                 "</span>",
               creationDate:
                 '<span class="capitalized defaultText">' +
-                item.creationDate +
-                "</span>",
-              inactive:
-                '<span class="capitalized defaultText">' +
-                (item.inactive !== "N" ? "Si" : "No") +
+                Moment(item.creationDate).format("DD/MM/YYYY ") +
                 "</span>",
               itemBtn:
                 "<span data-created='" +
@@ -68,11 +194,12 @@ export default function StaffLetter(props) {
                 "'>" +
                 EditBtn +
                 DeleteBtn +
+                (item.statusCardId == 5 ? " " : RechazarBtn) +
                 "</span>",
             });
           });
 
-          $("#Tbltipo").DataTable({
+          $("#TblStaffLetter").DataTable({
             destroy: true,
             searching: true,
             language: LangSpanish,
@@ -85,32 +212,52 @@ export default function StaffLetter(props) {
               dataResult.length === 0
                 ? [
                     {
-                      staffLetterSignName: "",
-                      employeePosition: "",
-                      inactive: "",
-                      priorityOrderToDisplaySign: "",
+                      bank: "",
+                      cardType: "",
+                      consulate: "",
                       creationDate: "",
+                      employeeName: "",
+                      other: "",
+                      statusCard: "",
                     },
                   ]
                 : dataResult,
             columns: [
               {
-                data: "staffLetterSignName",
-                title: "Nombre",
-                width: "25%",
+                data: "employeeName",
+                title: "Empleado",
+                width: "15%",
                 className: "capitalized",
               },
-
               {
-                data: "employeePosition",
-                title: "Posicion",
+                data: "bank",
+                title: "Banco",
                 width: "20%",
                 className: "capitalized",
               },
 
               {
-                data: "priorityOrderToDisplaySign",
-                title: "Prioridad",
+                data: "cardType",
+                title: "Tipo De Carta",
+                width: "20%",
+                className: "capitalized",
+              },
+
+              {
+                data: "consulate",
+                title: "Consuldado",
+                width: "20%",
+                className: "capitalized",
+              },
+              {
+                data: "other",
+                title: "Otros",
+                width: "15%",
+                className: "capitalized",
+              },
+              {
+                data: "statusCard",
+                title: "Estado",
                 width: "20%",
                 className: "capitalized",
               },
@@ -132,6 +279,11 @@ export default function StaffLetter(props) {
         }
       })
       .catch(function (err) {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
         console.error("Error de conexion " + err);
       });
     setDataLoading(false);
@@ -164,7 +316,7 @@ export default function StaffLetter(props) {
                         Style="min-height:600px"
                       >
                         <table
-                          id="Tbltipo"
+                          id="TblStaffLetter"
                           className="table table-striped table-bordered display"
                           Style="width:100% !important"
                         ></table>
