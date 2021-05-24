@@ -27,7 +27,7 @@ export default function AddFaq(props) {
   const addFaq = () => {
     API.postData("faq/add", {
       question: question.value,
-      faqOrder: parseInt(faqOrder.value),
+      faqOrder: 0,
       answer: getHtml(answer),
       inactive: "N",
       companyId: getUser().companyId,
@@ -74,13 +74,9 @@ export default function AddFaq(props) {
             <h3 className="text-center">AGREGAR NUEVA PREGUNTA FRECUENTE</h3>
 
             <div class="row">
-              <div class="form-group col-md-6">
+              <div class="form-group col-md-12">
                 <label class="control-label">Pregunta</label>
                 <input class="form-control" {...question} />
-              </div>
-              <div class="form-group col-md-6">
-                <label class="control-label">Orden de la pregunta</label>
-                <input class="form-control" {...faqOrder} />
               </div>
             </div>
 

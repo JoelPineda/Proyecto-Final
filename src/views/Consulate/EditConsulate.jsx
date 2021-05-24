@@ -17,7 +17,7 @@ export const EditConsulate = (e) => {
     "' class='form-control' id='tbconsulateNameEdit' /> </br>" +
     " <div class='form-group'>" +
     " <label class='float-left'>Activo</label>" +
-    "<select id='tbinactive'  value='" +
+    "<select id='tbinactiveC'  value='" +
     dataItem.inactive +
     "'    class='form-control'  > " +
     "   <option value=' '>Seleccionar</option>" +

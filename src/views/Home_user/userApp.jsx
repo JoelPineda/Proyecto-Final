@@ -302,9 +302,6 @@ export default function UserAPP(props) {
               <br />
               <br />
               <h2 className="h2">Usuario Aplicación</h2>
-              <span className="btn btn-success btn-sm" id="sp_AddUsuario">
-                <i className="fa fa-plus-circle"></i>&nbsp;Añadir Usuario
-              </span>
             </div>
           </div>
           <div className="row ">

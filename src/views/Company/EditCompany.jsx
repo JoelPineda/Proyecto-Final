@@ -326,6 +326,7 @@ export default function EditCompany(props) {
               <div class="form-group col-md-6">
                 <label class="control-label">Código Compañia</label>
                 <input
+                  readOnly
                   class="form-control"
                   id="companyId"
                   value={state.companyid}

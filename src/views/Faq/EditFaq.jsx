@@ -68,10 +68,10 @@ export default function EditFaq(props) {
   const updateFaq = () => {
     API.putData("Faq/update", {
       id: parseInt(id),
-      question: $("question").val(),
-      faqOrder: parseInt($("faqOrder").val()),
+      question: $("#question").val(),
+      faqOrder: parseInt($("#faqOrder").val()),
       answer: getHtml(answer),
-      inactive: $("activo").val(),
+      inactive: $("#activo").val(),
       companyId: getUser().companyId,
     })
       .then((response) => {

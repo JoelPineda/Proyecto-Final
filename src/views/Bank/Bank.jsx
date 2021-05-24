@@ -43,6 +43,12 @@ $(document).ready(() => {
     $(btnOk).removeAttr("disabled");
   });
 
+  $("body").on("change", "#tbinactive", (e) => {
+    let btnOk = $(".swal2-confirm.swal2-styled");
+
+    $(btnOk).removeAttr("disabled");
+  });
+
   const OnClickSaveEditBank = () => {
     let inac = $("#tbinactive").val() !== "Y" ? "N" : "Y";
     API.putData("Bank/update", {
@@ -89,7 +95,7 @@ $(document).ready(() => {
 
   $("body").on("change", "#tbBank", (e) => {
     let btnOk = $(".swal2-confirm.swal2-styled");
-
+    $(btnOk).removeAttr("disabled");
     if ($(e.currentTarget).val().length > 3) {
       API.getData("Bank/getName?bankname=" + $("#tbBank").val())
         .then((response) => {
@@ -144,7 +150,7 @@ export default function Bank(props) {
   const [bank, setBank] = useState(true);
 
   const fillData = () => {
-    API.getData("Bank/get")
+    API.getData("Bank/getBak")
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
@@ -181,7 +187,6 @@ export default function Bank(props) {
                 btoa(JSON.stringify([item])) +
                 "'>" +
                 EditBtn +
-                DeleteBtn +
                 "</span>",
             });
           });

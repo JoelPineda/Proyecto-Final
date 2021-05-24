@@ -92,8 +92,14 @@ $(document).ready(() => {
     $(btnOk).removeAttr("disabled");
   });
 
+  $("body").on("change", "#tbinactiveU", (e) => {
+    let btnOk = $(".swal2-confirm.swal2-styled");
+
+    $(btnOk).removeAttr("disabled");
+  });
+
   const OnClickSaveEditBank = () => {
-    let inac = $("#tbinactive").val() !== "Y" ? "N" : "Y";
+    let inac = $("#tbinactiveU").val() !== "Y" ? "N" : "Y";
 
     API.putData("BusinessUnitType/update", {
       id: parseInt($("#tbTipoID").val()),
@@ -125,7 +131,7 @@ $(document).ready(() => {
 
   const SaveDisableChanges = (params) => {
     let id = params.id;
-    API.putData("BusinessUnitType/DisableRegister?id=" + id)
+    API.putData("BusinessUnitType/delete?id=" + id)
       .then((res) => {
         if (res.status === 200) {
           MessageResults(res.status);
@@ -147,7 +153,7 @@ export default function UnitType(props) {
 
   const fillData = () => {
     let Record = [];
-    API.getData("BusinessUnitType/get")
+    API.getData("BusinessUnitType/getBak")
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {

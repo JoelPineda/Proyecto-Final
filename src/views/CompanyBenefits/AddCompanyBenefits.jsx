@@ -27,14 +27,11 @@ export default function AddCompanyBenefits(props) {
       .then((res) => {
         imagen = res.data[0];
         imagen1 = res.data[1];
+        addCompany(imagen, imagen);
       })
       .catch(function (err) {
         console.error("Error de conexion " + err);
       });
-
-    if (imagen != "" || imagen1 != "") {
-      addCompany(imagen, imagen);
-    }
   };
 
   const addCompany = (imagen, imagen1) => {

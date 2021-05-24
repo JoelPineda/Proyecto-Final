@@ -46,7 +46,7 @@ import EditSlider from "../../views/Slider/EditSlider";
 import StaffLetter from "../../views/StaffLetter/StaffLetter";
 import ServiceDescAdm from "../../views/Home_user/userApp";
 import MedicalLicenses from "../../views/StaffLetter/MedicalLicenses";
-
+import HistoryButton from "../Button/HistoryButton";
 export default class Menu extends React.Component {
   constructor(props) {
     super(props);
@@ -59,7 +59,9 @@ export default class Menu extends React.Component {
     function changeText(event) {
       removeUserSession();
     }
-
+    const goBack = () => {
+      window.history.back();
+    };
     return (
       <Router>
         <header id="header" className="main-header">
@@ -72,6 +74,17 @@ export default class Menu extends React.Component {
               {getToken() ? getUser().user : <></>}
             </center>
           </Link>
+          {getToken() ? (
+            window.location.pathname != "/" ? (
+              <>
+                <HistoryButton clickHandler={goBack}></HistoryButton>
+              </>
+            ) : (
+              <div></div>
+            )
+          ) : (
+            <></>
+          )}
         </header>
         <div className="col-4 ">
           <nav className="navbar navbar-static-top" id="menu">

@@ -37,8 +37,8 @@ export default function AddBenefitsCategory(props) {
   };
   const SaveBenefitsCategoryIMG = (imagen) => {
     API.postData("BenefitsCategory/add", {
-      showOrder: parseInt(orderCat.value),
-      Description: description.value,
+      orderCat: parseInt(orderCat.value),
+      description: description.value,
       logo: imagen,
       inactive: "N",
       companyId: getUser().companyId,
