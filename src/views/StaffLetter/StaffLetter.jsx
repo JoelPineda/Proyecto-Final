@@ -23,6 +23,7 @@ import { GetLetterConsulateWithSalary } from "../../components/letters/letterCon
 import { GetLetterOtherWithSalary } from "../../components/letters/letterOtherWithSalary";
 
 $(document).ready(() => {
+  let idUnico = 0;
   $("body").on("click", "#TblStaffLetter #btEdit", function (e) {
     let param = JSON.parse(
       atob($(e.currentTarget).parent().attr("data-item"))
@@ -48,47 +49,84 @@ $(document).ready(() => {
     }
   });
 
-  const SaveDisableChanges = (params) => {};
+  const SaveChanges = (params) => {
+    API.putData("StaffLetter/StatusCard?id=" + idUnico)
+      .then((res) => {
+        if (res.status === 200) {
+          MessageResults(res.status);
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 1200);
+        }
+      })
+      .catch(function (err) {
+        console.error("Error de conexion " + err);
+        MessageResults(400, err);
+      });
+  };
+  const SaveDisableChanges = (params) => {
+    let id = params.staffLetterId;
+    API.putData("StaffLetter/StatusCard?id=" + id)
+      .then((res) => {
+        if (res.status === 200) {
+          MessageResults(res.status);
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 1200);
+        }
+      })
+      .catch(function (err) {
+        console.error("Error de conexion " + err);
+        MessageResults(400, err);
+      });
+  };
 
   $("body").on("click", "#TblStaffLetter #btDel", function (e) {
     let param = JSON.parse(
       atob($(e.currentTarget).parent().attr("data-item"))
     )[0];
+
+    idUnico = param.staffLetterId;
     let DataResult = GetLetterParam(param.employeesList);
     switch (param.cardTypeId) {
       case 1:
         ShowPopUp({
-          handlerEvent: SaveDisableChanges,
+          handlerEvent: SaveChanges,
           htmlBody: GetLetter({ props: DataResult }),
           isDisabled: true,
+          TextOk: "Cambiar al estado siguiente",
         });
         break;
       case 2:
         ShowPopUp({
-          handlerEvent: SaveDisableChanges,
+          handlerEvent: SaveChanges,
           htmlBody: GetLetterWithSalary({ props: DataResult }),
           isDisabled: true,
+          TextOk: "Cambiar al estado siguiente",
         });
         break;
       case 4:
         ShowPopUp({
-          handlerEvent: SaveDisableChanges,
+          handlerEvent: SaveChanges,
           htmlBody: GetLetterBankWithSalary({ props: DataResult }),
           isDisabled: true,
+          TextOk: "Cambiar al estado siguiente",
         });
         break;
       case 5:
         ShowPopUp({
-          handlerEvent: SaveDisableChanges,
+          handlerEvent: SaveChanges,
           htmlBody: GetLetterConsulateWithSalary({ props: DataResult }),
           isDisabled: true,
+          TextOk: "Cambiar al estado siguiente",
         });
         break;
       case 6:
         ShowPopUp({
-          handlerEvent: SaveDisableChanges,
+          handlerEvent: SaveChanges,
           htmlBody: GetLetterOtherWithSalary({ props: DataResult }),
           isDisabled: true,
+          TextOk: "Cambiar al estado siguiente",
         });
         break;
 
@@ -193,7 +231,7 @@ export default function StaffLetter(props) {
                 btoa(JSON.stringify([item])) +
                 "'>" +
                 EditBtn +
-                DeleteBtn +
+                (item.statusCardId == 5 ? " " : DeleteBtn) +
                 (item.statusCardId == 5 ? " " : RechazarBtn) +
                 "</span>",
             });

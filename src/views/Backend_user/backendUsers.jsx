@@ -186,6 +186,8 @@ $(document).ready(() => {
     let dataRole = [];
     const dataSelected = $("#dropPermission").parent().find(".search-choice");
     const dataItem = $("#dropPermission.chosen-select").find("option");
+    const dataSelectedC = $("#dropCompany").val();
+
     for (let index = 0; index < dataItem.length; index++) {
       const element = dataItem[index];
       let ToUsed = false;
@@ -207,7 +209,7 @@ $(document).ready(() => {
       user: $("#divEditBackendUser #tbUserName").val(),
       password: $("#divEditBackendUser #tbPsw").val(),
       isActive: $("#dropInactive").val(),
-      companyId: getUser().companyId,
+      companyId: dataSelectedC,
       backendPermission: dataRole.join(),
     };
     if (dataRole.length === 0) {
@@ -220,6 +222,8 @@ $(document).ready(() => {
     let dataRole = [];
     const dataSelected = $("#dropPermission").parent().find(".search-choice");
     const dataItem = $("#dropPermission.chosen-select").find("option");
+    const dataSelectedC = $("#dropCompany").val();
+
     for (let index = 0; index < dataItem.length; index++) {
       const element = dataItem[index];
       let ToUsed = false;
@@ -241,7 +245,7 @@ $(document).ready(() => {
       user: $("#divEditBackendUser #tbUserName").val(),
       password: $("#divEditBackendUser #tbPsw").val(),
       isActive: $("#dropInactive").val(),
-      companyId: getUser().companyId,
+      companyId: dataSelectedC,
       backendPermission: dataRole.join(),
     };
     if (dataRole.length === 0) {
@@ -330,6 +334,7 @@ export default function BackendUser(props) {
 
           if (res.data.length > 0) {
             GetOptionMenuAndPermission(res.data[0]);
+            GetCompany(res.data[0]);
             JSON.parse(res.data[0].backendPermission).forEach((item) => {
               backendPermissionData.push({
                 PermisionId: item.PermisionId,
@@ -418,8 +423,8 @@ export default function BackendUser(props) {
                 item.CompanyId +
                 '" title="' +
                 item.CompanyName +
-                '"><img src="' +
-                GetImagePatch("/images/" + item.CompanyLogoName) +
+                '"><img src=" ' +
+                item.CompanyLogoName +
                 '"  class="img-user-grid"  alt="Logo" /></span>',
               IsActive:
                 '<span class="capitalized defaultText d-flex align-items-center justify-content-center">' +
@@ -570,7 +575,16 @@ export default function BackendUser(props) {
       btoa(JSON.stringify(backendOpMenuPermissionData))
     );
   };
-
+  const GetCompany = (dataItem) => {
+    let company = [];
+    JSON.parse(dataItem.backendCompany).forEach((element) => {
+      company.push({
+        Id: element.CompanyId,
+        Name: element.Name,
+      });
+    });
+    $("#TblBackendUser").attr("data-Company", btoa(JSON.stringify(company)));
+  };
   useEffect(() => {
     fillData();
   }, []);

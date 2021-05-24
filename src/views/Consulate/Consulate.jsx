@@ -94,8 +94,13 @@ $(document).ready(() => {
     $(btnOk).removeAttr("disabled");
   });
 
+  $("body").on("change", "#tbinactiveC", (e) => {
+    let btnOk = $(".swal2-confirm.swal2-styled");
+
+    $(btnOk).removeAttr("disabled");
+  });
   const OnClickSaveEditBank = () => {
-    let inac = $("#tbinactive").val() !== "Y" ? "N" : "Y";
+    let inac = $("#tbinactiveC").val() !== "Y" ? "N" : "Y";
 
     API.putData("Consulate/update", {
       id: parseInt($("#tbConsulateID").val()),
@@ -149,7 +154,7 @@ export default function Consulate(props) {
 
   const fillData = () => {
     let Record = [];
-    API.getData("Consulate/get")
+    API.getData("Consulate/getBak")
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
@@ -186,7 +191,6 @@ export default function Consulate(props) {
                 btoa(JSON.stringify([item])) +
                 "'>" +
                 EditBtn +
-                DeleteBtn +
                 "</span>",
             });
           });

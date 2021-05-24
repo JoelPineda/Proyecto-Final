@@ -89,13 +89,13 @@ export default function EditPolicy(props) {
   const updatePolicy = () => {
     API.putData("policies/update", {
       id: parseInt(id),
-      title: $("title").val(),
+      title: $("#titulo").val(),
       content: getHtml(content),
-      creationDate: $("creationDate").val(),
-      isRequired: $("isRequired").val(),
-      levelFrom: parseInt($("levelFrom").val()),
-      readAfterLogin: $("readAfterLogin").val(),
-      inactive: $("inactive").val(),
+      creationDate: $("#creationDate").val(),
+      isRequired: $("#isRequired").val(),
+      levelFrom: parseInt($("#levelFrom").val()),
+      readAfterLogin: $("#readAfterLogin").val(),
+      inactive: $("#inactive").val(),
       companyId: getUser().companyId,
     })
       .then((response) => {
@@ -127,7 +127,8 @@ export default function EditPolicy(props) {
               <div class="form-group col-md-12">
                 <label class="control-label">Titulo</label>
                 <input
-                  id="title"
+                  id="titulo"
+                  name="titulo"
                   class="form-control"
                   value={state.title}
                   onChange={handleChange}
@@ -152,6 +153,7 @@ export default function EditPolicy(props) {
                 <input
                   readonly
                   id="creationDate"
+                  name="creationDate"
                   type="date"
                   class="form-control"
                   value={Moment(state.creationDate).format("YYYY-MM-DD")}
@@ -178,6 +180,7 @@ export default function EditPolicy(props) {
                 <label class="control-label">Nivel</label>
                 <input
                   id="levelFrom"
+                  name="levelFrom"
                   type="text"
                   class="form-control"
                   value={state.levelFrom}

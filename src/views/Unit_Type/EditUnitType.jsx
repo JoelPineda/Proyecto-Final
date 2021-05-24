@@ -17,7 +17,7 @@ export const EditTipoUnidad = (e) => {
     "' class='form-control' id='tbDescriptionEdit' /> </br>" +
     " <div class='form-group'>" +
     " <label class='float-left'>Activo</label>" +
-    "<select id='tbinactive'  value='" +
+    "<select id='tbinactiveU'  value='" +
     dataItem.inactive +
     "'    class='form-control'  > " +
     "   <option value=' '>Seleccionar</option>" +

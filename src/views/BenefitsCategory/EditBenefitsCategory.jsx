@@ -35,9 +35,9 @@ export default function EditBenefitsCategory(props) {
 
   const handleChange = (e) => {
     setState({ logo: logo });
-    setState({ inactive: e.target.value, logo: logo });
     setState({ orderCat: e.target.value, logo: logo });
     setState({ description: e.target.value, logo: logo });
+    setState({ inactive: e.target.value, logo: logo });
   };
   const SaveBenefitsCategory = async () => {
     let img = $("#img").val();
