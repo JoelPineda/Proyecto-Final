@@ -10,18 +10,20 @@ import {
   ShowPopUp,
   ShowAlertMessage,
   ShowConfirmationMessage,
-  GetImagePatch,
+  MessageResults,
+  ShowConfirmationStatus,
 } from "../../utils/CommonFunctions";
 import { GetLetter } from "../../components/letters/letterWitoutSalary";
 
 $(document).ready(() => {
+  let idUnico = 0;
   $("body").on("click", "#TblMedicalLicenses #btDel", function (e) {
     let param = JSON.parse(
       atob($(e.currentTarget).parent().attr("data-item"))
     )[0];
-
+    idUnico = param.id;
     ShowPopUp({
-      handlerEvent: SaveDisableChanges,
+      handlerEvent: SaveChanges,
       htmlBody: GetCat(
         param.employeeNumber,
         param.img,
@@ -30,9 +32,48 @@ $(document).ready(() => {
         param.description
       ),
       isDisabled: true,
+      TextOk: "Cambiar al estado siguiente",
     });
   });
+  $("body").on("click", "#TblMedicalLicenses #btRec", function (e) {
+    let param = JSON.parse(
+      atob($(e.currentTarget).parent().attr("data-item"))
+    )[0];
 
+    ShowConfirmationMessage(
+      SaveRejectedChanges,
+      "",
+      param,
+      "DESEA RECHAZAR ESTA SOLICITUD"
+    );
+  });
+  $("body").on("click", "#TblMedicalLicenses #btEdit", function (e) {
+    let param = JSON.parse(
+      atob($(e.currentTarget).parent().attr("data-item"))
+    )[0];
+    if (param.statusMedicalId == 1) {
+      ShowConfirmationStatus(SaveDisableChanges, "", param, "A EN PROCESO");
+    } else if (param.statusMedicalId == 2) {
+      ShowConfirmationStatus(SaveDisableChanges, "", param, "A APROBADO");
+    }
+  });
+  const SaveRejectedChanges = (params) => {
+    let id = params.id;
+
+    API.putData("MedicalLicenses/RejectedMedical?id=" + id)
+      .then((res) => {
+        if (res.status === 200) {
+          MessageResults(res.status);
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 1200);
+        }
+      })
+      .catch(function (err) {
+        console.error("Error de conexion " + err);
+        MessageResults(400, err);
+      });
+  };
   const GetCat = (number, img, name, fecha, description) => {
     return `<html><body><section>
     <div class="container">
@@ -49,8 +90,37 @@ $(document).ready(() => {
     </div>	
 </section></body></html>`;
   };
-
-  const SaveDisableChanges = () => {};
+  const SaveDisableChanges = (params) => {
+    let id = params.id;
+    API.putData("MedicalLicenses/StatusMedical?id=" + id)
+      .then((res) => {
+        if (res.status === 200) {
+          MessageResults(res.status);
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 1200);
+        }
+      })
+      .catch(function (err) {
+        console.error("Error de conexion " + err);
+        MessageResults(400, err);
+      });
+  };
+  const SaveChanges = () => {
+    API.putData("MedicalLicenses/StatusMedical?id=" + idUnico)
+      .then((res) => {
+        if (res.status === 200) {
+          MessageResults(res.status);
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 1200);
+        }
+      })
+      .catch(function (err) {
+        console.error("Error de conexion " + err);
+        MessageResults(400, err);
+      });
+  };
 });
 
 export default function MedicalLicenses(props) {
@@ -65,6 +135,10 @@ export default function MedicalLicenses(props) {
           let dataResult = [];
 
           setMedicalLicenses(res.data);
+          let EditBtn =
+            "&nbsp;<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Carta' ></a>&nbsp;";
+          let RechazarBtn =
+            "<a href='#' id='btRec'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Rechazar Solicitud' ></a>&nbsp;";
 
           let DeleteBtn =
             "<a href='#' id='btDel'  class='fa fa-eye custom-color size-effect-x2 ' title='Visualizar Licencia' ></a>&nbsp;";
@@ -92,6 +166,12 @@ export default function MedicalLicenses(props) {
                 '<span class="capitalized defaultText">' +
                 item.companyId +
                 "</span>",
+              statusCard:
+                '<span class="capitalized defaultText ' +
+                item.statusCssClass +
+                '">' +
+                item.statusCard +
+                "</span>",
 
               creationDate:
                 '<span class="capitalized defaultText">' +
@@ -103,7 +183,13 @@ export default function MedicalLicenses(props) {
                 "'  data-item='" +
                 btoa(JSON.stringify([item])) +
                 "'>" +
-                DeleteBtn +
+                (item.statusMedicalId == 3 ? " " : EditBtn) +
+                (item.statusMedicalId == 4 || item.statusMedicalId == 3
+                  ? " "
+                  : DeleteBtn) +
+                (item.statusMedicalId == 4 || item.statusMedicalId == 3
+                  ? " "
+                  : RechazarBtn) +
                 "</span>",
             });
           });
@@ -127,6 +213,7 @@ export default function MedicalLicenses(props) {
                       description: "",
                       companyId: "",
                       creationDate: "",
+                      statusCard: "",
                     },
                   ]
                 : dataResult,
@@ -145,12 +232,6 @@ export default function MedicalLicenses(props) {
               },
 
               {
-                data: "img",
-                title: "Foto",
-                width: "20%",
-                className: "capitalized",
-              },
-              {
                 data: "description",
                 title: "Comentario",
                 width: "25%",
@@ -159,6 +240,12 @@ export default function MedicalLicenses(props) {
               {
                 data: "creationDate",
                 title: "Fecha",
+                width: "20%",
+                className: "capitalized",
+              },
+              {
+                data: "statusCard",
+                title: "Estado",
                 width: "20%",
                 className: "capitalized",
               },
