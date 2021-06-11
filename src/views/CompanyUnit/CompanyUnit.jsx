@@ -8,7 +8,7 @@ import { getUser, removeUserSession } from "../../utils/Common";
 import {
   MessageResults,
   ShowConfirmationMessage,
-  GetImagePatch,
+  ShowAlertMessage,
 } from "../../utils/CommonFunctions";
 
 $(document).ready(() => {
@@ -69,7 +69,7 @@ export default function CompanyUnit(props) {
                 "</span>",
               logo:
                 '<img src="' +
-                GetImagePatch("/images/units/" + item.logo) +
+                item.logo +
                 '"  class="img-fluid "  alt="Logo" />',
               detail:
                 '<span class="capitalized defaultText">' +
@@ -180,6 +180,11 @@ export default function CompanyUnit(props) {
         }
       })
       .catch(function (err) {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
         console.error("Error de conexion " + err);
       });
     setDataLoading(false);

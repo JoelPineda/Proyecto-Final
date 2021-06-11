@@ -5,7 +5,6 @@ import "moment/locale/es";
 import API from "../../utils/api";
 
 import { getUser, removeUserSession } from "../../utils/Common";
-import { AddBenefitsCategory } from "../BenefitsCategory/AddBenefitsCategory";
 import { EditBenefitsCategory } from "../BenefitsCategory/EditBenefitsCategory";
 import Loading from "../../components/loading/loading";
 import {
@@ -18,170 +17,6 @@ import {
 import { LangSpanish } from "../../tools/dataTables.Language";
 
 $(document).ready(() => {
-  $("#sp_AddTIPO").click(() => {
-    ShowPopUp({
-      titleName: "AGREGAR CATEGORÍA DE BENEFICIOS",
-      htmlBody: AddBenefitsCategory(),
-      handlerEvent: SaveCategory,
-      TextOk: "Guardar",
-      isDisabled: true,
-      EnabledDisabled: true,
-    });
-  });
-  const SaveCategory = () => {
-    let imagen = "";
-
-    let dataUpload = $("#inplogo")[0];
-    let formData = new FormData();
-    formData.append("postedFiles", dataUpload.files[0]);
-
-    API.postData("BenefitsCategory/UploadFiles", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-      .then((res) => {
-        imagen = res.data[0];
-      })
-      .catch(function (err) {
-        ShowAlertMessage(
-          "Información",
-          "Hubo un problema intente de nuevo",
-          "error"
-        );
-        console.error("Error de conexion " + err);
-      });
-    if (imagen != "") {
-      alert("Entro");
-      OnClickSaveBenefitsCategory(imagen);
-    }
-  };
-
-  const OnClickSaveBenefitsCategory = (imagen) => {
-    API.postData("BenefitsCategory/add", {
-      description: $("#tbDescriptionB").val(),
-      inactive: "N",
-      logo: imagen,
-      orderCat: parseInt($("#tbcat").val()),
-      companyId: getUser().companyId,
-    })
-      .then((res) => {
-        MessageResults(res.status);
-      })
-      .catch((error) => {
-        ShowAlertMessage(
-          "Información",
-          "Hubo un problema intente de nuevo",
-          "error"
-        );
-        console.log(error);
-      });
-  };
-
-  $("body").on("change", "#tbDescriptionB", (e) => {
-    let btnOk = $(".swal2-confirm.swal2-styled");
-
-    if ($(e.currentTarget).val().length > 3) {
-      API.getData(
-        "BenefitsCategory/getDescription?description=" +
-          $("#tbDescriptionB").val()
-      )
-        .then((response) => {
-          if (response.status === 200) {
-            if (response.data) {
-              $("#sp_tbDescriptionB").text("CATEGORÍA DE BENEFICIOS EXISTE");
-
-              $(btnOk).attr("disabled", true);
-            } else {
-              $(btnOk).removeAttr("disabled");
-              $("#sp_tbDescriptionB").text("");
-            }
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      $(btnOk).attr("disabled", true);
-      $("#sp_tbDescriptionB").text(" Requerido!");
-    }
-  });
-
-  $("body").on("click", "#TblBenefitsCategory #btEdit", function (e) {
-    ShowPopUp({
-      titleName: "ACTUALIZAR CATEGORÍA DE BENEFICIOS",
-      htmlBody: EditBenefitsCategory(e),
-      handlerEvent: ClickSave,
-      TextOk: "Guardar",
-      isDisabled: true,
-      EnabledDisabled: true,
-    });
-  });
-
-  $("body").on("change", "#tbDescriptionEdit", (e) => {
-    let btnOk = $(".swal2-confirm.swal2-styled");
-
-    $(btnOk).removeAttr("disabled");
-  });
-
-  const ClickSave = async () => {
-    let imagen = $("#logoName").val();
-
-    let dataUpload = $("#tblogo")[0];
-    let formData = new FormData();
-    formData.append("postedFiles", dataUpload.files[0]);
-
-    await API.postData("BenefitsCategory/UploadFiles", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-      .then((res) => {
-        if (res.data[0] != undefined) {
-          imagen = res.data[0];
-        }
-      })
-      .catch(function (err) {
-        ShowAlertMessage(
-          "Información",
-          "Hubo un problema al cargar la imagen intente de nuevo",
-          "error"
-        );
-        console.error("Error de conexion " + err);
-      });
-    OnClickSaveEditBank(imagen);
-    setTimeout(() => {
-      window.location.reload(true);
-    }, 1200);
-  };
-
-  const OnClickSaveEditBank = (imagen) => {
-    let inac = $("#tbinactive").val() !== "Y" ? "N" : "Y";
-
-    API.putData("BenefitsCategory/update", {
-      id: parseInt($("#tbTipoID").val()),
-      description: $("#tbDescriptionEdit").val(),
-      logo: imagen,
-      orderCat: parseInt($("#tbcat").val()),
-      companyId: getUser().companyId,
-      inactive: inac,
-    })
-      .then((res) => {
-        MessageResults(res.status);
-        setTimeout(() => {
-          window.location.reload(true);
-        }, 1200);
-      })
-      .catch((error) => {
-        ShowAlertMessage(
-          "Información",
-          "Hubo un problema intente de nuevo",
-          "error"
-        );
-        console.log(error);
-      });
-  };
-
   $("body").on("click", "#TblBenefitsCategory #btDel", function (e) {
     let param = JSON.parse(
       atob($(e.currentTarget).parent().attr("data-item"))
@@ -220,8 +55,6 @@ export default function BenefitsCategory(props) {
           let dataResult = [];
 
           setBenefitsCategory(res.data);
-          let EditBtn =
-            "&nbsp;<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Editar Categoría De Beneficios' ></a>&nbsp;";
 
           let DeleteBtn =
             "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Categoría De Beneficios' ></a>";
@@ -237,20 +70,27 @@ export default function BenefitsCategory(props) {
                 "</span>",
               logo:
                 '<img src="' +
-                GetImagePatch("/images/" + item.logo) +
+                item.logo +
                 '"  class="img-fluid"  alt="Logo" />',
               orderCat:
                 '<span class="capitalized defaultText">' +
                 item.orderCat +
                 "</span>",
-
+              inactive:
+                '<span class="capitalized defaultText">' +
+                (item.inactive !== "N" ? "Si" : "No") +
+                "</span>",
               itemBtn:
                 "<span data-created='" +
                 item.inactive +
                 "'  data-item='" +
                 btoa(JSON.stringify([item])) +
                 "'>" +
-                EditBtn +
+                '&nbsp;<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Beneficio" href="/editcategory?id=' +
+                item.id +
+                '"' +
+                item.id +
+                " ></a>&nbsp;" +
                 DeleteBtn +
                 "</span>",
             });
@@ -296,6 +136,12 @@ export default function BenefitsCategory(props) {
                 width: "20%",
                 className: "capitalized",
               },
+              {
+                data: "inactive",
+                title: "Inactivo",
+                width: "20%",
+                className: "capitalized",
+              },
 
               {
                 data: "itemBtn",
@@ -309,6 +155,11 @@ export default function BenefitsCategory(props) {
         }
       })
       .catch(function (err) {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
         console.error("Error de conexion " + err);
       });
     setDataLoading(false);
@@ -328,11 +179,13 @@ export default function BenefitsCategory(props) {
               <br />
               <br />
               <h2 className="h2">CATEGORÍA DE BENEFICIOS</h2>
+              <a href="/addcategory">
+                <span className="btn btn-success btn-sm">
+                  <i className="fa fa-plus-circle"></i>&nbsp;AÑADIR CATEGORÍA DE
+                  BENEFICIOS
+                </span>
+              </a>
 
-              <span className="btn btn-success btn-sm" id="sp_AddTIPO">
-                <i className="fa fa-plus-circle"></i>&nbsp;Añadir CATEGORÍA DE
-                BENEFICIOS
-              </span>
               <br />
               <br />
             </div>

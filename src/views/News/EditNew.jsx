@@ -3,6 +3,7 @@ import API from "../../utils/api";
 import { getUser, setUserSession } from "../../utils/Common";
 import { Editor } from "react-draft-wysiwyg";
 import Moment from "moment";
+import $ from "jquery";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import {
   convertToRaw,
@@ -70,14 +71,16 @@ export default function EditFaq(props) {
   const updateNews = () => {
     API.putData("News/update", {
       id: parseInt(id),
-      title: document.getElementById("title ").value,
-      publishingDate: document.getElementById("publishingDate ").value,
+      title: $("#title").val(),
+      publishingDate: $("#publishingDate").val(),
       content: getHtml(content),
-      inactive: document.getElementById("inactive").value,
+      inactive: $("#inactive").val(),
       companyId: getUser().companyId,
     })
       .then((resp) => {
         MessageResults(resp.status);
+
+        props.history.push("/news");
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);
@@ -104,7 +107,7 @@ export default function EditFaq(props) {
               <div class="form-group col-md-12">
                 <label class="control-label">Titulo</label>
                 <input
-                  id="title "
+                  id="title"
                   class="form-control"
                   value={state.title}
                   onChange={handleChange}
@@ -127,7 +130,7 @@ export default function EditFaq(props) {
               <div class="form-group col-md-6">
                 <label class="control-label">Fecha Publicacion</label>
                 <input
-                  id="publishingDate "
+                  id="publishingDate"
                   type="date"
                   class="form-control"
                   value={Moment(state.publishingDate).format("YYYY-MM-DD")}

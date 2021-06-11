@@ -187,6 +187,7 @@ export default function AddFaq(props) {
                 <input
                   type="file"
                   id="logo"
+                  accept="image/png"
                   onChange={(e) => convertiraBase64(e)}
                   multiple
                 />

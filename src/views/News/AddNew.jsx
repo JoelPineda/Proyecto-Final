@@ -26,13 +26,14 @@ export default function AddNew(props) {
   const addNews = () => {
     API.postData("News/add", {
       title: title.value,
-      publishingDate: publishingDate,
+      publishingDate: publishingDate.value,
       content: getHtml(content),
       inactive: "N",
       companyId: getUser().companyId,
     })
       .then((response) => {
         MessageResults(response.status);
+        props.history.push("/news");
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);

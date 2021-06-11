@@ -38,8 +38,11 @@ import BenefitsCategory from "../../views/BenefitsCategory/BenefitsCategory";
 import CompanyBenefits from "../../views/CompanyBenefits/CompanyBenefits";
 import AddCompanyBenefits from "../../views/CompanyBenefits/AddCompanyBenefits";
 import EditCompanyBenefits from "../../views/CompanyBenefits/EditCompanyBenefits";
-
+import PollVaccine from "../../views/Dashboard/pollVaccine";
+import TotalPollVaccine from "../../views/Dashboard/totalPollVaccine";
 import Slider from "../../views/Slider/Slider";
+import StaffLetter from "../../views/StaffLetter/StaffLetter";
+import ServiceDescAdm from "../../views/Home_user/userApp";
 
 export default class Menu extends React.Component {
   constructor(props) {
@@ -87,6 +90,9 @@ export default class Menu extends React.Component {
           <PrivateRoute exact path="/evaluation" component={Evaluation} />
           <PrivateRoute exact path="/backend_users" component={BackendUser} />
           <PrivateRoute path="/changepassword" component={MyChangePassword} />
+
+          <PrivateRoute path="/pollVaccine" component={PollVaccine} />
+          <PrivateRoute path="/totalpollVaccine" component={TotalPollVaccine} />
           <PrivateRoute path="/employeeVisit" component={EmployeeVisit} />
           <PrivateRoute
             path="/employeeVisitMonth"
@@ -128,7 +134,9 @@ export default class Menu extends React.Component {
             component={EditCompanyBenefits}
           />
 
+          <PrivateRoute path="/staff_letter" component={StaffLetter} />
           <PrivateRoute path="/banners" component={Slider} />
+          <PrivateRoute path="/frontend_users" component={ServiceDescAdm} />
         </Switch>
       </Router>
     );

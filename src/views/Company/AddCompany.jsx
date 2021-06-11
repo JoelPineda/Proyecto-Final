@@ -5,7 +5,7 @@ import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { convertToRaw, EditorState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
-import { ShowAlertMessage } from "../../utils/CommonFunctions";
+import { ShowAlertMessage, MessageResults } from "../../utils/CommonFunctions";
 
 const getHtml = (editorState) =>
   draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -112,6 +112,10 @@ export default function AddCompany(props) {
         image = res.data[0];
         imagen = res.data[0];
         add(image, imagen);
+        props.history.push("/settings");
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 1200);
       })
       .catch(function (err) {
         debugger;
@@ -143,7 +147,7 @@ export default function AddCompany(props) {
       mottoSecundary: getHtml(mottoSecundary),
     })
       .then((response) => {
-        ShowAlertMessage("Información", "Guardado correctamente");
+        MessageResults(response.status);
       })
       .catch((error) => {
         ShowAlertMessage(
@@ -221,6 +225,7 @@ export default function AddCompany(props) {
                 <input
                   type="file"
                   id="logo"
+                  accept="image/png"
                   onChange={(e) => convertiraBase64(e)}
                   multiple
                 />
@@ -232,6 +237,7 @@ export default function AddCompany(props) {
                 <input
                   type="file"
                   id="logoTitulo"
+                  accept="image/png"
                   onChange={(e) => convertiraBase641(e)}
                   multiple
                 />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import API from "../../utils/api";
 import { getUser } from "../../utils/Common";
 import { Editor } from "react-draft-wysiwyg";
+
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import {
   convertToRaw,
@@ -9,6 +10,7 @@ import {
   ContentState,
   convertFromHTML,
 } from "draft-js";
+import $ from "jquery";
 import draftToHtml from "draftjs-to-html";
 import queryString from "query-string";
 import { ShowAlertMessage, MessageResults } from "../../utils/CommonFunctions";
@@ -66,14 +68,16 @@ export default function EditFaq(props) {
   const updateFaq = () => {
     API.putData("Faq/update", {
       id: parseInt(id),
-      question: document.getElementById("question").value,
-      faqOrder: parseInt(document.getElementById("faqOrder").value),
+      question: $("#question").val(),
+      faqOrder: parseInt($("#faqOrder").val()),
       answer: getHtml(answer),
-      inactive: document.getElementById("activo").value,
+      inactive: $("#activo").val(),
       companyId: getUser().companyId,
     })
       .then((response) => {
         MessageResults(response.status);
+
+        props.history.push("/faq");
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);

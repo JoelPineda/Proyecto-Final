@@ -43,19 +43,24 @@ $(document).ready(() => {
     $(btnOk).removeAttr("disabled");
   });
 
+  $("body").on("change", "#tbinactive", (e) => {
+    let btnOk = $(".swal2-confirm.swal2-styled");
+
+    $(btnOk).removeAttr("disabled");
+  });
+
   const OnClickSaveEditBank = () => {
-    alert($("#tbBankID").val());
     let inac = $("#tbinactive").val() !== "Y" ? "N" : "Y";
     API.putData("Bank/update", {
       id: parseInt($("#tbBankID").val()),
       bankName: $("#tbBankEdit").val(),
       inactive: inac,
     })
-      .then((response) => {
+      .then((res) => {
+        MessageResults(res.status);
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);
-        ShowAlertMessage("Información", "Actualizado correctamente");
       })
       .catch((error) => {
         ShowAlertMessage(
@@ -72,11 +77,11 @@ $(document).ready(() => {
       bankName: $("#tbBank").val(),
       inactive: "N",
     })
-      .then((response) => {
+      .then((res) => {
+        MessageResults(res.status);
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);
-        ShowAlertMessage("Información", "Guardado correctamente");
       })
       .catch((error) => {
         ShowAlertMessage(
@@ -90,7 +95,7 @@ $(document).ready(() => {
 
   $("body").on("change", "#tbBank", (e) => {
     let btnOk = $(".swal2-confirm.swal2-styled");
-
+    $(btnOk).removeAttr("disabled");
     if ($(e.currentTarget).val().length > 3) {
       API.getData("Bank/getName?bankname=" + $("#tbBank").val())
         .then((response) => {
@@ -145,7 +150,7 @@ export default function Bank(props) {
   const [bank, setBank] = useState(true);
 
   const fillData = () => {
-    API.getData("Bank/get")
+    API.getData("Bank/getBak")
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
@@ -182,7 +187,6 @@ export default function Bank(props) {
                 btoa(JSON.stringify([item])) +
                 "'>" +
                 EditBtn +
-                DeleteBtn +
                 "</span>",
             });
           });
@@ -238,6 +242,11 @@ export default function Bank(props) {
         }
       })
       .catch(function (err) {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
         console.error("Error de conexion " + err);
       });
     setDataLoading(false);

@@ -35,11 +35,11 @@ $(document).ready(() => {
       ConsulateName: $("#tbConsulate").val(),
       inactive: "N",
     })
-      .then((response) => {
+      .then((res) => {
+        MessageResults(res.status);
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);
-        ShowAlertMessage("Información", "Guardado correctamente");
       })
       .catch((error) => {
         ShowAlertMessage(
@@ -94,19 +94,24 @@ $(document).ready(() => {
     $(btnOk).removeAttr("disabled");
   });
 
+  $("body").on("change", "#tbinactiveC", (e) => {
+    let btnOk = $(".swal2-confirm.swal2-styled");
+
+    $(btnOk).removeAttr("disabled");
+  });
   const OnClickSaveEditBank = () => {
-    let inac = $("#tbinactive").val() !== "Y" ? "N" : "Y";
+    let inac = $("#tbinactiveC").val() !== "Y" ? "N" : "Y";
 
     API.putData("Consulate/update", {
       id: parseInt($("#tbConsulateID").val()),
       ConsulateName: $("#tbconsulateNameEdit").val(),
       inactive: inac,
     })
-      .then((response) => {
+      .then((res) => {
+        MessageResults(res.status);
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);
-        ShowAlertMessage("Información", "Actualizado correctamente");
       })
       .catch((error) => {
         ShowAlertMessage(
@@ -149,7 +154,7 @@ export default function Consulate(props) {
 
   const fillData = () => {
     let Record = [];
-    API.getData("Consulate/get")
+    API.getData("Consulate/getBak")
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
@@ -186,7 +191,6 @@ export default function Consulate(props) {
                 btoa(JSON.stringify([item])) +
                 "'>" +
                 EditBtn +
-                DeleteBtn +
                 "</span>",
             });
           });
@@ -242,6 +246,11 @@ export default function Consulate(props) {
         }
       })
       .catch(function (err) {
+        ShowAlertMessage(
+          "Información",
+          "Hubo un problema intente de nuevo",
+          "error"
+        );
         console.error("Error de conexion " + err);
       });
     setDataLoading(false);

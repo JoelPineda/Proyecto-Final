@@ -3,6 +3,7 @@ import API from "../../utils/api";
 import { getUser } from "../../utils/Common";
 import { Editor } from "react-draft-wysiwyg";
 import Moment from "moment";
+import $ from "jquery";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import {
   convertToRaw,
@@ -88,17 +89,18 @@ export default function EditPolicy(props) {
   const updatePolicy = () => {
     API.putData("policies/update", {
       id: parseInt(id),
-      title: document.getElementById("title").value,
+      title: $("#titulo").val(),
       content: getHtml(content),
-      creationDate: document.getElementById("creationDate").value,
-      isRequired: document.getElementById("isRequired").value,
-      levelFrom: parseInt(document.getElementById("levelFrom").value),
-      readAfterLogin: document.getElementById("readAfterLogin").value,
-      inactive: document.getElementById("inactive").value,
+      creationDate: $("#creationDate").val(),
+      isRequired: $("#isRequired").val(),
+      levelFrom: parseInt($("#levelFrom").val()),
+      readAfterLogin: $("#readAfterLogin").val(),
+      inactive: $("#inactive").val(),
       companyId: getUser().companyId,
     })
       .then((response) => {
         MessageResults(response.status);
+        props.history.push("/policies");
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);
@@ -125,7 +127,8 @@ export default function EditPolicy(props) {
               <div class="form-group col-md-12">
                 <label class="control-label">Titulo</label>
                 <input
-                  id="title"
+                  id="titulo"
+                  name="titulo"
                   class="form-control"
                   value={state.title}
                   onChange={handleChange}
@@ -150,6 +153,7 @@ export default function EditPolicy(props) {
                 <input
                   readonly
                   id="creationDate"
+                  name="creationDate"
                   type="date"
                   class="form-control"
                   value={Moment(state.creationDate).format("YYYY-MM-DD")}
@@ -176,6 +180,7 @@ export default function EditPolicy(props) {
                 <label class="control-label">Nivel</label>
                 <input
                   id="levelFrom"
+                  name="levelFrom"
                   type="text"
                   class="form-control"
                   value={state.levelFrom}

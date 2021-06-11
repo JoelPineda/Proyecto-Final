@@ -133,12 +133,13 @@ export default function EditCompanyBenefits(props) {
       note: $("#note").val(),
       banner: img,
       imageMenu: img1,
-      inactive: $("#inactive").val(),
+      inactive: "N",
       webAddress: $("#webAddress").val(),
       companyId: getUser().companyId,
     })
       .then((res) => {
         MessageResults(res.status);
+        props.history.push("/company_benefits");
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);
@@ -231,9 +232,7 @@ export default function EditCompanyBenefits(props) {
         <div class="row">
           <div class="col-md-12">
             <br />
-            <h3 className="text-center">
-              AGREGAR NUEVO BENEFICIOS DE LA EMPRESA
-            </h3>
+            <h3 className="text-center">ACTUALIZAR BENEFICIOS DE LA EMPRESA</h3>
             <div class="row">
               <div class="form-group col-md-6">
                 <label class="control-label">Nombre Compañia</label>
@@ -312,23 +311,7 @@ export default function EditCompanyBenefits(props) {
                   ))}
                 </select>
               </div>
-
               <div class="form-group col-md-6">
-                <label class="control-label">Activo</label>
-                <select
-                  id="inactive"
-                  value={state.inactive}
-                  onChange={handleChange}
-                  class="form-control"
-                >
-                  <option value=" ">Seleccionar</option>
-                  <option value="N">Sí</option>
-                  <option value="Y">No</option>
-                </select>
-              </div>
-            </div>
-            <div class="row">
-              <div class="form-group col-md-12">
                 <label class="control-label">Página Web</label>
                 <input
                   id="webAddress"
@@ -349,12 +332,7 @@ export default function EditCompanyBenefits(props) {
                   multiple
                 />
                 <br />
-                <img
-                  id="output"
-                  src={GetImagePatch("/images/Pensando/" + state.banner)}
-                  width="150"
-                  height="100"
-                />
+                <img id="output" src={state.banner} width="250" height="200" />
               </div>
               <div class="form-group col-md-6">
                 <label class="control-label">Imagen Menú </label>&nbsp;&nbsp;
@@ -367,9 +345,9 @@ export default function EditCompanyBenefits(props) {
                 <br />
                 <img
                   id="output1"
-                  src={GetImagePatch("/images/Pensando/" + state.imageMenu)}
-                  width="150"
-                  height="100"
+                  src={state.imageMenu}
+                  width="250"
+                  height="200"
                 />
               </div>
             </div>

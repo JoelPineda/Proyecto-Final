@@ -11,7 +11,11 @@ import {
 } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import queryString from "query-string";
-import { ShowAlertMessage, GetImagePatch } from "../../utils/CommonFunctions";
+import {
+  ShowAlertMessage,
+  GetImagePatch,
+  MessageResults,
+} from "../../utils/CommonFunctions";
 
 const getHtml = (editorState) =>
   draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -198,7 +202,6 @@ export default function EditCompany(props) {
     setState({ suggestionEmail: e.target.value });
     setState({ emailCaseReport: e.target.value });
     setState({ emailSupport: e.target.value });
-    setState({ companyid: e.target.value });
     setState({
       emergencyMessage: emergencyMessage,
       showEmergencyMessage: showEmergencyMessage,
@@ -209,6 +212,8 @@ export default function EditCompany(props) {
       fundacionCorripio: fundacionCorripio,
       mottoPrimary: mottoPrimary,
       mottoSecundary: mottoSecundary,
+      logo: logo,
+      companyLogoWithTitle: companyLogoWithTitle,
     });
   };
 
@@ -246,6 +251,10 @@ export default function EditCompany(props) {
     })
       .then((res) => {
         companyUpdate(res);
+        props.history.push("/settings");
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 1200);
       })
       .catch(function (err) {
         ShowAlertMessage(
@@ -270,7 +279,7 @@ export default function EditCompany(props) {
       primaryColor: $("#primaryColor").val(),
       accentColor: $("#accentColor").val(),
       name: $("#name").val(),
-      showEmergencyMessage: getHtml(showEmergencyMessage),
+      showEmergencyMessage: "Y",
       emergencyMessage: getHtml(emergencyMessage),
       aboutUs: getHtml(aboutUs),
       mision: getHtml(mision),
@@ -278,16 +287,16 @@ export default function EditCompany(props) {
       values: getHtml(values),
       history: getHtml(history),
       fundacionCorripio: getHtml(fundacionCorripio),
-      suggestionEmail: "Y",
+      suggestionEmail: $("#suggestionEmail").val(),
       emailCaseReport: $("#emailCaseReport").val(),
       emailSupport: $("#emailSupport").val(),
-      companyId: companyid.value,
+      companyId: $("#companyId").val(),
       companyLogoWithTitle: res.data[1],
       mottoPrimary: getHtml(mottoPrimary),
       mottoSecundary: getHtml(mottoSecundary),
     })
       .then((response) => {
-        ShowAlertMessage("Información", "Actualizada correctamente");
+        MessageResults(response.status);
       })
       .catch((error) => {
         ShowAlertMessage(
@@ -317,9 +326,11 @@ export default function EditCompany(props) {
               <div class="form-group col-md-6">
                 <label class="control-label">Código Compañia</label>
                 <input
+                  readOnly
                   class="form-control"
                   id="companyId"
                   value={state.companyid}
+                  onChange={handleChangeName}
                 />
               </div>
             </div>
@@ -329,29 +340,26 @@ export default function EditCompany(props) {
                 <input
                   type="file"
                   id="logo"
+                  accept="image/png"
                   onChange={(e) => convertiraBase64(e)}
                   multiple
                 />
                 <br />
-                <img
-                  id="output"
-                  src={GetImagePatch("/images/" + state.logo)}
-                  width="150"
-                  height="100"
-                />
+                <img id="output" src={state.logo} width="150" height="100" />
               </div>
               <div class="form-group col-md-6">
                 <label class="control-label">Logo Titulo</label>&nbsp;&nbsp;
                 <input
                   type="file"
                   id="logoTitulo"
+                  accept="image/png"
                   onChange={(e) => convertiraBase641(e)}
                   multiple
                 />
                 <br />
                 <img
                   id="output1"
-                  src={GetImagePatch("/images/" + state.logo)}
+                  src={state.companyLogoWithTitle}
                   width="150"
                   height="100"
                 />
@@ -404,7 +412,7 @@ export default function EditCompany(props) {
               </div>
             </div>
             <div class="row">
-              <div class="form-group col-md-6">
+              <div class="form-group col-md-12">
                 <label class="control-label">Mensaje de emergencia</label>
                 <Editor
                   editorState={emergencyMessage}
@@ -521,16 +529,17 @@ export default function EditCompany(props) {
                 <span class="text-danger"></span>
               </div>
             </div>
-
-            <div class="form-group col-md-2">
-              <button
-                type="button"
-                className="mybt btn btn-outline-danger text-wrap"
-                onClick={ActualizarCompany}
-              >
-                Actualizar
-              </button>
-            </div>
+            <center>
+              <div class="form-group col-md-2">
+                <button
+                  type="button"
+                  className="mybt btn btn-outline-danger text-wrap"
+                  onClick={ActualizarCompany}
+                >
+                  Actualizar
+                </button>
+              </div>
+            </center>
           </div>
         </div>
       </div>

@@ -27,14 +27,11 @@ export default function AddCompanyBenefits(props) {
       .then((res) => {
         imagen = res.data[0];
         imagen1 = res.data[1];
+        addCompany(imagen, imagen);
       })
       .catch(function (err) {
         console.error("Error de conexion " + err);
       });
-
-    if (imagen != "" || imagen1 != "") {
-      addCompany(imagen, imagen);
-    }
   };
 
   const addCompany = (imagen, imagen1) => {
@@ -48,12 +45,13 @@ export default function AddCompanyBenefits(props) {
       note: note.value,
       banner: imagen,
       imageMenu: imagen1,
-      Inactive: "Y",
+      Inactive: "N",
       webAddress: webAddress.value,
       companyId: getUser().companyId,
     })
       .then((res) => {
         MessageResults(res.status);
+        props.history.push("/company_benefits");
         setTimeout(() => {
           window.location.reload(true);
         }, 1200);
@@ -207,11 +205,12 @@ export default function AddCompanyBenefits(props) {
                 <input
                   type="file"
                   id="logo"
+                  accept="image/png"
                   onChange={(e) => convertiraBase64(e)}
                   multiple
                 />
                 <br />
-                <img id="output" width="150" height="100" />
+                <img id="output" width="250" height="200" />
               </div>
               <div class="form-group col-md-6">
                 <label class="control-label">Imagen Menú </label>&nbsp;&nbsp;
@@ -222,7 +221,7 @@ export default function AddCompanyBenefits(props) {
                   multiple
                 />
                 <br />
-                <img id="output1" width="150" height="100" />
+                <img id="output1" width="250" height="200" />
               </div>
             </div>
           </div>

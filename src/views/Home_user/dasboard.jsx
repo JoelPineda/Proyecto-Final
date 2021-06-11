@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { getUser, removeUserSession } from "../../utils/Common";
 import API from "../../utils/api";
 import $ from "jquery";
-import { NumbersWithComma, numberWithCommas } from "../../utils/CommonFunctions";
+import {
+  NumbersWithComma,
+  numberWithCommas,
+} from "../../utils/CommonFunctions";
 
 export default function Dasboard(props) {
   const [company, setCompany] = useState([]);
@@ -115,6 +118,21 @@ export default function Dasboard(props) {
                   <i class="fa fa-unlock"></i>
                 </div>
                 <a href="/frontend_users" class="small-box-footer">
+                  Ver mas detalle <i class="fa fa-arrow-circle-right"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-xs-6">
+              <div class="small-box bg-gray">
+                <div class="inner">
+                  <h3>{numberWithCommas(item.vaccines)}</h3>
+                  <p>Encuesta de vacunación</p>
+                </div>
+                <div class="icon">
+                  <i class="fa fa-users"></i>
+                </div>
+                <a href="/pollVaccine" class="small-box-footer">
                   Ver mas detalle <i class="fa fa-arrow-circle-right"></i>
                 </a>
               </div>
