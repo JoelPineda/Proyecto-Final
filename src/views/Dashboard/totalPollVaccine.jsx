@@ -16,117 +16,13 @@ import {
 import { LangSpanish } from "../../tools/dataTables.Language";
 registerLocale("es", es);
 
-$(document).ready(() => {
-  $("body").on("click", "#TblVisita #btDel", function (e) {
-    let param = JSON.parse(
-      atob($(e.currentTarget).parent().attr("data-item"))
-    )[0];
-
-    ShowPopUp({
-      handlerEvent: SaveChanges,
-      htmlBody: GetCat(
-        param.name,
-        param.imangen,
-        param.secondDosis,
-        param.firstDosis,
-        param.noVacunado,
-        param.noMeVacunare,
-        param.employeeIdCard
-      ),
-      isDisabled: true,
-      TextOk: "OK",
-    });
-  });
-  const SaveChanges = (params) => {};
-  const GetCat = (
-    name,
-    imangen,
-    secondDosis,
-    firstDosis,
-    noVacunado,
-    noMeVacunare,
-    employeeIdCard
-  ) => {
-    return `<html><body><section>
-      <div class="container">
-      <p style="margin-bottom: 0.25in; line-height: 100%; text-align-center: left;"><font face="Times New Roman, serif"><font size="3">ENCUESTA VACUNA</font></font></p>
-      <p   style="margin-bottom: 0in; line-height: 100%"> ${employeeIdCard} ${name}  <br /></p>  
-      <p style="margin-bottom: 0in; line-height: 100%; text-align: left;">
-              <img src="${
-                imangen === ""
-                  ? GetImagePatch("/log.png")
-                  : "data:image;base64," + imangen
-              }" class="img-fluid" style="width: 600px !important;min-width: 200px;min-height: 45px;margin-top: 20px;" name="Logo DC" align="bottom" width="200" height="45" border="0" /> <font color="#575757"><font face="Segoe UI, serif"><font size="2" style="font-size: 10pt"><br /> <br /></font></font></font><br />
-          </p> 
-          <p style="margin-bottom: 0.25in; line-height: 100%; text-align: left;"><font face="Times New Roman, serif">VACUNADO: ${
-            noVacunado === "1" ? "NO" : "SI"
-          }</font><br /></p>
-          <p style="margin-bottom: 0.25in; line-height: 100%; text-align: left;"><font face="Times New Roman, serif">ME VACUNARE: ${
-            noMeVacunare === "1" ? "NO" : "SI"
-          }</font><br /></p>
-          <p style="margin-bottom: 0.25in; line-height: 100%; text-align: left;"><font face="Times New Roman, serif">PRIMERA DOSIS: ${
-            firstDosis === "0" ? "NO" : "SI"
-          }</font><br /></p>  
-           <p style="margin-bottom: 0.25in; line-height: 100%; text-align: left;"><font face="Times New Roman, serif">SEGUNDA DOSIS: ${
-             secondDosis === "0" ? "NO" : "SI"
-           }</font><br /></p>
-      </div>	
-  </section></body></html>`;
-  };
-
-  /////////////////////////////////////////////////
-  $("body").on("click", "#TblVisita #btEdit", function (e) {
-    let param = JSON.parse(
-      atob($(e.currentTarget).parent().attr("data-item"))
-    )[0];
-    ShowPopUp({
-      handlerEvent: SaveChanges,
-      htmlBody: GetCatEncuesta(
-        param.noMeVacunareTotal,
-        param.noVacunadoTotal,
-        param.secondDosisTotal,
-        param.siVacunadoTotal,
-        param.siMeVacunareTotal,
-        param.firstDosisTotal
-      ),
-      isDisabled: true,
-      TextOk: "OK",
-    });
-  });
-
-  /////////////////////////////////////////////////
-  $("body").on("click", "#btEditCompany", function (e) {});
-
-  const GetCatEncuesta = (
-    noMeVacunareTotal,
-    noVacunadoTotal,
-    secondDosisTotal,
-    siVacunadoTotal,
-    siMeVacunareTotal,
-    firstDosisTotal
-  ) => {
-    return `<html><body><section>
-      <div class="container">
-      <p style="margin-bottom: 0.25in; line-height: 100%; text-align-center: left;"><font face="Times New Roman, serif"><font size="3">ENCUESTA VACUNA TOTALES</font></font></p>
-      <p   style="margin-bottom: 0in; line-height: 100%">   <br /></p>  
-      <p style="margin-bottom: 0.25in; line-height: 100%; text-align: left;"><font face="Times New Roman, serif">TOTAL SI SE VACUNARAN: ${siMeVacunareTotal}</font><br /></p>
-     <p style="margin-bottom: 0.25in; line-height: 100%; text-align: left;"><font face="Times New Roman, serif">TOTAL NO SE VACUNARAN: ${noMeVacunareTotal}</font><br /></p>
-     <p style="margin-bottom: 0.25in; line-height: 100%; text-align: left;"><font face="Times New Roman, serif">TOTAL NO SE HAN VACUNADOS: ${noVacunadoTotal}</font><br /></p>
-     <p style="margin-bottom: 0.25in; line-height: 100%; text-align: left;"><font face="Times New Roman, serif">TOTAL SI SE HAN VACUNADO: ${siVacunadoTotal}</font><br /></p>
-     <p style="margin-bottom: 0.25in; line-height: 100%; text-align: left;"><font face="Times New Roman, serif">TOTAL PRIMERA DOSIS: ${firstDosisTotal}</font><br /></p>
-     <p style="margin-bottom: 0.25in; line-height: 100%; text-align: left;"><font face="Times New Roman, serif">TOTAL SEGUNDA DOSIS: ${secondDosisTotal}</font><br /></p>
-          
-      </div>	
-  </section></body></html>`;
-  };
-});
-export default function PollVaccine(props) {
+export default function TotalPollVaccine(props) {
   const [dataLoading, setDataLoading] = useState(true);
   const [policyAccepted, setpolicyAccepted] = useState(true);
 
   const fillData = () => {
     let Record = [];
-    API.getData("/PollVaccinesService/get?companyId=" + getUser().companyId)
+    API.getData("/PollVaccinesService/getCompany")
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
@@ -134,8 +30,6 @@ export default function PollVaccine(props) {
           setpolicyAccepted(res.data);
           let DeleteBtn =
             "<a href='#' id='btDel'  class='fa fa-eye custom-color size-effect-x2 ' title='Visualizar Encuestado' ></a>&nbsp;";
-          let EditBtn =
-            "&nbsp;<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Detelle Encuesta' ></a>&nbsp;";
           res.data.forEach((item) => {
             dataResult.push({
               name:
@@ -198,6 +92,10 @@ export default function PollVaccine(props) {
                 '<span class="capitalized defaultText">' +
                 item.secondDosisTotal +
                 "</span>",
+              totalEncuestado:
+                '<span class="capitalized defaultText">' +
+                item.total +
+                "</span>",
 
               itemBtn:
                 "<span data-created='" +
@@ -206,7 +104,6 @@ export default function PollVaccine(props) {
                 btoa(JSON.stringify([item])) +
                 "'>" +
                 DeleteBtn +
-                EditBtn +
                 "</span>",
             });
           });
@@ -240,51 +137,57 @@ export default function PollVaccine(props) {
                       siVacunadoTotal: "",
                       siMeVacunareTotal: "",
                       firstDosisTotal: "",
+                      totalEncuestado: "",
                     },
                   ]
                 : dataResult,
             columns: [
               {
-                data: "name",
-                title: "Empleado ",
-                width: "15%",
-                className: "capitalized",
-              },
-              {
-                data: "employeeIdCard",
-                title: "Id Card",
-                width: "15%",
-                className: "capitalized",
-              },
-
-              {
-                data: "noVacunado",
-                title: "Vacunado",
-                width: "5%",
-                className: "capitalized",
-              },
-              {
-                data: "noMeVacunare",
-                title: "Me Vacunare",
-                width: "15%",
-                className: "capitalized",
-              },
-              {
-                data: "firstDosis",
-                title: "Primera Dosis",
-                width: "15%",
-                className: "capitalized",
-              },
-              {
-                data: "secondDosis",
-                title: "Segunda Dosis",
-                width: "15%",
-                className: "capitalized",
-              },
-              {
                 data: "companyName",
                 title: "Compañia",
-                width: "20%",
+                width: "10%",
+                className: "capitalized",
+              },
+              {
+                data: "noMeVacunareTotal",
+                title: "No Se Vacunaran",
+                width: "10%",
+                className: "capitalized",
+              },
+              {
+                data: "siMeVacunareTotal",
+                title: "Si Se Vacunaran",
+                width: "10%",
+                className: "capitalized",
+              },
+              {
+                data: "noVacunadoTotal",
+                title: "No Vacunado",
+                width: "10%",
+                className: "capitalized",
+              },
+              {
+                data: "siVacunadoTotal",
+                title: "Vacunado",
+                width: "10%",
+                className: "capitalized",
+              },
+              {
+                data: "firstDosisTotal",
+                title: "Primera Dosis",
+                width: "10%",
+                className: "capitalized",
+              },
+              {
+                data: "secondDosisTotal",
+                title: "Segunda Dosis",
+                width: "10%",
+                className: "capitalized",
+              },
+              {
+                data: "totalEncuestado",
+                title: "Total Encuestado",
+                width: "10%",
                 className: "capitalized",
               },
             ],
@@ -312,18 +215,14 @@ export default function PollVaccine(props) {
     <>
       <div>
         <br />
-        <div className=" htmlPayroll    container">
+        <div className=" htmlPayroll container">
           <div className="row">
             <div className="lowcolor col-12">
               <br />
               <br />
-              <h2 className="h2">ENCUESTA DE VACUNA</h2>
-              <a href="/totalpollVaccine">
-                <span className="btn btn-success btn-sm">
-                  <i className="fa fa-plus-circle"></i>&nbsp;TOTALES ENCUESTADO
-                  POR COMPAÑIA
-                </span>
-              </a>
+              <h2 className="h2">
+                TOTALES ENCUESTADOS DE VACUNACIÓN POR EMPRESA
+              </h2>
             </div>
           </div>
           <div className="row ">

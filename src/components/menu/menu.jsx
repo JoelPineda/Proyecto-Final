@@ -39,8 +39,8 @@ import CompanyBenefits from "../../views/CompanyBenefits/CompanyBenefits";
 import AddCompanyBenefits from "../../views/CompanyBenefits/AddCompanyBenefits";
 import EditCompanyBenefits from "../../views/CompanyBenefits/EditCompanyBenefits";
 import PollVaccine from "../../views/Dashboard/pollVaccine";
+import TotalPollVaccine from "../../views/Dashboard/totalPollVaccine";
 import Slider from "../../views/Slider/Slider";
-
 import StaffLetter from "../../views/StaffLetter/StaffLetter";
 import ServiceDescAdm from "../../views/Home_user/userApp";
 
@@ -92,7 +92,7 @@ export default class Menu extends React.Component {
           <PrivateRoute path="/changepassword" component={MyChangePassword} />
 
           <PrivateRoute path="/pollVaccine" component={PollVaccine} />
-
+          <PrivateRoute path="/totalpollVaccine" component={TotalPollVaccine} />
           <PrivateRoute path="/employeeVisit" component={EmployeeVisit} />
           <PrivateRoute
             path="/employeeVisitMonth"
