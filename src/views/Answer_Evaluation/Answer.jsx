@@ -1,102 +1,58 @@
 import React, { useState, useEffect } from "react";
+import { registerLocale } from "react-datepicker";
 import $ from "jquery";
-import Moment from "moment";
+import es from "date-fns/locale/es";
 import "moment/locale/es";
 import API from "../../utils/api";
-
-import { getUser } from "../../utils/Common";
+import Moment from "moment";
 import Loading from "../../components/loading/loading";
-import {
-  ShowConfirmationMessage,
-  MessageResults,
-  ShowAlertMessage,
-} from "../../utils/CommonFunctions";
+import { ShowAlertMessage } from "../../utils/CommonFunctions";
 import { LangSpanish } from "../../tools/dataTables.Language";
+registerLocale("es", es);
 
-$(document).ready(() => {
-  $("body").on("click", "#TblNew #btDel", function (e) {
-    let param = JSON.parse(
-      atob($(e.currentTarget).parent().attr("data-item"))
-    )[0];
-    ShowConfirmationMessage(SaveDisableChanges, "", param);
-  });
-
-  const SaveDisableChanges = (params) => {
-    let id = params.id;
-    API.putData("News/DisableRegister?id=" + id)
-      .then((res) => {
-        if (res.status === 200) {
-          MessageResults(res.status);
-          setTimeout(() => {
-            window.location.reload(true);
-          }, 1200);
-        }
-      })
-      .catch(function (err) {
-        console.error("Error de conexion " + err);
-        MessageResults(400, err);
-      });
-  };
-});
-
-export default function New(props) {
+export default function Answer(props) {
   const [dataLoading, setDataLoading] = useState(true);
-  const [faq, setFaq] = useState(true);
+  const [policyAccepted, setpolicyAccepted] = useState(true);
 
   const fillData = () => {
     let Record = [];
-    API.getData("News/get?companyId="+  getUser().companyId)
+    API.getData("/NewEvaluation/GetNewEvaluationAll")
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
           let dataResult = [];
-
-          setFaq(res.data);
+          setpolicyAccepted(res.data);
           let DeleteBtn =
-            "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Usuario' ></a>";
+            "<a href='#' id='btDel'  class='fa fa-eye custom-color size-effect-x2 ' title='Visualizar Encuestado' ></a>&nbsp;";
+          let EditBtn =
+            "&nbsp;<a href='#' id='btEdit'  class='fa fa-pencil-square-o custom-color size-effect-x2' title='Detelle Encuesta' ></a>&nbsp;";
           res.data.forEach((item) => {
             dataResult.push({
-              id:
-                '<span class="container d-flex align-items-center justify-content-center">' +
-                item.id +
+              id: '<span class="capitalized defaultText">' + item.id + "</>",
+              name:
+                '<span class="capitalized defaultText">' + item.nombre + "</>",
+              fecha:
+                '<span class="capitalized defaultText">' +
+                Moment(item.fecha).format("DD/MM/YYYY  ") +
                 "</>",
-              title:
+              comentario:
                 '<span class="capitalized defaultText">' +
-                item.title +
+                item.comentario +
                 "</span>",
-              content:
+              encuesta:
                 '<span class="capitalized defaultText">' +
-                item.content +
+                item.encuesta +
                 "</span>",
-              publishingDate:
-                '<span class="capitalized defaultText">' +
-                Moment(item.publishingDate).format("DD/MM/YYYY  ") +
-                "</span>",
-              inactive:
-                '<span class="capitalized defaultText">' +
-                (item.inactive !== "N" ? "Si" : "No") +
-                "</span>",
-              companyId:
-                '<span class="capitalized defaultText">' +
-                item.companyId +
-                "</span>",
-
               itemBtn:
-                "<span data-created='" +
-                item.id +
-                "'  data-item='" +
-                btoa(JSON.stringify([item])) +
-                "'>" +
-                '&nbsp;<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Noticia" href="/editNew?id=' +
+                '<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Detalle Respuesta" href="/answerdetails?id=' +
                 item.id +
                 '"' +
-                " ></a>&nbsp;" +
-                DeleteBtn +
-                "</span>",
+                item.id +
+                " ></a>",
             });
           });
 
-          $("#TblNew").DataTable({
+          $("#TblVisita").DataTable({
             destroy: true,
             searching: true,
             language: LangSpanish,
@@ -109,45 +65,45 @@ export default function New(props) {
               dataResult.length === 0
                 ? [
                     {
-                      title: "",
-                      content: "",
-                      publishingDate: "",
-                      inactive: "",
-                      companyId: "",
+                      name: "",
+                      id: "",
+                      fecha: "",
+                      comentario: "",
+                      encuesta: "",
+                      itemBtn: "",
                     },
                   ]
                 : dataResult,
             columns: [
               {
-                data: "title",
-                title: "Titulo",
-                width: "25%",
+                data: "name",
+                title: "Empleado ",
+                width: "15%",
                 className: "capitalized",
               },
               {
-                data: "content",
-                title: "Contenido",
-                width: "25%",
+                data: "encuesta",
+                title: "Encuesta",
+                width: "13%",
                 className: "capitalized",
               },
               {
-                data: "publishingDate",
-                title: "Fecha\u00a0publicacion",
+                data: "comentario",
+                title: "Comentario",
                 width: "20%",
                 className: "capitalized",
               },
               {
-                data: "inactive",
-                title: "Inactivo",
-                width: "20%",
+                data: "fecha",
+                title: "Fecha",
+                width: "5%",
                 className: "capitalized",
               },
-
               {
                 data: "itemBtn",
-                title: "\u00a0Acciones\u00a0\u00a0\u00a0",
-                width: "30%",
-                orderable: false,
+                title: "Acciones",
+                width: "3%",
+                className: "capitalized",
               },
             ],
           });
@@ -160,9 +116,10 @@ export default function New(props) {
           "Hubo un problema intente de nuevo",
           "error"
         );
+        setDataLoading(false);
+
         console.error("Error de conexion " + err);
       });
-    setDataLoading(false);
   };
 
   useEffect(() => {
@@ -178,12 +135,7 @@ export default function New(props) {
             <div className="lowcolor col-12">
               <br />
               <br />
-              <h2 className="h2">Noticias</h2>
-              <a href="/addNew">
-                <span className="btn btn-success btn-sm">
-                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Noticia
-                </span>
-              </a>
+              <h2 className="h2">ENCUESTA EMPLEADO</h2>
             </div>
           </div>
           <div className="row ">
@@ -197,7 +149,7 @@ export default function New(props) {
                         Style="min-height:600px"
                       >
                         <table
-                          id="TblNew"
+                          id="TblVisita"
                           className="table table-striped table-bordered display"
                           Style="width:100% !important"
                         ></table>

@@ -43,6 +43,10 @@ import TotalPollVaccine from "../../views/Dashboard/totalPollVaccine";
 import Slider from "../../views/Slider/Slider";
 import StaffLetter from "../../views/StaffLetter/StaffLetter";
 import ServiceDescAdm from "../../views/Home_user/userApp";
+import AnswerAll from "../../views/Answer_Evaluation/Answer";
+import AnserDetails from "../../views/Answer_Evaluation/Answer_detail";
+import GymForm from "../../views/Gym_form/GymForm";
+import GymReservation from "../../views/Gym_form/Gym_reservation";
 
 export default class Menu extends React.Component {
   constructor(props) {
@@ -137,6 +141,11 @@ export default class Menu extends React.Component {
           <PrivateRoute path="/staff_letter" component={StaffLetter} />
           <PrivateRoute path="/banners" component={Slider} />
           <PrivateRoute path="/frontend_users" component={ServiceDescAdm} />
+          <PrivateRoute path="/answer" component={AnswerAll} />
+          <PrivateRoute path="/answerdetails" component={AnserDetails} />
+
+          <PrivateRoute path="/gymForm" component={GymForm} />
+          <PrivateRoute path="/gymReservation" component={GymReservation} />
         </Switch>
       </Router>
     );

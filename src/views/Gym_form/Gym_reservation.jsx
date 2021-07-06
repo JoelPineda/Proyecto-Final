@@ -1,28 +1,32 @@
 import React, { useState, useEffect } from "react";
-import $ from "jquery";
-import Moment from "moment";
-import "moment/locale/es";
-import { getUser } from "../../utils/Common";
 import API from "../../utils/api";
 import Loading from "../../components/loading/loading";
+import $ from "jquery";
+
+import Moment from "moment";
+import { LangSpanish } from "../../tools/dataTables.Language";
 import {
   ShowConfirmationMessage,
   MessageResults,
   ShowAlertMessage,
 } from "../../utils/CommonFunctions";
-import { LangSpanish } from "../../tools/dataTables.Language";
 
 $(document).ready(() => {
-  $("body").on("click", "#TblPolicy #btDel", function (e) {
+  $("body").on("click", "#TblNew #btDel", function (e) {
     let param = JSON.parse(
       atob($(e.currentTarget).parent().attr("data-item"))
     )[0];
-    ShowConfirmationMessage(SaveDisableChanges, "", param);
+    ShowConfirmationMessage(
+      SaveDisableChanges,
+      "",
+      param,
+      "DESEA CANCELAR LA RESERVACIÓN"
+    );
   });
 
   const SaveDisableChanges = (params) => {
     let id = params.id;
-    API.putData("policies/DisableRegister?id=" + id)
+    API.putData("GymReservation/delete?id=" + id)
       .then((res) => {
         if (res.status === 200) {
           MessageResults(res.status);
@@ -38,57 +42,43 @@ $(document).ready(() => {
   };
 });
 
-export default function Policy(props) {
+export default function GymReservation(props) {
   const [dataLoading, setDataLoading] = useState(true);
-  const [policy, setPolicy] = useState(true);
+  const [faq, setFaq] = useState(true);
 
-  const fillData = () => {
+  useEffect(() => {
     let Record = [];
-    API.getData("policies/getAll?companyId=" + getUser().companyId)
+    API.getData("GymReservation/getAll")
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
           let dataResult = [];
+
+          setFaq(res.data);
+
           let DeleteBtn =
-            "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Politica' ></a>";
-          setPolicy(res.data);
+            "<a href='#' id='btDel'  class='fa fa fa-trash custom-color size-effect-x2 red' title='Eliminar Usuario' ></a>";
           res.data.forEach((item) => {
             dataResult.push({
               id:
                 '<span class="container d-flex align-items-center justify-content-center">' +
                 item.id +
                 "</>",
-              title:
+              employeeIdCard:
                 '<span class="capitalized defaultText">' +
-                item.title +
+                item.employeeIdCard +
                 "</span>",
-              content:
+              horario:
                 '<span class="capitalized defaultText">' +
-                item.content +
+                item.horario +
                 "</span>",
-              creationDate:
+              day:
                 '<span class="capitalized defaultText">' +
-                Moment(item.creationDate).format("DD/MM/YYYY  ") +
+                Moment(item.day).format("DD/MM/YYYY  ") +
                 "</span>",
-              isRequired:
+              name:
                 '<span class="capitalized defaultText">' +
-                (item.isRequired !== "N" ? "Si" : "No") +
-                "</span>",
-              levelFrom:
-                '<span class="capitalized defaultText">' +
-                item.levelFrom +
-                "</span>",
-              readAfterLogin:
-                '<span class="capitalized defaultText">' +
-                item.readAfterLogin +
-                "</span>",
-              companyId:
-                '<span class="capitalized defaultText">' +
-                item.companyId +
-                "</span>",
-              inactive:
-                '<span class="capitalized defaultText">' +
-                (item.inactive !== "N" ? "Si" : "No") +
+                item.name +
                 "</span>",
 
               itemBtn:
@@ -97,16 +87,12 @@ export default function Policy(props) {
                 "'  data-item='" +
                 btoa(JSON.stringify([item])) +
                 "'>" +
-                '&nbsp;<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Politica" href="/editpolicy?id=' +
-                item.id +
-                '"' +
-                " ></a>&nbsp;" +
                 DeleteBtn +
                 "</span>",
             });
           });
 
-          $("#TblPolicy").DataTable({
+          $("#TblNew").DataTable({
             destroy: true,
             searching: true,
             language: LangSpanish,
@@ -119,50 +105,40 @@ export default function Policy(props) {
               dataResult.length === 0
                 ? [
                     {
-                      title: "",
-                      content: "",
-                      creationDate: "",
-                      isRequired: "",
-                      levelFrom: "",
-                      readAfterLogin: "",
-                      companyId: "",
-                      inactive: "",
-                      itemBtn: "",
+                      id: "",
+                      employeeIdCard: "",
+                      horario: "",
+                      day: "",
+                      name: "",
                     },
                   ]
                 : dataResult,
             columns: [
               {
-                data: "title",
-                title: "Titulo",
+                data: "name",
+                title: "Nombre",
                 width: "25%",
                 className: "capitalized",
               },
               {
-                data: "creationDate",
-                title: "Fecha\u00a0Creacion",
+                data: "employeeIdCard",
+                title: "Card",
                 width: "25%",
                 className: "capitalized",
               },
               {
-                data: "isRequired",
-                title: "Requerido",
+                data: "horario",
+                title: "Horario",
                 width: "20%",
                 className: "capitalized",
               },
               {
-                data: "levelFrom",
-                title: "Nivel",
+                data: "day",
+                title: "Día",
                 width: "20%",
                 className: "capitalized",
               },
 
-              {
-                data: "inactive",
-                title: "Inactivo ",
-                width: "20%",
-                className: "capitalized",
-              },
               {
                 data: "itemBtn",
                 title: "\u00a0Acciones\u00a0\u00a0\u00a0",
@@ -175,20 +151,10 @@ export default function Policy(props) {
         }
       })
       .catch(function (err) {
-        ShowAlertMessage(
-          "Información",
-          "Hubo un problema intente de nuevo",
-          "error"
-        );
         console.error("Error de conexion " + err);
       });
     setDataLoading(false);
-  };
-
-  useEffect(() => {
-    fillData();
-  }, []);
-
+  });
   return (
     <>
       <div>
@@ -198,12 +164,7 @@ export default function Policy(props) {
             <div className="lowcolor col-12">
               <br />
               <br />
-              <h2 className="h2">Politica</h2>
-              <a href="/addPolicy">
-                <span className="btn btn-success btn-sm">
-                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Politica
-                </span>
-              </a>
+              <h2 className="h2">Reservaciónes</h2>
             </div>
           </div>
           <div className="row ">
@@ -217,7 +178,7 @@ export default function Policy(props) {
                         Style="min-height:600px"
                       >
                         <table
-                          id="TblPolicy"
+                          id="TblNew"
                           className="table table-striped table-bordered display"
                           Style="width:100% !important"
                         ></table>
