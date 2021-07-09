@@ -41,13 +41,16 @@ import EditCompanyBenefits from "../../views/CompanyBenefits/EditCompanyBenefits
 import PollVaccine from "../../views/Dashboard/pollVaccine";
 import TotalPollVaccine from "../../views/Dashboard/totalPollVaccine";
 import Slider from "../../views/Slider/Slider";
+import EditSlider from "../../views/Slider/EditSlider";
+import AddSlider from "../../views/Slider/AddSlider";
 import StaffLetter from "../../views/StaffLetter/StaffLetter";
+import MedicalLicenses from "../../views/StaffLetter/MedicalLicenses";
 import ServiceDescAdm from "../../views/Home_user/userApp";
 import AnswerAll from "../../views/Answer_Evaluation/Answer";
 import AnserDetails from "../../views/Answer_Evaluation/Answer_detail";
 import GymForm from "../../views/Gym_form/GymForm";
 import GymReservation from "../../views/Gym_form/Gym_reservation";
-
+import GymFormFiltre from "../../views/Gym_form/GymFormFiltre";
 export default class Menu extends React.Component {
   constructor(props) {
     super(props);
@@ -126,7 +129,8 @@ export default class Menu extends React.Component {
           <PrivateRoute path="/company_unit" component={CompanyUnit} />
           <PrivateRoute path="/addCompanyUnit" component={AddCompanyUnit} />
           <PrivateRoute path="/editCompanyUnit" component={EditUnitCompany} />
-
+          <PrivateRoute path="/editSlider" component={EditSlider} />
+          <PrivateRoute path="/addSlider" component={AddSlider} />
           <PrivateRoute path="/comment" component={BenefitsCategory} />
           <PrivateRoute path="/company_benefits" component={CompanyBenefits} />
           <PrivateRoute
@@ -142,10 +146,13 @@ export default class Menu extends React.Component {
           <PrivateRoute path="/banners" component={Slider} />
           <PrivateRoute path="/frontend_users" component={ServiceDescAdm} />
           <PrivateRoute path="/answer" component={AnswerAll} />
+          <PrivateRoute path="/medical_licenses" component={MedicalLicenses} />
+
           <PrivateRoute path="/answerdetails" component={AnserDetails} />
 
           <PrivateRoute path="/gymForm" component={GymForm} />
           <PrivateRoute path="/gymReservation" component={GymReservation} />
+          <PrivateRoute path="/gymFormFiltre" component={GymFormFiltre} />
         </Switch>
       </Router>
     );
