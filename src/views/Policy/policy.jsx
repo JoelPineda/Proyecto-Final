@@ -95,7 +95,7 @@ export default function Policy(props) {
                 "<span data-created='" +
                 item.id +
                 "'  data-item='" +
-                btoa(JSON.stringify([item])) +
+                btoa(JSON.stringify([item.companyId])) +
                 "'>" +
                 '&nbsp;<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Politica" href="/editpolicy?id=' +
                 item.id +
