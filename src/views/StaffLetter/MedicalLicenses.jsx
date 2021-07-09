@@ -75,6 +75,9 @@ $(document).ready(() => {
       });
   };
   const GetCat = (number, img, name, fecha, description) => {
+    if (description == undefined) {
+      description = "";
+    }
     return `<html><body><section>
     <div class="container">
     <p style="margin-bottom: 0.25in; line-height: 100%; text-align-center: left;"><font face="Times New Roman, serif"><font size="3"> LICENCIA MÉDICA</font></font></p>

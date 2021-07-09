@@ -43,7 +43,7 @@ export default function Slider(props) {
 
   const fillData = () => {
     let Record = [];
-    API.getData("Slider/get?companyId=" + getUser().companyId)
+    API.getData("Slider/getall?companyId=" + getUser().companyId)
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
@@ -82,7 +82,7 @@ export default function Slider(props) {
                 "<span data-created='" +
                 item.id +
                 "'  data-item='" +
-                btoa(JSON.stringify([item])) +
+                btoa(JSON.stringify([item.companyId])) +
                 "'>" +
                 '&nbsp;<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Slider" href="/editSlider?id=' +
                 item.id +

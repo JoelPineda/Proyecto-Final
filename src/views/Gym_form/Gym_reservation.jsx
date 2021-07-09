@@ -110,6 +110,7 @@ export default function GymReservation(props) {
                       horario: "",
                       day: "",
                       name: "",
+                      itemBtn: "",
                     },
                   ]
                 : dataResult,

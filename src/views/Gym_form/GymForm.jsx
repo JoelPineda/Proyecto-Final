@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import $ from "jquery";
-import API from "../../utils/api";
 import Loading from "../../components/loading/loading";
+import API from "../../utils/api";
 import {
   ShowAlertMessage,
   ShowConfirmationMessage,
@@ -193,7 +193,10 @@ export default function GymForm(props) {
                 '<span class="capitalized defaultText">' +
                 item.mobileE +
                 "</span>",
-
+              subscription:
+                '<span class="capitalized defaultText">' +
+                (item.subscription === false ? "Cancelada" : "Activa") +
+                "</span>",
               itemBtn:
                 "<span data-created='" +
                 item.id +
@@ -235,6 +238,7 @@ export default function GymForm(props) {
                       phoneE: "",
                       mobileE: "",
                       itemBtn: "",
+                      subscription: "",
                     },
                   ]
                 : dataResult,
@@ -281,6 +285,12 @@ export default function GymForm(props) {
                 width: "10%",
                 className: "capitalized",
               },
+              {
+                data: "subscription",
+                title: "Subcripción",
+                width: "10%",
+                className: "capitalized",
+              },
 
               {
                 data: "itemBtn",
@@ -321,6 +331,13 @@ export default function GymForm(props) {
               <a href="/gymReservation">
                 <span className="btn btn-success btn-sm">
                   <i className="fa fa-plus-circle"></i>&nbsp;RESERVACIONES GYM
+                </span>
+              </a>
+              &nbsp;
+              <a href="/gymFormFiltre">
+                <span className="btn btn-success btn-sm">
+                  <i className="fa fa-calendar-check-o"></i>&nbsp;FILTRAR POR
+                  FECHA
                 </span>
               </a>
             </div>
