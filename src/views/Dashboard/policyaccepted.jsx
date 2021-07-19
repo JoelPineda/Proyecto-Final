@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Button from "../../components/Button/Button";
 import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
 import $ from "jquery";
 import Moment from "moment";
@@ -9,6 +8,7 @@ import { getUser, removeUserSession } from "../../utils/Common";
 import API from "../../utils/api";
 import { EditEvaluation } from "../Evaluation/editEvaluation";
 
+import { jsPDF } from "jspdf";
 import Loading from "../../components/loading/loading";
 import {
   ShowConfirmationMessage,
@@ -19,6 +19,48 @@ import { DataTable } from "datatables.net";
 import { LangSpanish } from "../../tools/dataTables.Language";
 registerLocale("es", es);
 
+$(document).ready(() => {
+  $("body").on("click", "#TblVisitaPolicy #btIMPR", function (e) {
+    let param = JSON.parse(
+      atob($(e.currentTarget).parent().attr("data-item"))
+    )[0];
+
+    var name = param.firstName + " " + param.lastName;
+    API.getData(
+      "Policies/getbyidHtml?id=" +
+        param.id +
+        "&employee=" +
+        param.employeeNumber +
+        "&name=" +
+        name +
+        "&cedula=" +
+        param.cedula
+    )
+      .then((response) => {
+        var doc = new jsPDF();
+
+        let pageWidth = doc.internal.pageSize.getWidth();
+        var splitTitle = doc.splitTextToSize(response.data.content, 270);
+        var pageHeight = doc.internal.pageSize.height;
+
+        doc.setFontSize("11");
+        var y = 7;
+        for (var i = 0; i < splitTitle.length; i++) {
+          if (y > 280) {
+            y = 10;
+            doc.addPage();
+          }
+          doc.text(15, y, splitTitle[i]);
+          y = y + 7;
+        }
+        // Save the PDF
+        doc.save(param.firstName + " " + param.title);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
+});
 export default function PolicyAccepted(props) {
   const [dataLoading, setDataLoading] = useState(true);
   const [policyAccepted, setpolicyAccepted] = useState(true);
@@ -31,6 +73,8 @@ export default function PolicyAccepted(props) {
         if (res.status === 200) {
           let dataResult = [];
           setpolicyAccepted(res.data);
+          let DeleteBtn =
+            "<a href='#' id='btIMPR'  class='fa fa-print custom-color size-effect-x2 red' title='Eliminar Politica' ></a>";
 
           res.data.forEach((item) => {
             dataResult.push({
@@ -41,6 +85,11 @@ export default function PolicyAccepted(props) {
               title:
                 '<span class="capitalized defaultText">' +
                 item.title +
+                "</span>",
+
+              cedula:
+                '<span class="capitalized defaultText">' +
+                item.cedula +
                 "</span>",
               readingDate:
                 '<span class="capitalized">' +
@@ -54,10 +103,22 @@ export default function PolicyAccepted(props) {
                 " " +
                 item.lastName +
                 "</span>",
+              employeeNumber:
+                '<span class="capitalized defaultText">' +
+                item.employeeNumber +
+                "</span>",
+              itemBtn:
+                "<span data-created='" +
+                item.id +
+                "'  data-item='" +
+                btoa(JSON.stringify([item])) +
+                "'>" +
+                DeleteBtn +
+                "</span>",
             });
           });
 
-          $("#TblVisita").DataTable({
+          $("#TblVisitaPolicy").DataTable({
             destroy: true,
             searching: true,
             language: LangSpanish,
@@ -68,7 +129,16 @@ export default function PolicyAccepted(props) {
             buttons: ["copy", "excel", "pdf"],
             data:
               dataResult.length === 0
-                ? [{ title: "", readingDate: "", employee: "" }]
+                ? [
+                    {
+                      title: "",
+                      readingDate: "",
+                      employee: "",
+                      itemBtn: "",
+                      content: "",
+                      employeeNumber: "",
+                    },
+                  ]
                 : dataResult,
             columns: [
               {
@@ -83,12 +153,17 @@ export default function PolicyAccepted(props) {
                 width: "25%",
                 className: "capitalized",
               },
-
               {
                 data: "readingDate",
                 title: "Fecha\u00a0Aceptacion",
                 width: "20%",
                 className: "capitalized",
+              },
+              {
+                data: "itemBtn",
+                title: "\u00a0Acciones\u00a0\u00a0\u00a0",
+                width: "10%",
+                orderable: false,
               },
             ],
           });
@@ -99,7 +174,6 @@ export default function PolicyAccepted(props) {
         setDataLoading(false);
         console.error("Error de conexion " + err);
       });
-    
   };
 
   useEffect(() => {
@@ -115,7 +189,7 @@ export default function PolicyAccepted(props) {
             <div className="lowcolor col-12">
               <br />
               <br />
-              <h2 className="h2">Visitas Empleados</h2>
+              <h2 className="h2">EMPLEADOS QUE HAN ACEPTADO LAS POLITICAS</h2>
             </div>
           </div>
           <div className="row ">
@@ -129,7 +203,7 @@ export default function PolicyAccepted(props) {
                         Style="min-height:600px"
                       >
                         <table
-                          id="TblVisita"
+                          id="TblVisitaPolicy"
                           className="table table-striped table-bordered display"
                           Style="width:100% !important"
                         ></table>

@@ -174,7 +174,6 @@ export default function StaffLetter(props) {
   const [staffLetter, setStaffLetter] = useState(true);
 
   const fillData = () => {
-    let Record = [];
     API.getData("StaffLetter/Get?companyId=" + getUser().companyId)
       .then((res) => {
         setDataLoading(false);
