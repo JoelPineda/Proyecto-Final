@@ -14,9 +14,45 @@ import $ from "jquery";
 import Loading from "../../components/loading/loading";
 import { LangSpanish } from "../../tools/dataTables.Language";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import { jsPDF } from "jspdf";
 
 registerLocale("es", es);
 
+$(document).ready(() => {
+  $("body").on("click", "#TblGYM #btIMPR", function (e) {
+    let param = JSON.parse(
+      atob($(e.currentTarget).parent().attr("data-item"))
+    )[0];
+
+    var doc = new jsPDF();
+
+    doc.text(10, 10, "Documento de acuerdo de solicitud gimnasio");
+    doc.setFontSize("12");
+    doc.text(
+      10,
+      20,
+      "Yo: " +
+        param.fullName +
+        ", cedula: " +
+        param.employeeIdCard +
+        ", código empleado:" +
+        param.employeeNumber
+    );
+    doc.text(
+      10,
+      30,
+      "Acepto que he solicitado la solicitud para usar las instalaciones del gimnasio"
+    );
+    doc.text(
+      10,
+      40,
+      "Acuerdo firmado: " + Moment(param.enrollmentDate).format("DD/MM/YYYY  ")
+    );
+
+    // Save the PDF
+    doc.save(param.fullName + " " + param.employeeNumber);
+  });
+});
 export default function GymFormFiltre(props) {
   const [startDate, setStartDate] = useState(
     new Date(new Date().getFullYear(), new Date().getMonth(), 1)
@@ -38,6 +74,8 @@ export default function GymFormFiltre(props) {
         setGymForm(res.data);
         let EditBtn =
           "<a href='#' id='btEdit'  class='fa fa-eye custom-color size-effect-x2 ' title='Visualizar Encuestado' ></a>&nbsp;";
+        let imprimirBtn =
+          "<a href='#' id='btIMPR'  class='fa fa-print custom-color size-effect-x2 red' title='Eliminar Politica' ></a>";
 
         let DeleteBtn =
           "<a href='#' id='btDel'  class='fa fa-pencil-square-o custom-color size-effect-x2 red' title='Eliminar Pregunta' ></a>";
@@ -117,8 +155,7 @@ export default function GymFormFiltre(props) {
               "'  data-item='" +
               btoa(JSON.stringify([item])) +
               "'>" +
-              EditBtn +
-              DeleteBtn +
+              imprimirBtn +
               "</span>",
           });
         });
@@ -155,6 +192,7 @@ export default function GymFormFiltre(props) {
                     subscription: "",
                     enrollmentDate: "",
                     cancellationDate: "",
+                    itemBtn: "",
                   },
                 ]
               : dataResult,
@@ -194,6 +232,12 @@ export default function GymFormFiltre(props) {
               title: "Subcripción",
               width: "10%",
               className: "capitalized",
+            },
+            {
+              data: "itemBtn",
+              title: "\u00a0Acciones\u00a0\u00a0\u00a0",
+              width: "5%",
+              orderable: false,
             },
           ],
         });

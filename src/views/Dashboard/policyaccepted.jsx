@@ -38,14 +38,8 @@ $(document).ready(() => {
     )
       .then((response) => {
         var doc = new jsPDF();
-        /*pdf.html(response.data.content, {});
-
-        pdf.save(param.firstName + " " + param.title);*/
 
         let pageWidth = doc.internal.pageSize.getWidth();
-
-        //   doc.text(param.title, pageWidth / 3, 20, "center");
-
         var splitTitle = doc.splitTextToSize(response.data.content, 270);
         var pageHeight = doc.internal.pageSize.height;
 
@@ -59,7 +53,6 @@ $(document).ready(() => {
           doc.text(15, y, splitTitle[i]);
           y = y + 7;
         }
-
         // Save the PDF
         doc.save(param.firstName + " " + param.title);
       })
