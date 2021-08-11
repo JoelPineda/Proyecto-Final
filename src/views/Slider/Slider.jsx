@@ -19,9 +19,8 @@ $(document).ready(() => {
     ShowConfirmationMessage(SaveDisableChanges, "", param);
   });
 
-  const SaveDisableChanges = (params) => {
-    let id = params.id;
-    API.putData("Slider/DisableRegister?id=" + id)
+  const SaveDisableChanges = (id) => {
+    API.putData("Slider/delete?id=" + id)
       .then((res) => {
         if (res.status === 200) {
           MessageResults(res.status);
@@ -82,7 +81,7 @@ export default function Slider(props) {
                 "<span data-created='" +
                 item.id +
                 "'  data-item='" +
-                btoa(JSON.stringify([item.companyId])) +
+                btoa(JSON.stringify([item.id])) +
                 "'>" +
                 '&nbsp;<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Slider" href="/editSlider?id=' +
                 item.id +
