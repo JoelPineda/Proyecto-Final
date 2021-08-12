@@ -165,7 +165,7 @@ export default function GymFormFiltre(props) {
           searching: true,
           language: LangSpanish,
           bLengthChange: false,
-          lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200],
+          lengthMenu: [60, 80, 90, 100, 200],
           order: [[0, "desc"]],
           dom: "Bfrtip",
           buttons: ["copy", "excel", "pdf"],

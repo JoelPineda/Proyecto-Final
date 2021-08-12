@@ -204,6 +204,13 @@ export default function Policy(props) {
                   <i className="fa fa-plus-circle"></i>&nbsp;Añadir Politica
                 </span>
               </a>
+              <br /><br />
+              <a href=" /policyRead">
+                <span className="btn btn-success btn-sm">
+                  <i className="fa fa-plus-circle"></i>&nbsp;Politica Leídas
+                </span>
+              </a>
+             
             </div>
           </div>
           <div className="row ">
