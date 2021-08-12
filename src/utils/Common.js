@@ -46,6 +46,7 @@ export const getAdmToken = () => {
 };
 
 export const getMenu = () => {
+  
   let menuList = [];
   menuList.push("<ul class='side-menu-ul'>");
   let backendOpc = JSON.parse(
@@ -57,16 +58,33 @@ export const getMenu = () => {
   let showAll = false;
   for (let idx = 0; idx < backendPermission.length; idx++) {
     const element = backendPermission[idx];
+    debugger;
     backendOpc.forEach((item) => {
-      if ((item.OptionMenuId = element.OptionMenuId && item.Name === "Todas")) {
-        showAll = true;
-        idx = backendPermission.length;
-      }
-    });
-  }
-  if (showAll) {
-    backendOpc.forEach((item) => {
-      if (item.Name !== "Todas") {
+      if ((item.OptionMenuId === element.OptionMenuId )) {
+        if(item.Name === "Todas"){
+          backendPermission.forEach((element) => {
+            backendOpc.forEach((item) => {
+              if (
+                (item.OptionMenuId = element.OptionMenuId && item.Name !== "Todas")
+              ) {
+                menuList.push(
+                  "<li class='m0' data-item='" +
+                    item.OptionMenuId +
+                    "'><a href='" +
+                    item.Path.replace("administrator/", "/") +
+                    "'><i class='fa " +
+                    item.Icon +
+                    " '></i><span>&nbsp;&nbsp;" +
+                    item.Name +
+                    "</span></a>" +
+                    "</li>"
+                );
+              }
+            });
+          });
+         
+        }
+        else{
         menuList.push(
           "<li class='m0' data-item='" +
             item.OptionMenuId +
@@ -79,9 +97,30 @@ export const getMenu = () => {
             "</span></a>" +
             "</li>"
         );
-      }
+        }
+    /*    showAll = true;
+        idx = backendPermission.length;*/
+     }
     });
-  } else {
+  }
+ /*  if (showAll) {
+    backendOpc.forEach((item) => {
+    // if (item.Name !== "Todas") {
+        menuList.push(
+          "<li class='m0' data-item='" +
+            item.OptionMenuId +
+            "'><a href='" +
+            item.Path.replace("administrator/", "/") +
+            "'><i class='fa " +
+            item.Icon +
+            " '></i><span>&nbsp;&nbsp;" +
+            item.Name +
+            "</span></a>" +
+            "</li>"
+        );
+  //     }
+    });
+  }else {
     backendPermission.forEach((element) => {
       backendOpc.forEach((item) => {
         if (
@@ -102,7 +141,7 @@ export const getMenu = () => {
         }
       });
     });
-  }
+  }*/
 
   menuList.push(
     "<li><a href='/logout'><i class='fa fa-sign-out '></i><span>&nbsp;Cerrar</span></a></li></ul>"

@@ -4,7 +4,8 @@ import Moment from "moment";
 import "moment/locale/es";
 import { getUser } from "../../utils/Common";
 import API from "../../utils/api";
-import Loading from "../../components/loading/loading";
+import Loading from "../../components/loading/loadingS";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import {
   ShowConfirmationMessage,
   MessageResults,
@@ -38,13 +39,13 @@ $(document).ready(() => {
   };
 });
 
-export default function Policy(props) {
+export default function PolicyRead(props) {
   const [dataLoading, setDataLoading] = useState(true);
   const [policy, setPolicy] = useState(true);
 
   const fillData = () => {
     let Record = [];
-    API.getData("policies/getAll?companyId=" + getUser().companyId)
+    API.getData("policies/getRead?companyId=" + getUser().companyId)
       .then((res) => {
         setDataLoading(false);
         if (res.status === 200) {
@@ -58,44 +59,29 @@ export default function Policy(props) {
                 '<span class="container d-flex align-items-center justify-content-center">' +
                 item.id +
                 "</>",
-              title:
+                name:
                 '<span class="capitalized defaultText">' +
-                item.title +
+                item.name +
                 "</span>",
-              content:
+                policie:
                 '<span class="capitalized defaultText">' +
-                item.content +
+                item.policie +
                 "</span>",
-              creationDate:
+           
+                code:
                 '<span class="capitalized defaultText">' +
-                Moment(item.creationDate).format("DD/MM/YYYY  ") +
+                item.code +
                 "</span>",
-              isRequired:
-                '<span class="capitalized defaultText">' +
-                (item.isRequired !== "N" ? "Si" : "No") +
-                "</span>",
-              levelFrom:
-                '<span class="capitalized defaultText">' +
-                item.levelFrom +
-                "</span>",
-              readAfterLogin:
-                '<span class="capitalized defaultText">' +
-                item.readAfterLogin +
-                "</span>",
-              companyId:
-                '<span class="capitalized defaultText">' +
-                item.companyId +
-                "</span>",
-              inactive:
-                '<span class="capitalized defaultText">' +
-                (item.inactive !== "N" ? "Si" : "No") +
-                "</span>",
+                read:
+                '<span class="capitalized defaultText">' +(item.read !== false ? "Si" : "No")
+                 +
+                "</span>",        
 
               itemBtn:
                 "<span data-created='" +
                 item.id +
                 "'  data-item='" +
-                btoa(JSON.stringify([item.companyId])) +
+                btoa(JSON.stringify([item])) +
                 "'>" +
                 '&nbsp;<a class="fa fa-pencil-square-o custom-color size-effect-x2"   title="Editar Politica" href="/editpolicy?id=' +
                 item.id +
@@ -107,11 +93,12 @@ export default function Policy(props) {
           });
 
           $("#TblPolicy").DataTable({
+          
             destroy: true,
             searching: true,
             language: LangSpanish,
             bLengthChange: false,
-            lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200],
+            lengthMenu: [5000 ],
             order: [[0, "desc"]],
             dom: "Bfrtip",
             buttons: ["copy", "excel", "pdf"],
@@ -119,59 +106,43 @@ export default function Policy(props) {
               dataResult.length === 0
                 ? [
                     {
-                      title: "",
-                      content: "",
-                      creationDate: "",
-                      isRequired: "",
-                      levelFrom: "",
-                      readAfterLogin: "",
-                      companyId: "",
-                      inactive: "",
-                      itemBtn: "",
+                      name: "",
+                      policie: "",
+                      code: "",
+                      read: "", 
                     },
                   ]
                 : dataResult,
             columns: [
               {
-                data: "title",
-                title: "Titulo",
+                data: "name",
+                title: "Nombre",
                 width: "25%",
                 className: "capitalized",
               },
               {
-                data: "creationDate",
-                title: "Fecha\u00a0Creacion",
+                data: "policie",
+                title: "Politica",
                 width: "25%",
                 className: "capitalized",
               },
               {
-                data: "isRequired",
-                title: "Requerido",
+                data: "code",
+                title: "Código Empleado",
                 width: "20%",
                 className: "capitalized",
               },
               {
-                data: "levelFrom",
-                title: "Nivel",
+                data: "read",
+                title: "Leyó",
                 width: "20%",
                 className: "capitalized",
-              },
-
-              {
-                data: "inactive",
-                title: "Inactivo ",
-                width: "20%",
-                className: "capitalized",
-              },
-              {
-                data: "itemBtn",
-                title: "\u00a0Acciones\u00a0\u00a0\u00a0",
-                width: "30%",
-                orderable: false,
-              },
+              } ,
+             
             ],
           });
           $(".csHidden").attr("style", "display:none");
+          setDataLoading(false);
         }
       })
       .catch(function (err) {
@@ -182,7 +153,7 @@ export default function Policy(props) {
         );
         console.error("Error de conexion " + err);
       });
-    setDataLoading(false);
+ 
   };
 
   useEffect(() => {
@@ -198,18 +169,8 @@ export default function Policy(props) {
             <div className="lowcolor col-12">
               <br />
               <br />
-              <h2 className="h2">Politica</h2>
-              <a href="/addPolicy">
-                <span className="btn btn-success btn-sm">
-                  <i className="fa fa-plus-circle"></i>&nbsp;Añadir Politica
-                </span>
-              </a>
-              <br /><br />
-              <a href=" /policyRead">
-                <span className="btn btn-success btn-sm">
-                  <i className="fa fa-plus-circle"></i>&nbsp;Politica Leídas
-                </span>
-              </a>
+              <h2 className="h2">Politica leídas y no leídas </h2>
+           
              
             </div>
           </div>
@@ -218,6 +179,18 @@ export default function Policy(props) {
               <>
                 <div className="container">
                   <div className="">
+                  {policy.length > 0 ? (
+                        <ReactHTMLTableToExcel
+                          id="ButtonExportExcel"
+                          className="btn btn-success"
+                          table="TblPolicy"
+                          filename="Politica leídas y no leídas"
+                          buttonText="Exportar a excel"
+                          
+                        />
+                      ) : (
+                        <br />
+                      )}
                     {!dataLoading ? (
                       <div
                         className="scroll-table bordered"

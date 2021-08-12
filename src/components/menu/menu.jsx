@@ -20,6 +20,7 @@ import NewCompany from "../../views/Company/AddCompany";
 import EditCompany from "../../views/Company/EditCompany";
 import AddPolicy from "../../views/Policy/AddPolicy";
 import EditPolicy from "../../views/Policy/EditPolicy";
+import PolicyRead from "../../views/Policy/policyRead";
 import PolicyInd from "../../views/Policy/policy";
 import Faq from "../../views/Faq/Faq";
 import AddFaq from "../../views/Faq/AddFaq";
@@ -153,6 +154,8 @@ export default class Menu extends React.Component {
           <PrivateRoute path="/gymForm" component={GymForm} />
           <PrivateRoute path="/gymReservation" component={GymReservation} />
           <PrivateRoute path="/gymFormFiltre" component={GymFormFiltre} />
+          <PrivateRoute path="/policyRead" component={PolicyRead} />
+          
         </Switch>
       </Router>
     );
