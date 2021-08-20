@@ -1,16 +1,26 @@
-import react from "react";
 import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
-import { getUser } from "../../utils/Common";
 import { NumbersWithComma } from "../../utils/CommonFunctions";
 import Moment from "moment";
 import es from "date-fns/locale/es";
-import "moment/locale/es";
-import { GetCssByCompany } from "../../CssbyCompany/CommonCSS";
+import "moment/locale/es"; 
 import { GetImagePatch } from "../../utils/CommonFunctions";
 
 registerLocale("es", es);
 
-export const GetLetterParam = (employee) => {
+export const GetLetterParam = (
+  employee,
+  salaryFrequencyId,
+  consulate,
+  bank,
+  others
+) => {
+  let salaryName = "";
+  if (salaryFrequencyId == 1) {
+    salaryName = "anual";
+  } else if (salaryFrequencyId == 2) {
+    salaryName = "mensual";
+  }  
+
   let addressFooter = [];
   //TODO: Create new table to store this information.
   addressFooter.push({
@@ -101,13 +111,13 @@ export const GetLetterParam = (employee) => {
     responsable_name: signData.staffLetterSignName ?? "",
     responsable_position: signData.employeePosition ?? "",
     urlImageSigned: GetImagePatch("/images/" + addressFooterData.firma),
-    salary_frequency: "",
+    salary_frequency: salaryName,
     salary: NumbersWithComma(
-      parseInt(36000) > 1 ? employee.annualSalary : employee.salary
+      salaryFrequencyId == 1 ? employee.annualSalary : employee.salary
     ),
-    bankName: "BANCO POPULAR",
-    consulateName: "EMBAJADA DE LOS ESTADOS UNIDOS",
-    OtherEntityName: "INFOTE",
+    bankName: bank,
+    consulateName: consulate,
+    OtherEntityName: others,
     LetterToDisplay: "NI IDEA",
     cardTypeId: parseInt(sessionStorage.getItem("CardTypeValue") ?? 0),
     salaryFrequencyId: parseInt(sessionStorage.getItem("SalaryValue") ?? 0),

@@ -3,7 +3,8 @@ import $ from "jquery";
 import Moment from "moment";
 import "moment/locale/es";
 import API from "../../utils/api";
-
+import { GetImagePatch } from "../../utils/CommonFunctions";
+import { jsPDF } from "jspdf";
 import { getUser, removeUserSession } from "../../utils/Common";
 import Loading from "../../components/loading/loading";
 import {
@@ -24,6 +25,9 @@ import { GetLetterOtherWithSalary } from "../../components/letters/letterOtherWi
 
 $(document).ready(() => {
   let idUnico = 0;
+  let DataResultado = [];
+  let Tipo = 0;
+  let cardType = "";
   $("body").on("click", "#TblStaffLetter #btEdit", function (e) {
     let param = JSON.parse(
       atob($(e.currentTarget).parent().attr("data-item"))
@@ -50,19 +54,40 @@ $(document).ready(() => {
   });
 
   const SaveChanges = (params) => {
-    API.putData("StaffLetter/StatusCard?id=" + idUnico)
-      .then((res) => {
-        if (res.status === 200) {
-          MessageResults(res.status);
-          setTimeout(() => {
-            window.location.reload(true);
-          }, 1200);
-        }
-      })
-      .catch(function (err) {
-        console.error("Error de conexion " + err);
-        MessageResults(400, err);
-      });
+    if (idUnico >= 4) {
+      if (
+        cardType == "A quien pueda interesar sin salario" ||
+        cardType == "A quien pueda interesar"
+      ) {
+        letterWitoutSalary();
+      } else if (cardType == "Carta bancaria") {
+        //Agregar metodo de la carta bancaria
+        letterBank_Consulate_Salary("Banco");
+      }
+      else if(cardType == "Carta consular"){
+        //Agregar metodo de la carta consular
+        letterBank_Consulate_Salary("Consul");
+      }
+      else if (cardType =="Carta otro"){
+        //Agregar metodo de la carta otro
+      }
+    } else {
+      API.putData("StaffLetter/StatusCard?id=" + idUnico)
+        .then((res) => {
+          if (res.status === 200) {
+            MessageResults(res.status);
+            setTimeout(() => {
+              window.location.reload(true);
+            }, 1200);
+          }
+        })
+        .catch(function (err) {
+          console.error("Error de conexion " + err);
+          MessageResults(400, err);
+        });
+    }
+
+    idUnico = 0;
   };
   const SaveDisableChanges = (params) => {
     let id = params.staffLetterId;
@@ -81,20 +106,188 @@ $(document).ready(() => {
       });
   };
 
+  const letterWitoutSalary = () => {
+    var doc = new jsPDF();
+    var logo = new Image();
+    logo.src = GetImagePatch("/images/logo_dc.png");
+    doc.addImage(logo, "PNG", 15, 20, 60, 20);
+    doc.text(15, 60, DataResultado.header_date);
+    doc.text(60, 80, "A QUIEN PUEDA INTERESAR");
+
+    var texto = `Mediante la presente, le informamos que el SR. ${DataResultado.employee_name}, dominicano mayor de edad, portador de la cédula de identidad y electoral No.${DataResultado.employee_id_card}, labora en esta empresa desde el ${DataResultado.hiring_date}, desempeñando actualmente el puesto de ${DataResultado.position_name} ubicada en la ${DataResultado.address} `;
+    var splitTitle = doc.splitTextToSize(texto, 250);
+
+    doc.setFontSize("12");
+
+    var y = 95;
+    for (var i = 0; i < splitTitle.length; i++) {
+      if (y > 250) {
+        y = 8;
+        doc.addPage();
+      }
+      doc.text(15, y, splitTitle[i]);
+      y = y + 8;
+    }
+    if (Tipo == 1 || Tipo == 2) {
+      doc.text(
+        15,
+        140,
+        `Recibe un ingreso ${DataResultado.salary_frequency} de ${DataResultado.salary} pesos, entre sueldos y gratificaciones voluntarias.`
+      );
+    }
+    doc.text(
+      15,
+      150,
+      `Expedimos la presente solicitud a la parte interesada a los ${DataResultado.header_date}.`
+    );
+    doc.text(15, 170, `Atentamente,`);
+    var firma = new Image();
+    firma.src = GetImagePatch("/images/firma_isis_abreu.png");
+
+    doc.addImage(firma, "PNG", 60, 190, 70, 25);
+
+    var sello = new Image();
+    sello.src = GetImagePatch("/images/sello_gyg.png");
+
+    doc.addImage(sello, "PNG", 60, 215, 90, 30);
+
+    var footer = `${DataResultado.companyName} | ${DataResultado.address} ${DataResultado.email} ${DataResultado.phones} ${DataResultado.rnc}`;
+    doc.setFontSize("10");
+    var splitTitles = doc.splitTextToSize(footer, 200);
+    var y = 270;
+    for (var i = 0; i < splitTitles.length; i++) {
+      if (y > 288) {
+        y = 8;
+        doc.addPage();
+      }
+      doc.text(15, y, splitTitles[i]);
+      y = y + 8;
+    }
+
+    // Save the PDF
+    doc.save(`Carta Empleado ${DataResultado.employee_name}`);
+  };
+
+
+
+
+  const letterBank_Consulate_Salary = (Name) => {
+    var doc = new jsPDF();
+    var logo = new Image();
+    logo.src = GetImagePatch("/images/logo_dc.png");
+    doc.addImage(logo, "PNG", 15, 20, 60, 20);
+
+    doc.text(15, 60, DataResultado.header_date);
+
+    
+    doc.text(15, 75,  "Señores:");
+
+  
+    if(Name == "Banco"){ 
+      
+      doc.text(15, 85, DataResultado.bankName);
+      
+    }else if(Name== "Consul"){ 
+      doc.text(15, 85, DataResultado.consulateName);
+    }
+    
+
+    var texto = `Mediante la presente, le informamos que el SR. ${DataResultado.employee_name}, dominicano mayor de edad, portador de la cédula de identidad y electoral No.${DataResultado.employee_id_card}, labora en esta empresa desde el ${DataResultado.hiring_date}, desempeñando actualmente el puesto de ${DataResultado.position_name} ubicada en la ${DataResultado.address} `;
+    var splitTitle = doc.splitTextToSize(texto, 250);
+
+    doc.setFontSize("12");
+
+
+    var y = 105;
+    for (var i = 0; i < splitTitle.length; i++) {
+      if (y > 270) {
+        y = 8;
+        doc.addPage();
+      }
+      doc.text(15, y, splitTitle[i]);
+      y = y + 8;
+    }
+    if (Tipo == 1 || Tipo == 2) {
+      doc.text(
+        15,
+        150,
+        `Recibe un ingreso ${DataResultado.salary_frequency} de ${DataResultado.salary} pesos, entre sueldos y gratificaciones voluntarias.`
+      );
+    }
+    doc.text(
+      15,
+      163,
+      `Expedimos la presente solicitud a la parte interesada a los ${DataResultado.header_date}.`
+    );
+    doc.text(15, 180, `Atentamente,`);
+    var firma = new Image();
+    firma.src = GetImagePatch("/images/firma_isis_abreu.png");
+
+    doc.addImage(firma, "PNG", 70, 195, 65, 15);
+
+    var sello = new Image();
+    sello.src = GetImagePatch("/images/sello_gyg.png");
+
+    doc.addImage(sello, "PNG", 60, 210, 90, 30);
+
+
+    doc.setFontSize("10");
+    var footer = `${DataResultado.companyName} | ${DataResultado.address}`;
+    var contact =  `${DataResultado.email} ${DataResultado.phones} ${DataResultado.rnc}`;
+    doc.text(15, 270,  footer);
+    doc.text(46, 280,  contact);
+
+    // Save the PDF
+    if(Name == "Banco"){ 
+
+      doc.save(`Carta Banco ${DataResultado.employee_name}`);
+      
+    }else if(Name== "Consul"){ 
+      doc.save(`Carta Consulado ${DataResultado.employee_name}`);
+    }
+    
+  };
+
   $("body").on("click", "#TblStaffLetter #btDel", function (e) {
     let param = JSON.parse(
       atob($(e.currentTarget).parent().attr("data-item"))
     )[0];
+    cardType = param.cardType;
+    alert(cardType);
+    let consulate = "";
+    let bank = "";
+    let other = "";
+    if (param.consulate != null) {
+      consulate = param.consulate.consulateName;
+    }
+    if (param.bank != null) {
+      bank = param.bank.bankName;
+    }
+    if (param.other != null) {
+      other = param.other;
+    }
 
-    idUnico = param.staffLetterId;
-    let DataResult = GetLetterParam(param.employeesList);
+    idUnico = param.statusCardId;
+    let DataResult = GetLetterParam(
+      param.employeesList,
+      param.salaryFrequencyId,
+      consulate,
+      bank,
+      other
+    );
+    DataResultado = DataResult;
+    Tipo = param.salaryFrequencyId;
+    alert(idUnico);
     switch (param.cardTypeId) {
       case 1:
         ShowPopUp({
           handlerEvent: SaveChanges,
           htmlBody: GetLetter({ props: DataResult }),
           isDisabled: true,
-          TextOk: "Cambiar al estado siguiente",
+          TextOk:
+            idUnico == 4 || idUnico == 5
+              ? "Imprimir carta"
+              : "Cambiar al estado siguiente",
         });
         break;
       case 2:
@@ -102,7 +295,10 @@ $(document).ready(() => {
           handlerEvent: SaveChanges,
           htmlBody: GetLetterWithSalary({ props: DataResult }),
           isDisabled: true,
-          TextOk: "Cambiar al estado siguiente",
+          TextOk:
+            idUnico == 4 || idUnico == 5
+              ? "Imprimir carta"
+              : "Cambiar al estado siguiente",
         });
         break;
       case 4:
@@ -110,7 +306,10 @@ $(document).ready(() => {
           handlerEvent: SaveChanges,
           htmlBody: GetLetterBankWithSalary({ props: DataResult }),
           isDisabled: true,
-          TextOk: "Cambiar al estado siguiente",
+          TextOk:
+            idUnico == 4 || idUnico == 5
+              ? "Imprimir carta"
+              : "Cambiar al estado siguiente",
         });
         break;
       case 5:
@@ -118,7 +317,10 @@ $(document).ready(() => {
           handlerEvent: SaveChanges,
           htmlBody: GetLetterConsulateWithSalary({ props: DataResult }),
           isDisabled: true,
-          TextOk: "Cambiar al estado siguiente",
+          TextOk:
+            idUnico == 4 || idUnico == 5
+              ? "Imprimir carta"
+              : "Cambiar al estado siguiente",
         });
         break;
       case 6:
@@ -126,7 +328,10 @@ $(document).ready(() => {
           handlerEvent: SaveChanges,
           htmlBody: GetLetterOtherWithSalary({ props: DataResult }),
           isDisabled: true,
-          TextOk: "Cambiar al estado siguiente",
+          TextOk:
+            idUnico == 4 || idUnico == 5
+              ? "Imprimir carta"
+              : "Cambiar al estado siguiente",
         });
         break;
 
@@ -205,9 +410,9 @@ export default function StaffLetter(props) {
                 '<span class="capitalized defaultText">' +
                 item.employeeName +
                 "</span>",
-              employeeNumber:
+              salaryFrequencyId:
                 '<span class="capitalized defaultText">' +
-                item.employeeNumber +
+                item.salaryFrequencyId +
                 "</span>",
               other:
                 '<span class="capitalized defaultText">' +
@@ -256,6 +461,7 @@ export default function StaffLetter(props) {
                       employeeName: "",
                       other: "",
                       statusCard: "",
+                      salaryFrequencyId: "",
                     },
                   ]
                 : dataResult,
