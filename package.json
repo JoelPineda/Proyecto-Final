@@ -30,6 +30,7 @@
     "react-barcodes": "^1.0.3",
     "react-bootstrap": "^1.4.0",
     "react-bootstrap-modal": "^4.2.0",
+    "react-data-export": "^0.6.0",
     "react-datepicker": "^3.3.0",
     "react-dom": "^17.0.1",
     "react-draft-wysiwyg": "^1.14.5",
@@ -42,7 +43,9 @@
     "rxjs-compat": "^6.6.3",
     "sweetalert2": "^8.19.0",
     "sweetalert2-react": "^0.8.3",
-    "web-vitals": "^0.2.4"
+    "web-vitals": "^0.2.4",
+    "xlsx": "^0.17.1",
+    "xlsx-style": "^0.8.13"
   },
   "scripts": {
     "start": "react-scripts start",

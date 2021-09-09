@@ -52,6 +52,7 @@ import AnserDetails from "../../views/Answer_Evaluation/Answer_detail";
 import GymForm from "../../views/Gym_form/GymForm";
 import GymReservation from "../../views/Gym_form/Gym_reservation";
 import GymFormFiltre from "../../views/Gym_form/GymFormFiltre";
+import { Survey } from "../../views/Dashboard/Survey";
 export default class Menu extends React.Component {
   constructor(props) {
     super(props);
@@ -155,6 +156,7 @@ export default class Menu extends React.Component {
           <PrivateRoute path="/gymReservation" component={GymReservation} />
           <PrivateRoute path="/gymFormFiltre" component={GymFormFiltre} />
           <PrivateRoute path="/policyRead" component={PolicyRead} />
+          <PrivateRoute path="/survey" component={Survey} />
           
         </Switch>
       </Router>

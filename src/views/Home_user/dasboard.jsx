@@ -137,6 +137,20 @@ export default function Dasboard(props) {
                 </a>
               </div>
             </div>
+            <div class="col-lg-3 col-xs-6">
+              <div class="small-box bg-red">
+                <div class="inner">
+                  <h3>{numberWithCommas(item.lastMonthVisit)}</h3>
+                  <p>Encuestados</p>
+                </div>
+                <div class="icon">
+                  <i class="fa fa-wpforms"></i>
+                </div>
+                <a href="/survey" class="small-box-footer">
+                  Ver mas detalle <i class="fa fa-arrow-circle-right"></i>
+                </a>
+              </div>
+            </div>
           </div>
         ))}
       </section>
